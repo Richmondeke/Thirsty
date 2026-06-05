@@ -644,6 +644,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroCtaBtn && heroContent && heroVideo && heroSection) {
     let pauseTimeout = null;
     
+    heroVideo.addEventListener('timeupdate', () => {
+      if (heroVideo.duration && !isNaN(heroVideo.duration)) {
+        const progress = heroVideo.currentTime / heroVideo.duration;
+        heroSection.style.setProperty('--video-progress', progress);
+      }
+    });
+
     heroCtaBtn.addEventListener('mouseenter', () => {
       if (pauseTimeout) {
         clearTimeout(pauseTimeout);
@@ -662,6 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pauseTimeout = setTimeout(() => {
         heroVideo.pause();
         heroVideo.currentTime = 0;
+        heroSection.style.setProperty('--video-progress', 0);
       }, 500);
     });
   }
