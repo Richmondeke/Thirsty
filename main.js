@@ -93,6 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (profileAvatarPreview) {
         profileAvatarPreview.src = profile.avatar_url || defaultAvatar;
       }
+
+      // Update Passport Generator Inputs
+      const passportInputName = document.getElementById('passport-input-name');
+      const passportInputId = document.getElementById('passport-input-id');
+      if (passportInputName && !passportInputName.value) {
+        passportInputName.value = profile.username;
+      }
+      if (passportInputId && !passportInputId.value) {
+        passportInputId.value = profile.thirstyclub_id || 'T999-XXXX';
+      }
+      drawPassport();
     } else {
       // User is Logged Out
       if (rsvpPromoCard) rsvpPromoCard.style.display = 'block';
@@ -103,6 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
         navRsvpBtn.textContent = 'RSVP';
         navRsvpBtn.href = '#tickets';
       }
+
+      // Default or clear Passport Generator Inputs
+      const passportInputName = document.getElementById('passport-input-name');
+      const passportInputId = document.getElementById('passport-input-id');
+      if (passportInputName) {
+        passportInputName.value = '';
+      }
+      if (passportInputId) {
+        passportInputId.value = '';
+      }
+      drawPassport();
     }
   };
 
@@ -605,7 +627,337 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 10. Initialization
+  // 10. Hero Scroll Dimming Handler
+  // ==========================================
+  const heroScrollOverlay = document.getElementById('hero-scroll-overlay');
+  window.addEventListener('scroll', () => {
+    if (!heroScrollOverlay) return;
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    // Opacity dims background image up to 0.85 when scrolled past 80% height of viewport
+    const opacity = Math.min(scrollY / (windowHeight * 0.8), 0.85);
+    heroScrollOverlay.style.opacity = opacity;
+  });
+
+  // ==========================================
+  // 11. Thirsty Passport Generator Logic
+  // ==========================================
+  let uploadedImage = null;
+
+  const drawPassport = () => {
+    const canvas = document.getElementById('passport-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, 600, 400);
+    
+    // Draw technical grid background
+    ctx.strokeStyle = 'rgba(255, 62, 62, 0.04)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 600; i += 20) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, 400);
+      ctx.stroke();
+    }
+    for (let i = 0; i < 400; i += 20) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(600, i);
+      ctx.stroke();
+    }
+
+    // Draw red outer border
+    ctx.strokeStyle = '#ff3e3e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(15, 15, 570, 370);
+
+    // Draw HUD corner bracket accents
+    ctx.fillStyle = '#ff3e3e';
+    // Top-left
+    ctx.fillRect(10, 10, 20, 4);
+    ctx.fillRect(10, 10, 4, 20);
+    // Top-right
+    ctx.fillRect(570, 10, 20, 4);
+    ctx.fillRect(586, 10, 4, 20);
+    // Bottom-left
+    ctx.fillRect(10, 386, 20, 4);
+    ctx.fillRect(10, 370, 4, 20);
+    // Bottom-right
+    ctx.fillRect(570, 386, 20, 4);
+    ctx.fillRect(586, 370, 4, 20);
+
+    // Technical metadata text
+    ctx.fillStyle = 'rgba(255, 62, 62, 0.6)';
+    ctx.font = '8px monospace';
+    ctx.fillText("SECURE ACCESS TERMINAL // T999", 25, 28);
+    ctx.fillText("SYS.STATUS: VALID", 495, 28);
+
+    // Photo slot coordinates
+    const targetX = 40;
+    const targetY = 70;
+    const targetWidth = 220;
+    const targetHeight = 260;
+
+    if (uploadedImage) {
+      // Draw uploaded image scaled & cropped (cover style)
+      const imgWidth = uploadedImage.width;
+      const imgHeight = uploadedImage.height;
+      const aspect = targetWidth / targetHeight;
+      let srcWidth, srcHeight, srcX, srcY;
+      
+      if (imgWidth / imgHeight > aspect) {
+        srcHeight = imgHeight;
+        srcWidth = imgHeight * aspect;
+        srcX = (imgWidth - srcWidth) / 2;
+        srcY = 0;
+      } else {
+        srcWidth = imgWidth;
+        srcHeight = imgWidth / aspect;
+        srcX = 0;
+        srcY = (imgHeight - srcHeight) / 2;
+      }
+
+      ctx.drawImage(uploadedImage, srcX, srcY, srcWidth, srcHeight, targetX, targetY, targetWidth, targetHeight);
+      
+      // Cyber red overlay filter
+      ctx.fillStyle = 'rgba(255, 62, 62, 0.12)';
+      ctx.fillRect(targetX, targetY, targetWidth, targetHeight);
+
+      // Faint horizontal scanlines
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      for (let y = targetY; y < targetY + targetHeight; y += 4) {
+        ctx.fillRect(targetX, y, targetWidth, 1.5);
+      }
+    } else {
+      // Draw placeholder
+      ctx.fillStyle = 'rgba(255, 62, 62, 0.03)';
+      ctx.fillRect(targetX, targetY, targetWidth, targetHeight);
+      ctx.strokeStyle = 'rgba(255, 62, 62, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(targetX, targetY, targetWidth, targetHeight);
+
+      // Placeholder HUD crosshair
+      ctx.strokeStyle = 'rgba(255, 62, 62, 0.15)';
+      ctx.beginPath();
+      ctx.moveTo(targetX + targetWidth/2 - 15, targetY + targetHeight/2);
+      ctx.lineTo(targetX + targetWidth/2 + 15, targetY + targetHeight/2);
+      ctx.moveTo(targetX + targetWidth/2, targetY + targetHeight/2 - 15);
+      ctx.lineTo(targetX + targetWidth/2, targetY + targetHeight/2 + 15);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255, 62, 62, 0.5)';
+      ctx.font = 'bold 9px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText("NO PHOTO UPLOADED", targetX + targetWidth/2, targetY + targetHeight/2 - 25);
+      ctx.fillText("DRAG & DROP PICTURE", targetX + targetWidth/2, targetY + targetHeight/2 + 25);
+      ctx.textAlign = 'left';
+    }
+
+    // Photo slot border and corners
+    ctx.strokeStyle = '#ff3e3e';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(targetX, targetY, targetWidth, targetHeight);
+
+    ctx.fillStyle = '#ff3e3e';
+    // Photo corners
+    ctx.fillRect(targetX - 4, targetY - 4, 12, 3);
+    ctx.fillRect(targetX - 4, targetY - 4, 3, 12);
+    ctx.fillRect(targetX + targetWidth - 8, targetY - 4, 12, 3);
+    ctx.fillRect(targetX + targetWidth + 1, targetY - 4, 3, 12);
+    ctx.fillRect(targetX - 4, targetY + targetHeight + 1, 12, 3);
+    ctx.fillRect(targetX - 4, targetY + targetHeight - 8, 3, 12);
+    ctx.fillRect(targetX + targetWidth - 8, targetY + targetHeight + 1, 12, 3);
+    ctx.fillRect(targetX + targetWidth + 1, targetY + targetHeight - 8, 3, 12);
+
+    // Get input values
+    const holderName = (document.getElementById('passport-input-name')?.value || 'UNREGISTERED GUEST').toUpperCase();
+    const holderId = (document.getElementById('passport-input-id')?.value || 'T999-XXXX').toUpperCase();
+
+    // Draw Info on Right
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 20px Kyrilla, Inter, sans-serif';
+    ctx.fillText("THIRSTY999 ACCESS PASS", 290, 95);
+
+    ctx.fillStyle = '#ff3e3e';
+    ctx.font = 'bold 10px monospace';
+    ctx.fillText("LEVEL // GUEST AUTHENTICATED", 290, 115);
+
+    // Name row
+    ctx.fillStyle = '#888888';
+    ctx.font = 'bold 10px monospace';
+    ctx.fillText("HOLDER NAME", 290, 155);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 16px Kyrilla, Inter, sans-serif';
+    ctx.fillText(holderName, 290, 175);
+
+    // Holder Code row
+    ctx.fillStyle = '#888888';
+    ctx.font = 'bold 10px monospace';
+    ctx.fillText("HOLDER CODE", 290, 215);
+    ctx.fillStyle = '#ff3e3e';
+    ctx.font = 'bold 15px monospace';
+    ctx.fillText(holderId, 290, 235);
+
+    // Expiry and Role row
+    ctx.fillStyle = '#888888';
+    ctx.font = 'bold 9px monospace';
+    ctx.fillText("EXPIRY DATE", 290, 275);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText("14.06.2026", 290, 290);
+
+    ctx.fillStyle = '#888888';
+    ctx.font = 'bold 9px monospace';
+    ctx.fillText("ACCESS LEVEL", 420, 275);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText("CLUB GUEST", 420, 290);
+
+    // Access Approved Badge
+    const badgeX = 485;
+    const badgeY = 78;
+    const badgeW = 75;
+    const badgeH = 18;
+
+    ctx.strokeStyle = '#ff3e3e';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
+    ctx.fillStyle = 'rgba(255, 62, 62, 0.1)';
+    ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+
+    ctx.fillStyle = '#ff3e3e';
+    ctx.font = 'bold 8px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText("ACCESS GRANTED", badgeX + badgeW/2, badgeY + badgeH/2);
+    
+    // Reset defaults
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+
+    // Faux Barcode Generator
+    const barcodeX = 290;
+    const barcodeY = 315;
+    const barcodeWidth = 270;
+    const barcodeHeight = 35;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(barcodeX, barcodeY, barcodeWidth, barcodeHeight);
+
+    ctx.fillStyle = '#000000';
+    let seed = 0;
+    for (let i = 0; i < holderId.length; i++) {
+      seed += holderId.charCodeAt(i);
+    }
+
+    let currentBarX = barcodeX + 10;
+    const endBarX = barcodeX + barcodeWidth - 10;
+
+    function random() {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    }
+
+    while (currentBarX < endBarX) {
+      const barWidth = Math.floor(random() * 4) + 1;
+      ctx.fillRect(currentBarX, barcodeY, barWidth, barcodeHeight);
+      const space = Math.floor(random() * 4) + 1;
+      currentBarX += barWidth + space;
+    }
+  };
+
+  // File Upload Handlers
+  const passportDropzone = document.getElementById('passport-dropzone');
+  const passportFileInput = document.getElementById('passport-file-input');
+  const downloadPassportBtn = document.getElementById('download-passport-btn');
+  const passportInputName = document.getElementById('passport-input-name');
+  const passportInputId = document.getElementById('passport-input-id');
+
+  const handlePassportFile = (file) => {
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size exceeds 5MB limit. Please upload a smaller image.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        uploadedImage = img;
+        drawPassport();
+        if (downloadPassportBtn) {
+          downloadPassportBtn.disabled = false;
+        }
+        const fileInfo = document.getElementById('passport-file-info');
+        if (fileInfo) {
+          fileInfo.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+          fileInfo.style.color = 'var(--accent-color)';
+        }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  if (passportDropzone && passportFileInput) {
+    passportDropzone.addEventListener('click', () => passportFileInput.click());
+    
+    passportFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      handlePassportFile(file);
+    });
+
+    passportDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      passportDropzone.classList.add('dragover');
+    });
+
+    ['dragleave', 'dragend'].forEach(type => {
+      passportDropzone.addEventListener(type, () => {
+        passportDropzone.classList.remove('dragover');
+      });
+    });
+
+    passportDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      passportDropzone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handlePassportFile(file);
+      }
+    });
+  }
+
+  // Redraw when input details change
+  if (passportInputName) {
+    passportInputName.addEventListener('input', () => drawPassport());
+  }
+  if (passportInputId) {
+    passportInputId.addEventListener('input', () => drawPassport());
+  }
+
+  // Download action
+  if (downloadPassportBtn) {
+    downloadPassportBtn.addEventListener('click', () => {
+      const canvas = document.getElementById('passport-canvas');
+      if (!canvas || !uploadedImage) return;
+
+      const link = document.createElement('a');
+      link.download = `thirsty999-passport-${(passportInputName?.value || 'guest').toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+
+  // ==========================================
+  // 12. Initialization
   // ==========================================
   updateUI();
+  // Draw placeholder passport template
+  drawPassport();
 });

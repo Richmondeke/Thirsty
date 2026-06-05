@@ -138,7 +138,21 @@ header nav .nav-btn:hover {
   text-align: center;
   z-index: 2;
   padding: 0 1.5rem;
-  background: radial-gradient(circle at center, rgba(15, 15, 15, 0.8) 0%, #000 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%),
+              url('images/Heroimage.png') no-repeat center center / cover;
+}
+
+.hero-scroll-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  opacity: 0; /* Updated dynamically by JavaScript on scroll */
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.1s ease-out;
 }
 
 .hero-overlay {
@@ -149,25 +163,33 @@ header nav .nav-btn:hover {
   height: 100%;
   background: linear-gradient(180deg, transparent 60%, var(--bg-color) 100%);
   pointer-events: none;
+  z-index: 2;
 }
 
 .hero-content {
   position: relative;
   z-index: 3;
-  max-width: 900px;
+  max-width: 750px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .hero-content h1 {
   font-family: 'Kyrilla', sans-serif;
   font-weight: 900;
   font-size: 8vw;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
   color: var(--text-color);
   text-transform: uppercase;
   opacity: 0;
   animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards, glowPulse 3s infinite alternate;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95), 0 0 30px rgba(255, 62, 62, 0.4), 0 0 10px rgba(0, 0, 0, 0.8);
 }
 
 .hero-subtitle {
@@ -177,7 +199,7 @@ header nav .nav-btn:hover {
   color: var(--accent-color);
   text-transform: uppercase;
   margin-bottom: 2rem;
-  text-shadow: 0 0 8px var(--accent-glow);
+  text-shadow: 0 0 12px var(--accent-glow), 0 2px 8px rgba(0, 0, 0, 0.95);
   opacity: 0;
   animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
 }
@@ -187,12 +209,13 @@ header nav .nav-btn:hover {
   justify-content: center;
   gap: 1.5rem;
   font-size: 1rem;
-  color: var(--text-dim);
-  font-weight: 500;
+  color: var(--text-color);
+  font-weight: 700;
   letter-spacing: 0.1em;
   margin-bottom: 3rem;
   opacity: 0;
   animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 .hero-details .divider {
@@ -203,7 +226,9 @@ header nav .nav-btn:hover {
   display: inline-block;
   padding: 1rem 2.5rem;
   border: 1px solid var(--text-color);
-  background: transparent;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: var(--text-color);
   text-decoration: none;
   font-weight: 700;
@@ -1341,6 +1366,17 @@ header .logout-btn {
 }
 
 /* --- Keyframes & Animations --- */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes slideDownHeader {
   from {
     transform: translateY(-100%);
@@ -1530,6 +1566,9 @@ header .logout-btn {
 }
 
 @media (max-width: 480px) {
+  .hero-content-card {
+    padding: 2.5rem 1.5rem;
+  }
   header {
     padding: 0.8rem 1.2rem;
   }
@@ -1824,5 +1863,187 @@ header .logout-btn {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Passport Section Styles --- */
+.passport-section {
+  padding: 8rem 4rem;
+  background: var(--bg-color);
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.passport-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.passport-controls-card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 3rem;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.control-header h3 {
+  font-family: 'Kyrilla', sans-serif;
+  font-weight: 950;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.control-header p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* Upload Dropzone */
+.upload-dropzone {
+  border: 2px dashed rgba(255, 62, 62, 0.35);
+  background: rgba(255, 62, 62, 0.01);
+  border-radius: 4px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  border-color: var(--accent-color);
+  background: rgba(255, 62, 62, 0.04);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.dropzone-text {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.browse-link {
+  color: var(--accent-color);
+  text-decoration: underline;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.file-info {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.passport-inputs {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.passport-inputs .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#download-passport-btn:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Passport Preview */
+.passport-preview-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 3/2; /* 600x400 */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 62, 62, 0.08);
+  border: 1px solid rgba(255, 62, 62, 0.2);
+}
+
+.passport-glow-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent-color);
+  box-shadow: inset 0 0 30px rgba(255, 62, 62, 0.15), 0 0 15px rgba(255, 62, 62, 0.15);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: 8px;
+}
+
+#passport-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #050505;
+  object-fit: cover;
+}
+
+.canvas-tip {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+}
+
+/* Responsive Passport Section */
+@media (max-width: 900px) {
+  .passport-section {
+    padding: 6rem 2rem;
+  }
+  .passport-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .passport-controls-card {
+    padding: 2rem 1.5rem;
+  }
+  .passport-inputs {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+}
+
 
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thirsty999 Club | The Concert</title>
   <meta name="description" content="Thirsty999 Club - An immersive concert experience at Nextthought Studios on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
+  <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -19,6 +20,7 @@
     <nav>
       <a href="#lineup">Lineup</a>
       <a href="#gallery">Gallery</a>
+      <a href="#passport">Passport</a>
       <a href="#venue">Venue</a>
       <a href="#tickets" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
       <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
@@ -29,6 +31,8 @@
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
+      <!-- Scroll dimming layer -->
+      <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1 class="glitch-text">THIRSTY999</h1>
@@ -253,6 +257,57 @@
         <div class="lightbox-counter"><span id="lightbox-current">1</span> / 10</div>
       </div>
     </dialog>
+
+    <!-- Passport Generator Section -->
+    <section class="passport-section" id="passport">
+      <div class="section-title-wrap reveal-on-scroll">
+        <h2 class="section-title">PASSPORT</h2>
+        <p class="section-subtitle-desc">GENERATE YOUR EXCLUSIVE ACCESS PASSPORT</p>
+      </div>
+
+      <div class="passport-container reveal-on-scroll">
+        <!-- Left: Upload & Customization Controls -->
+        <div class="passport-controls-card">
+          <div class="control-header">
+            <h3>PASSPORT CREATOR</h3>
+            <p>Upload a photo to generate your custom Thirsty Passport. If you are logged in, your details will be linked automatically.</p>
+          </div>
+
+          <!-- Image Upload Dropzone -->
+          <div class="upload-dropzone" id="passport-dropzone">
+            <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
+            <div class="dropzone-content">
+              <span class="upload-icon">📷</span>
+              <p class="dropzone-text">Drag & drop your picture or <span class="browse-link">browse</span></p>
+              <span class="file-info" id="passport-file-info">JPG, PNG or WEBP (Max 5MB)</span>
+            </div>
+          </div>
+
+          <!-- Customization Inputs -->
+          <div class="passport-inputs">
+            <div class="input-group">
+              <label for="passport-input-name">Passport Holder Name</label>
+              <input type="text" id="passport-input-name" placeholder="Enter username..." maxlength="20">
+            </div>
+            <div class="input-group">
+              <label for="passport-input-id">ThirstyID</label>
+              <input type="text" id="passport-input-id" placeholder="T999-XXXX" maxlength="12">
+            </div>
+          </div>
+
+          <button class="buy-button" id="download-passport-btn" disabled>DOWNLOAD PASSPORT</button>
+        </div>
+
+        <!-- Right: Preview Canvas -->
+        <div class="passport-preview-card">
+          <div class="canvas-wrapper">
+            <div class="passport-glow-border"></div>
+            <canvas id="passport-canvas" width="600" height="400"></canvas>
+          </div>
+          <p class="canvas-tip">Preview of your Thirsty999 Passport. Click Download to save.</p>
+        </div>
+      </div>
+    </section>
 
     <!-- Venue Section with Map Layout -->
     <section class="venue-section" id="venue">
