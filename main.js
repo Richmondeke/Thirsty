@@ -406,7 +406,100 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 9. Initialization
+  // 9. Past Editions Gallery Lightbox Interactivity
+  // ==========================================
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  const lightbox = document.getElementById('gallery-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCloseBtn = document.querySelector('.lightbox-close');
+  const lightboxPrevBtn = document.querySelector('.lightbox-nav.prev');
+  const lightboxNextBtn = document.querySelector('.lightbox-nav.next');
+  const lightboxCurrentSpan = document.getElementById('lightbox-current');
+
+  let currentGalleryIndex = 0;
+  const totalGalleryItems = galleryItems.length;
+
+  const updateLightboxImage = (index) => {
+    if (index < 0 || index >= totalGalleryItems) return;
+    currentGalleryIndex = index;
+    const targetItem = galleryItems[index];
+    const imgSrc = targetItem.getAttribute('data-src');
+    
+    if (lightboxImg) {
+      lightboxImg.src = imgSrc;
+    }
+    if (lightboxCurrentSpan) {
+      lightboxCurrentSpan.textContent = currentGalleryIndex + 1;
+    }
+  };
+
+  const openLightbox = (index) => {
+    if (lightbox) {
+      updateLightboxImage(index);
+      lightbox.showModal();
+    }
+  };
+
+  const closeLightbox = () => {
+    if (lightbox) {
+      lightbox.close();
+      if (lightboxImg) lightboxImg.src = ''; // Clear source to stop load
+    }
+  };
+
+  const showNextImage = () => {
+    let nextIndex = currentGalleryIndex + 1;
+    if (nextIndex >= totalGalleryItems) {
+      nextIndex = 0; // Loop back to start
+    }
+    updateLightboxImage(nextIndex);
+  };
+
+  const showPrevImage = () => {
+    let prevIndex = currentGalleryIndex - 1;
+    if (prevIndex < 0) {
+      prevIndex = totalGalleryItems - 1; // Loop to end
+    }
+    updateLightboxImage(prevIndex);
+  };
+
+  // Add click listeners to gallery items
+  galleryItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+      openLightbox(index);
+    });
+  });
+
+  // Controls listeners
+  if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+  if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', showPrevImage);
+  if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', showNextImage);
+
+  // Close lightbox on backdrop click
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      // If click target is the dialog itself (backdrop), close it
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // Keyboard navigation
+  window.addEventListener('keydown', (e) => {
+    if (lightbox && lightbox.open) {
+      if (e.key === 'ArrowRight') {
+        showNextImage();
+      } else if (e.key === 'ArrowLeft') {
+        showPrevImage();
+      } else if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    }
+  });
+
+  // ==========================================
+  // 10. Initialization
   // ==========================================
   updateUI();
 });

@@ -17,6 +17,7 @@
     <div class="logo">THIRSTY999</div>
     <nav>
       <a href="#lineup">Lineup</a>
+      <a href="#gallery">Gallery</a>
       <a href="#venue">Venue</a>
       <a href="#tickets" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
       <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
@@ -167,6 +168,90 @@
         <button class="lineup-toggle-btn" id="lineup-toggle-btn">View Full Lineup</button>
       </div>
     </section>
+
+    <!-- Gallery Section (Past Editions) -->
+    <section class="gallery-section" id="gallery">
+      <div class="section-title-wrap reveal-on-scroll">
+        <h2 class="section-title">PAST EDITIONS</h2>
+      </div>
+      <div class="gallery-container reveal-on-scroll">
+        <div class="gallery-grid">
+          <div class="gallery-item" data-index="0" data-src="images/THIRSTY_1.JPG">
+            <img src="images/THIRSTY_1.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="1" data-src="images/THIRSTY_31.JPG">
+            <img src="images/THIRSTY_31.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="2" data-src="images/THIRSTY_37.JPG">
+            <img src="images/THIRSTY_37.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="3" data-src="images/THIRSTY_63.JPG">
+            <img src="images/THIRSTY_63.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="4" data-src="images/THIRSTY_69.JPG">
+            <img src="images/THIRSTY_69.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="5" data-src="images/THIRSTY_75.JPG">
+            <img src="images/THIRSTY_75.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="6" data-src="images/THIRSTY_76.JPG">
+            <img src="images/THIRSTY_76.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="7" data-src="images/THIRSTY_77.JPG">
+            <img src="images/THIRSTY_77.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="8" data-src="images/THIRSTY_79.JPG">
+            <img src="images/THIRSTY_79.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+          <div class="gallery-item" data-index="9" data-src="images/THIRSTY_94.JPG">
+            <img src="images/THIRSTY_94.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
+            <div class="gallery-item-overlay">
+              <span class="gallery-zoom-icon">🔍</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Lightbox Modal -->
+    <dialog id="gallery-lightbox" class="lightbox-modal">
+      <div class="lightbox-content">
+        <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-nav prev" aria-label="Previous image">&lsaquo;</button>
+        <div class="lightbox-image-container">
+          <img id="lightbox-img" src="" alt="Zoomed past edition photo">
+        </div>
+        <button class="lightbox-nav next" aria-label="Next image">&rsaquo;</button>
+        <div class="lightbox-counter"><span id="lightbox-current">1</span> / 10</div>
+      </div>
+    </dialog>
 
     <!-- Venue Section with Map Layout -->
     <section class="venue-section" id="venue">
