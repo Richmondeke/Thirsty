@@ -638,12 +638,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const heroCtaBtn = document.getElementById('hero-cta-btn');
   const heroContent = document.querySelector('.hero-content');
-  if (heroCtaBtn && heroContent) {
+  const heroVideo = document.getElementById('hero-bg-video');
+  const heroSection = document.querySelector('.hero');
+  
+  if (heroCtaBtn && heroContent && heroVideo && heroSection) {
+    let pauseTimeout = null;
+    
     heroCtaBtn.addEventListener('mouseenter', () => {
+      if (pauseTimeout) {
+        clearTimeout(pauseTimeout);
+        pauseTimeout = null;
+      }
       heroContent.classList.add('cta-hovered');
+      heroSection.classList.add('video-active');
+      heroVideo.play().catch(err => {
+        console.log("Video play error:", err);
+      });
     });
+    
     heroCtaBtn.addEventListener('mouseleave', () => {
       heroContent.classList.remove('cta-hovered');
+      heroSection.classList.remove('video-active');
+      pauseTimeout = setTimeout(() => {
+        heroVideo.pause();
+        heroVideo.currentTime = 0;
+      }, 500);
     });
   }
 
@@ -969,10 +988,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(elementId);
     if (!el) return;
     
+    el.dataset.animating = 'true';
     const duration = 1500; // 1.5 seconds
     const startTime = performance.now();
     
     const updateCount = (currentTime) => {
+      if (el.dataset.animating !== 'true') return;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
@@ -986,6 +1007,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(updateCount);
       } else {
         el.textContent = targetVal;
+        delete el.dataset.animating;
       }
     };
     
@@ -999,4 +1021,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Trigger money counter animations on load
   animateCounter('hero-counter', 999);
   animateCounter('logo-counter', 999);
+
+  // Set up infinite money counter on hover
+  const setupInfiniteCounterHover = (triggerSelector, counterId) => {
+    const trigger = document.querySelector(triggerSelector);
+    const counter = document.getElementById(counterId);
+    if (!trigger || !counter) return;
+
+    let intervalId = null;
+
+    trigger.addEventListener('mouseenter', () => {
+      // Cancel onload animation if active
+      delete counter.dataset.animating;
+      
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        const randomVal = Math.floor(Math.random() * 1000);
+        counter.textContent = String(randomVal).padStart(3, '0');
+      }, 50); // Fast cycle every 50ms
+    });
+
+    trigger.addEventListener('mouseleave', () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      counter.textContent = '999';
+    });
+  };
+
+  setupInfiniteCounterHover('.logo', 'logo-counter');
+  setupInfiniteCounterHover('.glitch-text', 'hero-counter');
 });
