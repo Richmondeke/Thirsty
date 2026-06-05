@@ -35,7 +35,7 @@
     <nav>
       <a href="#lineup">Lineup</a>
       <a href="#gallery">Gallery</a>
-      <!-- <a href="#passport">Passport</a> -->
+      <a href="#passport">Passport</a>
       <a href="#venue">Venue</a>
       <!-- <a href="#tickets" id="nav-dash-link">Sign In</a> -->
       <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
@@ -280,7 +280,7 @@
       </div>
     </dialog>
 
-    <!-- Passport Generator Section (Hidden for now)
+    <!-- Passport Generator Section -->
     <section class="passport-section" id="passport">
       <div class="section-title-wrap reveal-on-scroll">
         <h2 class="section-title">PASSPORT</h2>
@@ -291,42 +291,64 @@
         <div class="passport-controls-card">
           <div class="control-header">
             <h3>PASSPORT CREATOR</h3>
-            <p>Upload a photo to generate your custom Thirsty Passport. If you are logged in, your details will be linked automatically.</p>
+            <p>Upload a photo and fill in your details to customize your Thirsty Passport. Export as high-quality PNG or JPG.</p>
           </div>
 
           <div class="upload-dropzone" id="passport-dropzone">
             <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
             <div class="dropzone-content">
               <span class="upload-icon">📷</span>
-              <p class="dropzone-text">Drag & drop your picture or <span class="browse-link">browse</span></p>
-              <span class="file-info" id="passport-file-info">JPG, PNG or WEBP (Max 5MB)</span>
+              <p class="dropzone-text">Drag & drop portrait picture or <span class="browse-link">browse</span></p>
+              <span class="file-info" id="passport-file-info">JPG or PNG (Max 5MB)</span>
             </div>
           </div>
 
           <div class="passport-inputs">
-            <div class="input-group">
-              <label for="passport-input-name">Passport Holder Name</label>
-              <input type="text" id="passport-input-name" placeholder="Enter username..." maxlength="20">
+            <div class="input-row split-2">
+              <div class="input-group">
+                <label for="passport-input-name">Full Name</label>
+                <input type="text" id="passport-input-name" value="ADELINE PALMERSTON" maxlength="30">
+              </div>
+              <div class="input-group">
+                <label for="passport-input-pob">Place of Thirst</label>
+                <input type="text" id="passport-input-pob" value="MANCHESTER" maxlength="20">
+              </div>
             </div>
-            <div class="input-group">
-              <label for="passport-input-id">ThirstyID</label>
-              <input type="text" id="passport-input-id" placeholder="T999-XXXX" maxlength="12">
+
+            <div class="input-row split-2">
+              <div class="input-group">
+                <label for="passport-input-gender">Gender</label>
+                <input type="text" id="passport-input-gender" value="F" maxlength="5">
+              </div>
+              <div class="input-group">
+                <label for="passport-input-sig">Signature Text</label>
+                <input type="text" id="passport-input-sig" value="A. Palmerston" maxlength="20">
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group full-width">
+                <label for="passport-export-format">Export Format</label>
+                <select id="passport-export-format">
+                  <option value="png">PNG (High Quality Lossless)</option>
+                  <option value="jpeg">JPG (Standard Web Format)</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <button class="buy-button" id="download-passport-btn" disabled>DOWNLOAD PASSPORT</button>
+          <button class="buy-button" id="download-passport-btn">DOWNLOAD PASSPORT</button>
         </div>
 
         <div class="passport-preview-card">
-          <div class="canvas-wrapper">
+          <div class="canvas-wrapper vertical-passport-wrapper">
             <div class="passport-glow-border"></div>
-            <canvas id="passport-canvas" width="600" height="400"></canvas>
+            <canvas id="passport-canvas" width="600" height="800"></canvas>
           </div>
-          <p class="canvas-tip">Preview of your ThirstyClub999 Passport. Click Download to save.</p>
+          <p class="canvas-tip">Real-time booklet preview. Click Download to export.</p>
         </div>
       </div>
     </section>
-    -->
 
     <!-- Venue Section with Map Layout -->
     <section class="venue-section" id="venue">

@@ -1577,6 +1577,10 @@ header .logout-btn {
   header {
     padding: 1rem 1.5rem;
   }
+  header .logo {
+    font-size: 1.45rem;
+    letter-spacing: 0.06em;
+  }
   header nav {
     gap: 1.2rem;
   }
@@ -1679,19 +1683,20 @@ header .logout-btn {
     padding: 2.5rem 1.5rem;
   }
   header {
-    padding: 0.8rem 1.2rem;
+    padding: 0.8rem 0.8rem;
   }
   header .logo {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
   }
   header nav {
-    gap: 0.7rem;
+    gap: 0.5rem;
   }
   header nav a {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
   }
   header nav .nav-btn {
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.7rem;
   }
   .hero-content h1 {
     font-size: clamp(2rem, 9.5vw, 3rem);
@@ -1762,6 +1767,8 @@ header .logout-btn {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  transition: grid-template-columns 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gallery-item {
@@ -1811,10 +1818,11 @@ header .logout-btn {
   border-color: var(--accent-color);
   box-shadow: 0 0 20px var(--accent-glow);
   transform: translateY(-2px);
+  z-index: 5;
 }
 
 .gallery-item:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .gallery-item:hover .gallery-item-overlay {
@@ -1823,6 +1831,43 @@ header .logout-btn {
 
 .gallery-item:hover .gallery-zoom-icon {
   transform: scale(1);
+}
+
+/* Desktop CSS Grid Hover Expansion */
+@media (min-width: 901px) {
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    aspect-ratio: 4/3;
+  }
+
+  .gallery-item {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Expand Columns */
+  .gallery-grid:has(.gallery-item:nth-child(3n+1):hover) {
+    grid-template-columns: 1.65fr 0.675fr 0.675fr;
+  }
+  .gallery-grid:has(.gallery-item:nth-child(3n+2):hover) {
+    grid-template-columns: 0.675fr 1.65fr 0.675fr;
+  }
+  .gallery-grid:has(.gallery-item:nth-child(3n):hover) {
+    grid-template-columns: 0.675fr 0.675fr 1.65fr;
+  }
+
+  /* Expand Rows */
+  .gallery-grid:has(.gallery-item:nth-child(-n+3):hover) {
+    grid-template-rows: 1.65fr 0.675fr 0.675fr;
+  }
+  .gallery-grid:has(.gallery-item:nth-child(n+4):nth-child(-n+6):hover) {
+    grid-template-rows: 0.675fr 1.65fr 0.675fr;
+  }
+  .gallery-grid:has(.gallery-item:nth-child(n+7):hover) {
+    grid-template-rows: 0.675fr 0.675fr 1.65fr;
+  }
 }
 
 /* Lightbox Modal */
@@ -2079,13 +2124,55 @@ header .logout-btn {
 
 .passport-inputs {
   display: flex;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 1.2rem;
   margin-bottom: 2rem;
 }
 
-.passport-inputs .input-group {
+.passport-inputs .input-row {
+  display: flex;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.passport-inputs .input-row.split-2 > .input-group {
   flex: 1;
-  margin-bottom: 0;
+}
+
+.passport-inputs .input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.passport-inputs label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.passport-inputs input,
+.passport-inputs select {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 0.75rem 0.9rem;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.passport-inputs input:focus,
+.passport-inputs select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: rgba(255, 62, 62, 0.02);
+  box-shadow: 0 0 10px rgba(255, 62, 62, 0.15);
 }
 
 #download-passport-btn:disabled {
@@ -2113,6 +2200,11 @@ header .logout-btn {
   overflow: hidden;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 62, 62, 0.08);
   border: 1px solid rgba(255, 62, 62, 0.2);
+}
+
+.canvas-wrapper.vertical-passport-wrapper {
+  aspect-ratio: 3/4; /* 600x800 */
+  max-width: 420px;
 }
 
 .passport-glow-border {
@@ -2151,13 +2243,19 @@ header .logout-btn {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+  .canvas-wrapper.vertical-passport-wrapper {
+    max-width: 400px;
+  }
 }
 
 @media (max-width: 480px) {
   .passport-controls-card {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
   }
-  .passport-inputs {
+  .upload-dropzone {
+    padding: 2rem 1rem;
+  }
+  .passport-inputs .input-row {
     flex-direction: column;
     gap: 1.2rem;
   }
