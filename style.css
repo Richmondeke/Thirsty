@@ -79,6 +79,8 @@ header {
   -webkit-backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  opacity: 0;
+  animation: slideDownHeader 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 header .logo {
@@ -164,7 +166,8 @@ header nav .nav-btn:hover {
   margin-bottom: 1rem;
   color: var(--text-color);
   text-transform: uppercase;
-  animation: glowPulse 3s infinite alternate;
+  opacity: 0;
+  animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards, glowPulse 3s infinite alternate;
 }
 
 .hero-subtitle {
@@ -175,6 +178,8 @@ header nav .nav-btn:hover {
   text-transform: uppercase;
   margin-bottom: 2rem;
   text-shadow: 0 0 8px var(--accent-glow);
+  opacity: 0;
+  animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
 }
 
 .hero-details {
@@ -186,6 +191,8 @@ header nav .nav-btn:hover {
   font-weight: 500;
   letter-spacing: 0.1em;
   margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
 }
 
 .hero-details .divider {
@@ -207,6 +214,8 @@ header nav .nav-btn:hover {
   position: relative;
   overflow: hidden;
   transition: var(--transition-smooth);
+  opacity: 0;
+  animation: fadeInUpHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
 }
 
 .cta-button::before {
@@ -248,6 +257,8 @@ header nav .nav-btn:hover {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   pointer-events: none;
+  opacity: 0;
+  animation: fadeInScroll 1.2s ease 1.2s forwards;
 }
 
 .scroll-indicator .mouse {
@@ -1330,6 +1341,37 @@ header .logout-btn {
 }
 
 /* --- Keyframes & Animations --- */
+@keyframes slideDownHeader {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUpHero {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInScroll {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
 @keyframes marqueeLoop {
   0% {
     transform: translate3d(0, 0, 0);
@@ -1376,6 +1418,12 @@ header .logout-btn {
 }
 
 /* --- Responsive Media Queries --- */
+@media (max-width: 1200px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 1024px) {
   .hero-content h1 {
     font-size: 10vw;
@@ -1478,6 +1526,64 @@ header .logout-btn {
     flex-direction: column;
     gap: 1.5rem;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.8rem 1.2rem;
+  }
+  header .logo {
+    font-size: 1.3rem;
+  }
+  header nav {
+    gap: 0.7rem;
+  }
+  header nav a {
+    font-size: 0.72rem;
+  }
+  header nav .nav-btn {
+    padding: 0.4rem 0.8rem;
+  }
+  .hero-content h1 {
+    font-size: 14vw;
+  }
+  .hero-subtitle {
+    font-size: 0.95rem;
+    letter-spacing: 0.2em;
+  }
+  .hero-details {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .hero-details .divider {
+    display: none;
+  }
+  .venue-title {
+    font-size: 2.2rem;
+  }
+  .sound-names {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 400px) {
+  header nav {
+    gap: 0.5rem;
+  }
+  header nav a {
+    font-size: 0.68rem;
+  }
+  .static-lineup-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 0.8rem;
+  }
+  .static-artist {
+    font-size: 1rem;
+    height: 70px;
+    padding: 0.3rem;
   }
 }
 
