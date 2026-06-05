@@ -1694,7 +1694,9 @@ header .logout-btn {
     padding: 0.4rem 0.8rem;
   }
   .hero-content h1 {
-    font-size: 14vw;
+    font-size: clamp(2rem, 9.5vw, 3rem);
+    word-break: keep-all;
+    overflow-wrap: normal;
   }
   .hero-subtitle {
     font-size: 0.95rem;
@@ -1713,7 +1715,14 @@ header .logout-btn {
     font-size: 2.2rem;
   }
   .sound-names {
-    font-size: 1.4rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 1.6rem;
+  }
+  .sound-names .amp {
+    font-size: 1.2rem;
+    margin: 0.1rem 0;
   }
 }
 

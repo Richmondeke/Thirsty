@@ -643,6 +643,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if (heroCtaBtn && heroContent && heroVideo && heroSection) {
     let pauseTimeout = null;
+    let isHovered = false;
+    
+    heroVideo.muted = true;
     
     heroVideo.addEventListener('timeupdate', () => {
       if (heroVideo.duration && !isNaN(heroVideo.duration)) {
@@ -651,19 +654,26 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    heroVideo.addEventListener('playing', () => {
+      if (isHovered) {
+        heroSection.classList.add('video-active');
+      }
+    });
+
     heroCtaBtn.addEventListener('mouseenter', () => {
+      isHovered = true;
       if (pauseTimeout) {
         clearTimeout(pauseTimeout);
         pauseTimeout = null;
       }
       heroContent.classList.add('cta-hovered');
-      heroSection.classList.add('video-active');
       heroVideo.play().catch(err => {
         console.log("Video play error:", err);
       });
     });
     
     heroCtaBtn.addEventListener('mouseleave', () => {
+      isHovered = false;
       heroContent.classList.remove('cta-hovered');
       heroSection.classList.remove('video-active');
       pauseTimeout = setTimeout(() => {
