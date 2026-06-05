@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 10. Hero Scroll Dimming Handler
+  // 10. Hero Scroll Dimming Handler & Hover Fade
   // ==========================================
   const heroScrollOverlay = document.getElementById('hero-scroll-overlay');
   window.addEventListener('scroll', () => {
@@ -635,6 +635,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const opacity = Math.min(scrollY / (windowHeight * 0.8), 0.85);
     heroScrollOverlay.style.opacity = opacity;
   });
+
+  const heroCtaBtn = document.getElementById('hero-cta-btn');
+  const heroContent = document.querySelector('.hero-content');
+  if (heroCtaBtn && heroContent) {
+    heroCtaBtn.addEventListener('mouseenter', () => {
+      heroContent.classList.add('cta-hovered');
+    });
+    heroCtaBtn.addEventListener('mouseleave', () => {
+      heroContent.classList.remove('cta-hovered');
+    });
+  }
 
   // ==========================================
   // 11. Thirsty Passport Generator Logic
