@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thirsty999 Club | The Concert</title>
+  <meta name="description" content="Thirsty999 Club - An immersive concert experience at Nextthought Studios on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Dynamic Cursor Glow Background -->
+  <div id="cursor-glow"></div>
+
+  <!-- Header Navigation -->
+  <header>
+    <div class="logo">THIRSTY999</div>
+    <nav>
+      <a href="#lineup">Lineup</a>
+      <a href="#venue">Venue</a>
+      <a href="#tickets" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
+      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="glitch-text">THIRSTY999</h1>
+        <p class="hero-subtitle">CLUB CONCERT EXPERIENCE</p>
+        <div class="hero-details">
+          <span>JUNE 14TH 2026</span>
+          <span class="divider">|</span>
+          <span>4PM &ndash; 12AM</span>
+        </div>
+        <a href="#tickets" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
+      </div>
+      <div class="scroll-indicator">
+        <div class="mouse">
+          <div class="wheel"></div>
+        </div>
+        <span>Scroll Down</span>
+      </div>
+    </section>
+
+    <!-- Scrolling Artist Lineup Section -->
+    <section class="lineup-section" id="lineup">
+      <div class="section-title-wrap">
+        <h2 class="section-title">THE LINEUP</h2>
+      </div>
+
+      <!-- Marquee 1 (Left Scrolling) -->
+      <div class="marquee-wrapper" id="marquee-wrapper">
+        <div class="marquee-container">
+          <div class="marquee marquee-left">
+            <div class="marquee-track">
+              <span>ZLATAN IBILE</span>
+              <span class="star">★</span>
+              <span>ODUMODUBLVCK</span>
+              <span class="star">★</span>
+              <span>JERIQDAHUSLA</span>
+              <span class="star">★</span>
+              <span>$TRAFFITTI</span>
+              <span class="star">★</span>
+              <span>D4J4H BOBO</span>
+              <span class="star">★</span>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="marquee-track" aria-hidden="true">
+              <span>ZLATAN IBILE</span>
+              <span class="star">★</span>
+              <span>ODUMODUBLVCK</span>
+              <span class="star">★</span>
+              <span>JERIQDAHUSLA</span>
+              <span class="star">★</span>
+              <span>$TRAFFITTI</span>
+              <span class="star">★</span>
+              <span>D4J4H BOBO</span>
+              <span class="star">★</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marquee 2 (Right Scrolling) -->
+        <div class="marquee-container">
+          <div class="marquee marquee-right">
+            <div class="marquee-track">
+              <span>WAVESTAR</span>
+              <span class="star">✦</span>
+              <span>ART$RAGHUL</span>
+              <span class="star">✦</span>
+              <span>$COTTYOLORIN</span>
+              <span class="star">✦</span>
+              <span>eGERTTON</span>
+              <span class="star">✦</span>
+              <span>R33NZO</span>
+              <span class="star">✦</span>
+              <span>DAVETHEORACLE</span>
+              <span class="star">✦</span>
+              <span>SUonO SAI</span>
+              <span class="star">✦</span>
+              <span>DAnpapa GTA</span>
+              <span class="star">✦</span>
+              <span>MONOCHROME</span>
+              <span class="star">✦</span>
+              <span>MAEVERSE</span>
+              <span class="star">✦</span>
+              <span>EROGTHI</span>
+              <span class="star">✦</span>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="marquee-track" aria-hidden="true">
+              <span>WAVESTAR</span>
+              <span class="star">✦</span>
+              <span>ART$RAGHUL</span>
+              <span class="star">✦</span>
+              <span>$COTTYOLORIN</span>
+              <span class="star">✦</span>
+              <span>eGERTTON</span>
+              <span class="star">✦</span>
+              <span>R33NZO</span>
+              <span class="star">✦</span>
+              <span>DAVETHEORACLE</span>
+              <span class="star">✦</span>
+              <span>SUonO SAI</span>
+              <span class="star">✦</span>
+              <span>DAnpapa GTA</span>
+              <span class="star">✦</span>
+              <span>MONOCHROME</span>
+              <span class="star">✦</span>
+              <span>MAEVERSE</span>
+              <span class="star">✦</span>
+              <span>EROGTHI</span>
+              <span class="star">✦</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Static Lineup Grid (Visible when toggled) -->
+      <div class="static-lineup-container" id="static-lineup-container" style="display: none;">
+        <div class="static-lineup-grid">
+          <div class="static-artist">ZLATAN IBILE</div>
+          <div class="static-artist">ODUMODUBLVCK</div>
+          <div class="static-artist">JERIQDAHUSLA</div>
+          <div class="static-artist">$TRAFFITTI</div>
+          <div class="static-artist">D4J4H BOBO</div>
+          <div class="static-artist">WAVESTAR</div>
+          <div class="static-artist">ART$RAGHUL</div>
+          <div class="static-artist">$COTTYOLORIN</div>
+          <div class="static-artist">eGERTTON</div>
+          <div class="static-artist">R33NZO</div>
+          <div class="static-artist">DAVETHEORACLE</div>
+          <div class="static-artist">SUonO SAI</div>
+          <div class="static-artist">DAnpapa GTA</div>
+          <div class="static-artist">MONOCHROME</div>
+          <div class="static-artist">MAEVERSE</div>
+          <div class="static-artist">EROGTHI</div>
+        </div>
+      </div>
+
+      <!-- Toggle View Button -->
+      <div class="toggle-btn-wrap">
+        <button class="lineup-toggle-btn" id="lineup-toggle-btn">View Full Lineup</button>
+      </div>
+    </section>
+
+    <!-- Venue Section with Map Layout -->
+    <section class="venue-section" id="venue">
+      <div class="venue-container reveal-on-scroll">
+        <!-- Address & Sound Details -->
+        <div class="venue-card">
+          <div class="venue-header">
+            <h3>VENUE</h3>
+            <h2 class="venue-title">NEXTTHOUGHT STUDIOS</h2>
+            <p class="venue-address">Ikate, Elegushi, Lekki, Lagos, Nigeria</p>
+          </div>
+          <div class="sound-policy">
+            <div class="label">SOUND SYSTEM POLICY:</div>
+            <div class="sound-names">
+              <span>SOUNDPOLICY BY CRAYVELLI</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Dark Vector Map Mockup -->
+        <div class="map-card">
+          <div class="radar-grid">
+            <div class="radar-sweep"></div>
+            <!-- Coordinate grids -->
+            <div class="grid-line horizontal"></div>
+            <div class="grid-line vertical"></div>
+            <div class="radar-circle circle-1"></div>
+            <div class="radar-circle circle-2"></div>
+            <div class="radar-circle circle-3"></div>
+            <!-- Location Pin -->
+            <div class="map-marker">
+              <div class="marker-pulse"></div>
+              <div class="marker-dot"></div>
+              <div class="marker-label">NEXTTHOUGHT STUDIOS</div>
+            </div>
+            <!-- Map Details Overlay -->
+            <div class="map-hud">
+              <div class="hud-item"><span class="hud-label">LAT:</span> 6.4311&deg; N</div>
+              <div class="hud-item"><span class="hud-label">LNG:</span> 3.4758&deg; E</div>
+            </div>
+          </div>
+          <a href="https://maps.google.com/?q=Nexthought+Studios+Ikate+Elegushi+Lagos" target="_blank" class="map-link-btn">
+            OPEN IN GOOGLE MAPS
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Ticket/RSVP & Dashboard Section -->
+    <section class="tickets-section" id="tickets">
+      <!-- 1. Logged-Out Promo State -->
+      <div class="ticket-card reveal-on-scroll" id="rsvp-promo-card">
+        <div class="card-glow"></div>
+        <div class="ticket-card-content">
+          <div class="ticket-header">
+            <h4>R.S.V.P FOR ACCESS</h4>
+            <span class="badge">FREE ENTRY</span>
+          </div>
+          <div class="ticket-body">
+            <p>Access is highly restricted and subject to capacity rules. Register below to generate your unique Thirsty999ID and secure your guestlist spot.</p>
+            <p class="rsvp-link-display">Register online below or visit <a href="https://www.thirstyclub999.com" target="_blank" class="accent-link">www.thirstyclub999.com</a></p>
+          </div>
+          <button class="buy-button" id="open-auth-btn">RSVP NOW</button>
+        </div>
+      </div>
+
+      <!-- 2. Logged-In Dashboard State (Hidden by default) -->
+      <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
+        <div class="dashboard-header">
+          <div class="dash-logo-title">
+            <span class="dash-logo">THIRSTY999</span>
+            <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
+          </div>
+          <button class="logout-btn" id="dash-logout-btn">Logout</button>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="dash-tabs">
+          <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
+          <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
+          <button class="tab-btn" data-tab="profile-tab">Profile</button>
+        </div>
+
+        <!-- Tab 1: Tickets -->
+        <div class="tab-content active" id="tickets-tab">
+          <div class="vip-ticket">
+            <div class="ticket-stub-left">
+              <div class="ticket-logo">T999</div>
+              <div class="ticket-meta">
+                <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
+                <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
+                <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
+                <div class="meta-row"><span class="meta-label">VENUE:</span> NEXTTHOUGHT STUDIOS</div>
+              </div>
+            </div>
+            <div class="ticket-stub-right">
+              <!-- Mock QR Code SVG -->
+              <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="transparent"/>
+                <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
+                <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
+                <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
+              </svg>
+              <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Leaderboard -->
+        <div class="tab-content" id="leaderboard-tab">
+          <div class="leaderboard-container">
+            <h4 class="tab-title">CLUB LEADERBOARD</h4>
+            <ul class="leaderboard-list">
+              <li class="leaderboard-item top-rank">
+                <span class="rank">#1</span>
+                <span class="name">Cruel Santino</span>
+                <span class="points">9,990 PTS</span>
+              </li>
+              <li class="leaderboard-item top-rank">
+                <span class="rank">#2</span>
+                <span class="name">Odumodublvck</span>
+                <span class="points">8,500 PTS</span>
+              </li>
+              <li class="leaderboard-item" id="user-leaderboard-row">
+                <span class="rank" id="user-rank">#3</span>
+                <span class="name" id="user-leaderboard-name">You</span>
+                <span class="points">1,200 PTS</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="rank">#4</span>
+                <span class="name">Lady Donli</span>
+                <span class="points">950 PTS</span>
+              </li>
+              <li class="leaderboard-item">
+                <span class="rank">#5</span>
+                <span class="name">Jeriqdahusla</span>
+                <span class="points">800 PTS</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 3: Profile -->
+        <div class="tab-content" id="profile-tab">
+          <div class="profile-container">
+            <h4 class="tab-title">EDIT PROFILE</h4>
+            <form id="profile-form">
+              <!-- Avatar Upload -->
+              <div class="avatar-upload-group">
+                <div class="avatar-preview-wrapper">
+                  <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
+                </div>
+                <div class="avatar-input-wrapper">
+                  <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
+                  <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                  <span class="input-tip">Max size 2MB</span>
+                </div>
+              </div>
+
+              <!-- Username Edit -->
+              <div class="input-group">
+                <label for="profile-username">Username</label>
+                <input type="text" id="profile-username" placeholder="Username" required>
+              </div>
+
+              <!-- Social IDs -->
+              <div class="input-group">
+                <label for="profile-instagram">Instagram ID</label>
+                <input type="text" id="profile-instagram" placeholder="@instagram">
+              </div>
+              <div class="input-group">
+                <label for="profile-twitter">Twitter ID</label>
+                <input type="text" id="profile-twitter" placeholder="@twitter">
+              </div>
+              <div class="input-group">
+                <label for="profile-discord">Discord Username</label>
+                <input type="text" id="profile-discord" placeholder="username#1234">
+              </div>
+
+              <button type="submit" class="submit-ticket-btn">Save Profile</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2026 THIRSTY999 CLUB. ALL RIGHTS RESERVED.</p>
+      <div class="socials">
+        <a href="#">INSTAGRAM</a>
+        <a href="#">TWITTER</a>
+        <a href="#">DISCORD</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Dialog Modal (Login / Signup) -->
+  <dialog id="ticket-modal">
+    <div class="modal-content">
+      <button class="close-modal" aria-label="Close modal">&times;</button>
+      
+      <!-- Tab Headers for Dialog -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="auth-login-tab-btn">LOGIN</button>
+        <button class="auth-tab-btn" id="auth-signup-tab-btn">SIGN UP</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <p class="modal-desc">Login with your Thirsty999ID or Email.</p>
+        <div class="input-group">
+          <label for="login-id">Thirsty999ID or Email</label>
+          <input type="text" id="login-id" placeholder="T999-XXXX or email..." required>
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="enter password..." required>
+        </div>
+        <div class="auth-toggle-link">
+          Don't have an ID? <span id="switch-to-signup">Sign up here</span>
+        </div>
+        <button type="submit" class="submit-ticket-btn">Login</button>
+      </form>
+
+      <!-- Signup Form (Hidden by default) -->
+      <form id="signup-form" style="display: none;">
+        <p class="modal-desc">Create your profile to get a Thirsty999ID and RSVP.</p>
+        <div class="input-group">
+          <label for="signup-username">Username</label>
+          <input type="text" id="signup-username" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" placeholder="email..." required>
+        </div>
+        <div class="input-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="enter password..." required>
+        </div>
+        <div class="auth-toggle-link">
+          Already have an ID? <span id="switch-to-login">Login here</span>
+        </div>
+        <button type="submit" class="submit-ticket-btn">Get Thirsty999ID & RSVP</button>
+      </form>
+    </div>
+  </dialog>
+
+  <script src="main.js"></script>
+</body>
+</html>
