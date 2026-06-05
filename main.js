@@ -32,14 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 3. User Session State Manager
+  // 3. Supabase Client Integration & Session Manager
   // ==========================================
-  // Helper to fetch data from LocalStorage
-  const getUsers = () => JSON.parse(localStorage.getItem('t999_users')) || [];
-  const saveUsers = (users) => localStorage.setItem('t999_users', JSON.stringify(users));
-  const getSession = () => JSON.parse(localStorage.getItem('t999_session')) || null;
-  const saveSession = (session) => localStorage.setItem('t999_session', JSON.stringify(session));
-  const clearSession = () => localStorage.removeItem('t999_session');
+  const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Global Session State
+  let currentSession = null;
+  let currentUserProfile = null;
+  let currentUserTicket = null;
 
   // DOM elements to toggle based on auth
   const rsvpPromoCard = document.getElementById('rsvp-promo-card');
@@ -62,9 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const defaultAvatar = "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>";
 
   const updateUI = () => {
-    const user = getSession();
+    const session = currentSession;
+    const profile = currentUserProfile;
     
-    if (user) {
+    if (session && profile) {
       // User is Logged In
       if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'block';
@@ -76,19 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Update Dashboard contents
-      if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${user.username}`;
-      if (ticketUserId) ticketUserId.textContent = user.thirstyclub_id;
-      if (ticketUserName) ticketUserName.textContent = user.username;
-      if (ticketBarcodeId) ticketBarcodeId.textContent = user.thirstyclub_id;
-      if (userLeaderboardName) userLeaderboardName.textContent = user.username;
+      if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
+      if (ticketUserId) ticketUserId.textContent = profile.thirstyclub_id || 'T999-XXXX';
+      if (ticketUserName) ticketUserName.textContent = profile.username;
+      if (ticketBarcodeId) ticketBarcodeId.textContent = profile.thirstyclub_id || 'T999-XXXX';
+      if (userLeaderboardName) userLeaderboardName.textContent = profile.username;
 
       // Update Profile Inputs
-      if (profileUsername) profileUsername.value = user.username;
-      if (profileInstagram) profileInstagram.value = user.socials?.instagram || '';
-      if (profileTwitter) profileTwitter.value = user.socials?.twitter || '';
-      if (profileDiscord) profileDiscord.value = user.socials?.discord || '';
+      if (profileUsername) profileUsername.value = profile.username;
+      if (profileInstagram) profileInstagram.value = profile.socials?.instagram || '';
+      if (profileTwitter) profileTwitter.value = profile.socials?.twitter || '';
+      if (profileDiscord) profileDiscord.value = profile.socials?.discord || '';
       if (profileAvatarPreview) {
-        profileAvatarPreview.src = user.profilePic || defaultAvatar;
+        profileAvatarPreview.src = profile.avatar_url || defaultAvatar;
       }
     } else {
       // User is Logged Out
@@ -103,6 +106,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const syncSessionAndProfile = async (session) => {
+    currentSession = session;
+    if (session) {
+      try {
+        // Fetch profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+        } else {
+          currentUserProfile = profile;
+        }
+
+        // Fetch ticket
+        const { data: tickets, error: ticketError } = await supabase
+          .from('tickets')
+          .select('*')
+          .eq('user_id', session.user.id);
+
+        if (ticketError) {
+          console.error("Error fetching tickets:", ticketError);
+        } else if (tickets && tickets.length > 0) {
+          currentUserTicket = tickets[0];
+        }
+      } catch (err) {
+        console.error("Error syncing profile:", err);
+      }
+    } else {
+      currentUserProfile = null;
+      currentUserTicket = null;
+    }
+    updateUI();
+  };
+
+  // Listen to auth changes
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    await syncSessionAndProfile(session);
+  });
+
   // ==========================================
   // 4. RSVP Dialog & Auth Modal Management
   // ==========================================
@@ -113,8 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModalBtn = document.querySelector('.close-modal');
 
   const openAuthModal = () => {
-    const session = getSession();
-    if (session) {
+    if (currentSession) {
       // If logged in, navigate straight to tickets/dashboard section
       document.getElementById('tickets').scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
@@ -124,15 +169,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (openAuthBtn) openAuthBtn.addEventListener('click', openAuthModal);
   if (navRsvpBtnClick) navRsvpBtnClick.addEventListener('click', (e) => {
-    const session = getSession();
-    if (!session) {
+    if (!currentSession) {
       e.preventDefault();
       openAuthModal();
     }
   });
   if (heroCtaBtn) heroCtaBtn.addEventListener('click', (e) => {
-    const session = getSession();
-    if (!session) {
+    if (!currentSession) {
       e.preventDefault();
       openAuthModal();
     }
@@ -185,102 +228,137 @@ document.addEventListener('DOMContentLoaded', () => {
   if (switchToLogin) switchToLogin.addEventListener('click', showLoginForm);
 
   // ==========================================
-  // 5. Auth Handlers (Signup / Login)
+  // 5. Supabase Auth Handlers (Signup / Login)
   // ==========================================
   
-  // Helper to generate a unique 4-digit Thirsty999ID
-  const generateThirstyID = () => {
-    const users = getUsers();
-    let uniqueId = '';
-    let isUnique = false;
-    
-    while (!isUnique) {
-      const randNum = Math.floor(1000 + Math.random() * 9000);
-      uniqueId = `T999-${randNum}`;
-      isUnique = !users.some(u => u.thirstyclub_id === uniqueId);
-    }
-    return uniqueId;
-  };
-
   // Sign Up Submit
   if (signupForm) {
-    signupForm.addEventListener('submit', (e) => {
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      const submitBtn = signupForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Processing...";
+      }
       
       const username = document.getElementById('signup-username').value.trim();
       const email = document.getElementById('signup-email').value.trim().toLowerCase();
       const password = document.getElementById('signup-password').value;
 
-      const users = getUsers();
+      try {
+        // Validate username locally first
+        const { data: existingProfiles, error: profileCheckError } = await supabase
+          .from('profiles')
+          .select('id')
+          .ilike('username', username);
 
-      // Validate email format and check existing accounts
-      if (users.some(u => u.email === email)) {
-        alert("An account with this email address already exists.");
-        return;
+        if (profileCheckError) {
+          throw new Error("Could not check username availability.");
+        }
+
+        if (existingProfiles && existingProfiles.length > 0) {
+          alert("This username is already taken.");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Get Thirsty999ID & RSVP";
+          }
+          return;
+        }
+
+        // Sign Up with Supabase Auth
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username: username
+            }
+          }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (data.session) {
+          alert("Registration Successful!\n\nYour account is active, and your Thirsty999ID has been generated.");
+          modal.close();
+          signupForm.reset();
+        } else {
+          alert("Registration Successful!\n\nPlease check your email inbox to verify your account. Once verified, your unique Thirsty999ID will be generated and you can log in.");
+          modal.close();
+          signupForm.reset();
+        }
+      } catch (err) {
+        alert("Sign Up Error: " + err.message);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Get Thirsty999ID & RSVP";
+        }
       }
-
-      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-        alert("This username is already taken.");
-        return;
-      }
-
-      // Generate ID & Create User
-      const thirstyclub_id = generateThirstyID();
-      const newUser = {
-        username,
-        email,
-        password,
-        thirstyclub_id,
-        profilePic: '',
-        socials: { instagram: '', twitter: '', discord: '' }
-      };
-
-      users.push(newUser);
-      saveUsers(users);
-      saveSession(newUser);
-
-      alert(`Registration Successful!\n\nYour unique ID is: ${thirstyclub_id}\n\nPlease save this ID. You can use it to login along with your password.`);
-      
-      modal.close();
-      signupForm.reset();
-      updateUI();
-      document.getElementById('tickets').scrollIntoView({ behavior: 'smooth' });
     });
   }
 
   // Login Submit
   if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const loginId = document.getElementById('login-id').value.trim().toLowerCase();
-      const password = document.getElementById('login-password').value;
-
-      const users = getUsers();
-      
-      // Match ID or Email
-      const matchedUser = users.find(u => 
-        (u.thirstyclub_id.toLowerCase() === loginId || u.email === loginId) && 
-        u.password === password
-      );
-
-      if (!matchedUser) {
-        alert("Invalid Thirsty999ID/Email or Password.");
-        return;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Logging in...";
       }
 
-      saveSession(matchedUser);
-      modal.close();
-      loginForm.reset();
-      updateUI();
-      document.getElementById('tickets').scrollIntoView({ behavior: 'smooth' });
+      const loginId = document.getElementById('login-id').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        let email = loginId.toLowerCase();
+
+        // Check if input is a ThirstyID (T999-XXXX)
+        if (loginId.toUpperCase().startsWith("T999-")) {
+          // Resolve ThirstyID to Email
+          const { data: profile, error: profileErr } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('thirstyclub_id', loginId.toUpperCase())
+            .single();
+
+          if (profileErr || !profile || !profile.email) {
+            throw new Error("Invalid Thirsty999ID. Make sure it is spelled correctly.");
+          }
+          email = profile.email;
+        }
+
+        // Authenticate via Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        modal.close();
+        loginForm.reset();
+      } catch (err) {
+        alert("Login Error: " + err.message);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Login";
+        }
+      }
     });
   }
 
   // Logout actions
-  const handleLogout = () => {
-    clearSession();
-    updateUI();
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     window.location.hash = ''; // Clear hash navigation
   };
 
@@ -335,11 +413,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Handle Profile Form Submit
   if (profileForm) {
-    profileForm.addEventListener('submit', (e) => {
+    profileForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const user = getSession();
-      if (!user) return;
+      if (!currentSession) return;
+
+      const submitBtn = profileForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Saving...";
+      }
 
       const newUsername = document.getElementById('profile-username').value.trim();
       const instagram = document.getElementById('profile-instagram').value.trim();
@@ -347,37 +430,60 @@ document.addEventListener('DOMContentLoaded', () => {
       const discord = document.getElementById('profile-discord').value.trim();
       const profilePic = profileAvatarPreview.src;
 
-      const users = getUsers();
+      try {
+        // Check if username is taken by anyone else
+        const { data: existingProfiles, error: profileCheckError } = await supabase
+          .from('profiles')
+          .select('id')
+          .neq('id', currentSession.user.id)
+          .ilike('username', newUsername);
 
-      // Check if username is taken by anyone else
-      const usernameTaken = users.some(u => 
-        u.thirstyclub_id !== user.thirstyclub_id && 
-        u.username.toLowerCase() === newUsername.toLowerCase()
-      );
+        if (profileCheckError) {
+          throw new Error("Could not check username availability.");
+        }
 
-      if (usernameTaken) {
-        alert("This username is already taken by another user.");
-        return;
+        if (existingProfiles && existingProfiles.length > 0) {
+          alert("This username is already taken by another user.");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Save Profile";
+          }
+          return;
+        }
+
+        // Update profile in Supabase
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            username: newUsername,
+            avatar_url: profilePic,
+            socials: { instagram, twitter, discord }
+          })
+          .eq('id', currentSession.user.id);
+
+        if (updateError) {
+          throw updateError;
+        }
+
+        alert("Profile updated successfully!");
+        
+        // Refresh local profile state
+        const { data: refreshedProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', currentSession.user.id)
+          .single();
+        
+        currentUserProfile = refreshedProfile;
+        updateUI();
+      } catch (err) {
+        alert("Profile Update Error: " + err.message);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Save Profile";
+        }
       }
-
-      // Update user details in storage
-      const userIndex = users.findIndex(u => u.thirstyclub_id === user.thirstyclub_id);
-      
-      const updatedUser = {
-        ...user,
-        username: newUsername,
-        profilePic: profilePic,
-        socials: { instagram, twitter, discord }
-      };
-
-      if (userIndex !== -1) {
-        users[userIndex] = updatedUser;
-        saveUsers(users);
-      }
-      
-      saveSession(updatedUser);
-      alert("Profile updated successfully!");
-      updateUI();
     });
   }
 
