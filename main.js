@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rsvpPromoCard = document.getElementById('rsvp-promo-card');
   const userDashboardCard = document.getElementById('user-dashboard-card');
   const navRsvpBtn = document.getElementById('nav-rsvp-btn');
+  const navDashLink = document.getElementById('nav-dash-link');
   const headerLogoutBtn = document.getElementById('header-logout-btn');
 
   // Dashboard specific fields
@@ -73,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (userDashboardCard) userDashboardCard.style.display = 'block';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
       
-      if (navRsvpBtn) {
-        navRsvpBtn.textContent = 'Dashboard';
-        navRsvpBtn.href = '#tickets';
+      if (navDashLink) {
+        navDashLink.textContent = 'Dashboard';
+        navDashLink.href = '#tickets';
       }
 
       // Update Dashboard contents
@@ -110,9 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
       
-      if (navRsvpBtn) {
-        navRsvpBtn.textContent = 'RSVP';
-        navRsvpBtn.href = '#tickets';
+      if (navDashLink) {
+        navDashLink.textContent = 'Sign In';
+        navDashLink.href = '#tickets';
       }
 
       // Default or clear Passport Generator Inputs
@@ -176,32 +177,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const modal = document.getElementById('ticket-modal');
   const openAuthBtn = document.getElementById('open-auth-btn');
-  const navRsvpBtnClick = document.getElementById('nav-rsvp-btn');
-  const heroCtaBtn = document.getElementById('hero-cta-btn');
+  const navDashLinkClick = document.getElementById('nav-dash-link');
   const closeModalBtn = document.querySelector('.close-modal');
 
   const openAuthModal = () => {
     if (currentSession) {
       // If logged in, navigate straight to tickets/dashboard section
-      document.getElementById('tickets').scrollIntoView({ behavior: 'smooth' });
+      const ticketsSection = document.getElementById('tickets');
+      if (ticketsSection) ticketsSection.scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
       modal.showModal();
     }
   };
 
   if (openAuthBtn) openAuthBtn.addEventListener('click', openAuthModal);
-  if (navRsvpBtnClick) navRsvpBtnClick.addEventListener('click', (e) => {
-    if (!currentSession) {
-      e.preventDefault();
-      openAuthModal();
-    }
-  });
-  if (heroCtaBtn) heroCtaBtn.addEventListener('click', (e) => {
-    if (!currentSession) {
-      e.preventDefault();
-      openAuthModal();
-    }
-  });
+  if (navDashLinkClick) {
+    navDashLinkClick.addEventListener('click', (e) => {
+      if (!currentSession) {
+        e.preventDefault();
+        openAuthModal();
+      }
+    });
+  }
 
   if (closeModalBtn && modal) {
     closeModalBtn.addEventListener('click', () => modal.close());
@@ -283,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
           alert("This username is already taken.");
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = "Get Thirsty999ID & RSVP";
+            submitBtn.textContent = "Get ThirstyID & Passport";
           }
           return;
         }
@@ -304,11 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (data.session) {
-          alert("Registration Successful!\n\nYour account is active, and your Thirsty999ID has been generated.");
+          alert("Registration Successful!\n\nYour account is active, and your ThirstyID has been generated.");
           modal.close();
           signupForm.reset();
         } else {
-          alert("Registration Successful!\n\nPlease check your email inbox to verify your account. Once verified, your unique Thirsty999ID will be generated and you can log in.");
+          alert("Registration Successful!\n\nPlease check your email inbox to verify your account. Once verified, your unique ThirstyID will be generated and you can log in.");
           modal.close();
           signupForm.reset();
         }
@@ -317,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.textContent = "Get Thirsty999ID & RSVP";
+          submitBtn.textContent = "Get ThirstyID & Passport";
         }
       }
     });
@@ -350,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .single();
 
           if (profileErr || !profile || !profile.email) {
-            throw new Error("Invalid Thirsty999ID. Make sure it is spelled correctly.");
+            throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
           }
           email = profile.email;
         }
@@ -779,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Draw Info on Right
     ctx.fillStyle = '#ffffff';
     ctx.font = '900 20px Kyrilla, Inter, sans-serif';
-    ctx.fillText("THIRSTY999 ACCESS PASS", 290, 95);
+    ctx.fillText("THIRSTYCLUB999 ACCESS PASS", 290, 95);
 
     ctx.fillStyle = '#ff3e3e';
     ctx.font = 'bold 10px monospace';
@@ -948,16 +945,47 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!canvas || !uploadedImage) return;
 
       const link = document.createElement('a');
-      link.download = `thirsty999-passport-${(passportInputName?.value || 'guest').toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.download = `thirstyclub999-passport-${(passportInputName?.value || 'guest').toLowerCase().replace(/\s+/g, '-')}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
   }
 
   // ==========================================
-  // 12. Initialization
+  // 12. Initialization & Counter Animation
   // ==========================================
+  const animateCounter = (elementId, targetVal) => {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    
+    const duration = 1500; // 1.5 seconds
+    const startTime = performance.now();
+    
+    const updateCount = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing outQuad
+      const easeProgress = progress * (2 - progress);
+      const currentVal = Math.floor(easeProgress * targetVal);
+      
+      el.textContent = String(currentVal).padStart(3, '0');
+      
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      } else {
+        el.textContent = targetVal;
+      }
+    };
+    
+    requestAnimationFrame(updateCount);
+  };
+
   updateUI();
   // Draw placeholder passport template
   drawPassport();
+  
+  // Trigger money counter animations on load
+  animateCounter('hero-counter', 999);
+  animateCounter('logo-counter', 999);
 });

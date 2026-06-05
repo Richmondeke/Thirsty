@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thirsty999 Club | The Concert</title>
-  <meta name="description" content="Thirsty999 Club - An immersive concert experience at Nextthought Studios on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
+  <title>ThirstyClub999 | The Concert</title>
+  <meta name="description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -16,13 +16,14 @@
 
   <!-- Header Navigation -->
   <header>
-    <div class="logo">THIRSTY999</div>
+    <div class="logo">THIRSTYCLUB<span id="logo-counter">999</span></div>
     <nav>
       <a href="#lineup">Lineup</a>
       <a href="#gallery">Gallery</a>
       <a href="#passport">Passport</a>
       <a href="#venue">Venue</a>
-      <a href="#tickets" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
+      <a href="#tickets" id="nav-dash-link">Sign In</a>
+      <a href="https://tix.africa" target="_blank" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
       <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
     </nav>
   </header>
@@ -35,14 +36,14 @@
       <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <h1 class="glitch-text">THIRSTY999</h1>
+        <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
         <p class="hero-subtitle">CONCERT EXPERIENCE</p>
         <div class="hero-details">
           <span>JUNE 14TH 2026</span>
           <span class="divider">|</span>
           <span>4PM &ndash; 12AM</span>
         </div>
-        <a href="#tickets" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
+        <a href="https://tix.africa" target="_blank" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
       </div>
       <div class="scroll-indicator">
         <div class="mouse">
@@ -304,7 +305,7 @@
             <div class="passport-glow-border"></div>
             <canvas id="passport-canvas" width="600" height="400"></canvas>
           </div>
-          <p class="canvas-tip">Preview of your Thirsty999 Passport. Click Download to save.</p>
+          <p class="canvas-tip">Preview of your ThirstyClub999 Passport. Click Download to save.</p>
         </div>
       </div>
     </section>
@@ -316,8 +317,8 @@
         <div class="venue-card">
           <div class="venue-header">
             <h3>VENUE</h3>
-            <h2 class="venue-title">NEXTTHOUGHT STUDIOS</h2>
-            <p class="venue-address">Ikate, Elegushi, Lekki, Lagos, Nigeria</p>
+            <h2 class="venue-title">TBD</h2>
+            <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
           </div>
           <div class="sound-policy">
             <div class="label">SOUND SYSTEM POLICY:</div>
@@ -341,7 +342,7 @@
             <div class="map-marker">
               <div class="marker-pulse"></div>
               <div class="marker-dot"></div>
-              <div class="marker-label">NEXTTHOUGHT STUDIOS</div>
+              <div class="marker-label">TBD (LEKKI, LAGOS)</div>
             </div>
             <!-- Map Details Overlay -->
             <div class="map-hud">
@@ -349,8 +350,8 @@
               <div class="hud-item"><span class="hud-label">LNG:</span> 3.4758&deg; E</div>
             </div>
           </div>
-          <a href="https://maps.google.com/?q=Nexthought+Studios+Ikate+Elegushi+Lagos" target="_blank" class="map-link-btn">
-            OPEN IN GOOGLE MAPS
+          <a href="#" class="map-link-btn" onclick="event.preventDefault(); alert('Location will be announced soon to guestlist holders.');">
+            LOCATION ANNOUNCED SOON
           </a>
         </div>
       </div>
@@ -363,14 +364,17 @@
         <div class="card-glow"></div>
         <div class="ticket-card-content">
           <div class="ticket-header">
-            <h4>R.S.V.P FOR ACCESS</h4>
+            <h4>GET TICKETS & ACCESS</h4>
             <span class="badge">FREE ENTRY</span>
           </div>
           <div class="ticket-body">
-            <p>Access is highly restricted and subject to capacity rules. Register below to generate your unique Thirsty999ID and secure your guestlist spot.</p>
-            <p class="rsvp-link-display">Register online below or visit <a href="https://www.thirstyclub999.com" target="_blank" class="accent-link">www.thirstyclub999.com</a></p>
+            <p>To secure your guestlist spot, register on Tix Africa. After registering, create your ThirstyID and custom holographic passport below to link your profile.</p>
+            <p class="rsvp-link-display">Book online or visit <a href="https://tix.africa" target="_blank" class="accent-link">tix.africa</a></p>
           </div>
-          <button class="buy-button" id="open-auth-btn">RSVP NOW</button>
+          <div class="ticket-buttons-group">
+            <a href="https://tix.africa" target="_blank" class="buy-button tix-btn">BOOK ON TIX AFRICA</a>
+            <button class="buy-button secondary-btn" id="open-auth-btn">CREATE THIRSTY PASSPORT</button>
+          </div>
         </div>
       </div>
 
@@ -378,7 +382,7 @@
       <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
         <div class="dashboard-header">
           <div class="dash-logo-title">
-            <span class="dash-logo">THIRSTY999</span>
+            <span class="dash-logo">THIRSTYCLUB999</span>
             <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
           </div>
           <button class="logout-btn" id="dash-logout-btn">Logout</button>
@@ -400,7 +404,7 @@
                 <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
                 <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
                 <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                <div class="meta-row"><span class="meta-label">VENUE:</span> NEXTTHOUGHT STUDIOS</div>
+                <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
               </div>
             </div>
             <div class="ticket-stub-right">
@@ -498,7 +502,7 @@
   <!-- Footer -->
   <footer>
     <div class="footer-content">
-      <p>&copy; 2026 THIRSTY999 CLUB. ALL RIGHTS RESERVED.</p>
+      <p>&copy; 2026 THIRSTYCLUB999. ALL RIGHTS RESERVED.</p>
       <div class="socials">
         <a href="#">INSTAGRAM</a>
         <a href="#">TWITTER</a>
@@ -520,9 +524,9 @@
 
       <!-- Login Form -->
       <form id="login-form">
-        <p class="modal-desc">Login with your Thirsty999ID or Email.</p>
+        <p class="modal-desc">Login with your ThirstyID or Email.</p>
         <div class="input-group">
-          <label for="login-id">Thirsty999ID or Email</label>
+          <label for="login-id">ThirstyID or Email</label>
           <input type="text" id="login-id" placeholder="T999-XXXX or email..." required>
         </div>
         <div class="input-group">
@@ -537,7 +541,7 @@
 
       <!-- Signup Form (Hidden by default) -->
       <form id="signup-form" style="display: none;">
-        <p class="modal-desc">Create your profile to get a Thirsty999ID and RSVP.</p>
+        <p class="modal-desc">Create your profile to get a ThirstyID and RSVP.</p>
         <div class="input-group">
           <label for="signup-username">Username</label>
           <input type="text" id="signup-username" placeholder="Username" required>
@@ -553,7 +557,7 @@
         <div class="auth-toggle-link">
           Already have an ID? <span id="switch-to-login">Login here</span>
         </div>
-        <button type="submit" class="submit-ticket-btn">Get Thirsty999ID & RSVP</button>
+        <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
       </form>
     </div>
   </dialog>
