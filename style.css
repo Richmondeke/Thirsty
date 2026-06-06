@@ -163,8 +163,7 @@ header nav .nav-btn.members-white:hover {
   text-align: center;
   z-index: 2;
   padding: 0 1.5rem;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%),
-              url('images/Heroimage.png') no-repeat center center / cover;
+  background: #000000;
 }
 
 .hero-bg-video {
