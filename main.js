@@ -78,6 +78,27 @@ document.addEventListener('DOMContentLoaded', () => {
       if (userDashboardCard) userDashboardCard.style.display = 'block';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
 
+      // Hide header RSVP button to save navbar space when logged in
+      const navRsvpBtn = document.getElementById('nav-rsvp-btn');
+      if (navRsvpBtn) navRsvpBtn.style.display = 'none';
+      
+      // Check if user is an admin
+      const isAdmin = session.user.email && (
+        session.user.email.startsWith('admin@') || 
+        session.user.email.endsWith('@thirstyclub999.com') ||
+        profile.role === 'admin' ||
+        profile.socials?.role === 'admin'
+      );
+      
+      const adminTabBtn = document.getElementById('admin-tab-btn');
+      if (adminTabBtn) {
+        if (isAdmin) {
+          adminTabBtn.style.display = 'inline-block';
+        } else {
+          adminTabBtn.style.display = 'none';
+        }
+      }
+
       // Update Dashboard contents
       if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
       if (ticketUserId) ticketUserId.textContent = profile.thirstyclub_id || 'T999-XXXX';
@@ -146,6 +167,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ticketsSection) ticketsSection.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
+
+      const adminTabBtn = document.getElementById('admin-tab-btn');
+      if (adminTabBtn) adminTabBtn.style.display = 'none';
+
+      // Show header RSVP button
+      const navRsvpBtn = document.getElementById('nav-rsvp-btn');
+      if (navRsvpBtn) navRsvpBtn.style.display = 'inline-block';
+
+      // Reset tabs active state
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabButtons.forEach(b => {
+        if (b.getAttribute('data-tab') === 'tickets-tab') {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      tabContents.forEach(c => {
+        if (c.id === 'tickets-tab') {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
 
       // Default or clear Passport Generator Inputs & State
       const passportInputName = document.getElementById('passport-input-name');
@@ -415,6 +461,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       btn.classList.add('active');
       document.getElementById(targetTab).classList.add('active');
+
+      if (targetTab === 'admin-tab') {
+        loadAdminDashboard();
+      }
     });
   });
 
@@ -1379,4 +1429,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupInfiniteCounterHover('.logo', 'logo-counter');
   setupInfiniteCounterHover('.glitch-text', 'hero-counter');
+
+  const escapeHtml = (str) => {
+    if (typeof str !== 'string') return str || '';
+    return str.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+  };
+
+  const loadAdminDashboard = async () => {
+    try {
+      const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      let maleCount = 0;
+      let femaleCount = 0;
+      let otherCount = 0;
+
+      const tbody = document.getElementById('admin-users-list');
+      if (tbody) {
+        tbody.innerHTML = '';
+        users.forEach(user => {
+          const gender = (user.socials?.gender || '').trim().toUpperCase();
+          if (gender === 'M' || gender === 'MALE') {
+            maleCount++;
+          } else if (gender === 'F' || gender === 'FEMALE') {
+            femaleCount++;
+          } else {
+            otherCount++;
+          }
+
+          const date = new Date(user.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><span class="glow-id">${escapeHtml(user.thirstyclub_id || 'N/A')}</span></td>
+            <td>${escapeHtml(user.username || '')}</td>
+            <td>${escapeHtml(user.email || '')}</td>
+            <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
+            <td>${escapeHtml(user.socials?.place_of_thirst || 'N/A')}</td>
+            <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Update stats UI
+      const totalEl = document.getElementById('admin-stat-total');
+      const maleEl = document.getElementById('admin-stat-male');
+      const femaleEl = document.getElementById('admin-stat-female');
+      const otherEl = document.getElementById('admin-stat-other');
+
+      if (totalEl) totalEl.textContent = users.length;
+      if (maleEl) maleEl.textContent = maleCount;
+      if (femaleEl) femaleEl.textContent = femaleCount;
+      if (otherEl) otherEl.textContent = otherCount;
+
+    } catch (err) {
+      console.error("Error loading admin dashboard:", err);
+      alert("Error loading admin dashboard: " + err.message);
+    }
+  };
+
+  // Expose internals for testing / debugging
+  window.__internals = {
+    setCurrentSession: (session) => { currentSession = session; },
+    setCurrentUserProfile: (profile) => { currentUserProfile = profile; },
+    updateUI,
+    loadAdminDashboard
+  };
 });

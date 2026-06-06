@@ -1536,6 +1536,120 @@ header .logout-btn {
   color: var(--text-dim);
 }
 
+/* --- Admin Dashboard Tab Styling --- */
+.admin-container {
+  text-align: left;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.admin-stat-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 62, 62, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.admin-stat-card .stat-value {
+  font-family: 'Kyrilla', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(255, 62, 62, 0.2);
+  margin-bottom: 0.5rem;
+}
+
+.admin-stat-card .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.admin-users-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.admin-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.admin-users-table th,
+.admin-users-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.admin-users-table th {
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--text-color);
+  font-family: 'Kyrilla', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-users-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-m {
+  background: rgba(74, 144, 226, 0.15);
+  color: #4a90e2;
+  border: 1px solid rgba(74, 144, 226, 0.3);
+}
+
+.badge-f {
+  background: rgba(255, 107, 129, 0.15);
+  color: #ff6b81;
+  border: 1px solid rgba(255, 107, 129, 0.3);
+}
+
+.badge-other, .badge-n\/a, .badge-na {
+  background: rgba(168, 168, 168, 0.15);
+  color: #a8a8a8;
+  border: 1px solid rgba(168, 168, 168, 0.3);
+}
+
 /* --- Keyframes & Animations --- */
 @keyframes cardFadeIn {
   from {
@@ -1743,6 +1857,35 @@ header .logout-btn {
     flex-direction: column;
     gap: 1.5rem;
     text-align: center;
+  }
+
+  /* Modals Responsiveness */
+  dialog {
+    padding: 2.2rem 1.5rem;
+    width: 92%;
+    box-sizing: border-box;
+  }
+  .close-modal {
+    top: 0.5rem;
+    right: 0.8rem;
+    font-size: 1.8rem;
+  }
+
+  /* Admin Dashboard Responsiveness */
+  .admin-users-table th,
+  .admin-users-table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  .admin-stat-card {
+    padding: 1rem;
+  }
+  .admin-stat-card .stat-value {
+    font-size: 1.8rem;
+  }
+  .admin-stats-grid {
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
