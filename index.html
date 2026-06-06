@@ -63,7 +63,7 @@
           <span class="divider">|</span>
           <span>6PM</span>
         </div>
-        <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
+        <a href="#rsvp" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
       </div>
       <div class="scroll-indicator">
         <div class="mouse">
@@ -201,7 +201,7 @@
         <h2 class="section-title">PAST EDITIONS</h2>
       </div>
       <div class="gallery-container reveal-on-scroll">
-        <div class="gallery-grid">
+        <div class="gallery-scroller" id="gallery-scroller">
           <div class="gallery-item" data-index="0" data-src="images/THIRSTY_1.JPG">
             <img src="images/THIRSTY_1.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
             <div class="gallery-item-overlay">
@@ -420,26 +420,7 @@
     </section>
 
     <!-- Dynamic Ticket/RSVP & Dashboard Section -->
-    <section class="tickets-section" id="tickets">
-      <!-- 1. Logged-Out Promo State -->
-      <div class="ticket-card reveal-on-scroll" id="rsvp-promo-card">
-        <div class="card-glow"></div>
-        <div class="ticket-card-content">
-          <div class="ticket-header">
-            <h4>GET TICKETS & ACCESS</h4>
-            <span class="badge">FREE ENTRY</span>
-          </div>
-          <div class="ticket-body">
-            <p>To secure your guestlist spot, register on Tix Africa. After registering, you will receive details to access the event.</p>
-            <p class="rsvp-link-display">Book online or visit <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="accent-link">tix.africa</a></p>
-          </div>
-          <div class="ticket-buttons-group">
-            <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="buy-button tix-btn">BOOK ON TIX AFRICA</a>
-            <!-- <button class="buy-button secondary-btn" id="open-auth-btn">CREATE THIRSTY PASSPORT</button> -->
-          </div>
-        </div>
-      </div>
-
+    <section class="tickets-section" id="tickets" style="display: none;">
       <!-- 2. Logged-In Dashboard State (Hidden by default) -->
       <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
         <div class="dashboard-header">
@@ -638,6 +619,35 @@
         <p class="card-note">The passport grants you access to the event. Keep it safe.</p>
       </div>
       <button class="buy-button" id="success-modal-close-btn">ENTER CLUBHOUSE</button>
+    </div>
+  </dialog>
+
+  <!-- Processing Dialog Modal -->
+  <dialog id="processing-modal">
+    <div class="modal-content processing-content" style="text-align: center; align-items: center;">
+      <h3 style="font-family: 'Kyrilla', sans-serif; font-weight: 950; font-size: 1.8rem; color: var(--accent-color); margin-bottom: 0.5rem; letter-spacing: 0.05em; text-shadow: 0 0 12px var(--accent-glow);">PROCESSING Passport</h3>
+      <p class="processing-desc" style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1rem;">Signing your passport and generating your Thirsty ID...</p>
+      <div class="scanner-container">
+        <div class="scanner-line"></div>
+        <div class="scanner-passport-preview">
+          <svg viewBox="0 0 100 130" class="scanner-passport-svg">
+            <rect x="5" y="5" width="90" height="120" rx="8" fill="#5A060C" stroke="rgba(255, 62, 62, 0.3)" stroke-width="2"/>
+            <circle cx="50" cy="40" r="15" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
+            <circle cx="43" cy="48" r="12" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
+            <circle cx="57" cy="48" r="12" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
+            <line x1="5" y1="65" x2="95" y2="65" stroke="rgba(0,0,0,0.5)" stroke-width="3"/>
+            <rect x="15" y="75" width="25" height="35" rx="2" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(255, 62, 62, 0.2)"/>
+            <line x1="48" y1="80" x2="85" y2="80" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+            <line x1="48" y1="90" x2="85" y2="90" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+            <line x1="48" y1="100" x2="85" y2="100" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+            <line x1="48" y1="110" x2="85" y2="110" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="processing-status" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+        <span class="status-dot pulsed" style="width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; display: inline-block;"></span>
+        <span id="processing-status-text" style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.05em;">VERIFYING CREDENTIALS...</span>
+      </div>
     </div>
   </dialog>
 

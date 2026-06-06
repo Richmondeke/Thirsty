@@ -68,13 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const session = currentSession;
     const profile = currentUserProfile;
     
-    const rsvpPromoCard = document.getElementById('rsvp-promo-card');
     const userDashboardCard = document.getElementById('user-dashboard-card');
     const headerLogoutBtn = document.getElementById('header-logout-btn');
+    const ticketsSection = document.getElementById('tickets');
     
     if (session && profile) {
       // User is Logged In
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
+      if (ticketsSection) ticketsSection.style.display = 'block';
       if (userDashboardCard) userDashboardCard.style.display = 'block';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
 
@@ -142,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       // User is Logged Out
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'block';
+      const ticketsSection = document.getElementById('tickets');
+      if (ticketsSection) ticketsSection.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
 
@@ -318,7 +319,14 @@ document.addEventListener('DOMContentLoaded', () => {
     closeSuccessModalBtn.addEventListener('click', closeSuccessModal);
   }
   if (successModalCloseBtn) {
-    successModalCloseBtn.addEventListener('click', closeSuccessModal);
+    successModalCloseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeSuccessModal();
+      const ticketsSection = document.getElementById('tickets');
+      if (ticketsSection) {
+        ticketsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
   }
 
   // Close success modal on backdrop click
@@ -634,9 +642,49 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 9. Past Editions Gallery Lightbox Interactivity
+  // 9. 3D Curved Gallery Scroll Calculations
   // ==========================================
+  const galleryScroller = document.getElementById('gallery-scroller');
   const galleryItems = document.querySelectorAll('.gallery-item');
+
+  const updateGallery3DEffect = () => {
+    if (!galleryScroller || galleryItems.length === 0) return;
+
+    const scrollerCenter = galleryScroller.scrollLeft + galleryScroller.offsetWidth / 2;
+    const scrollerWidth = galleryScroller.offsetWidth;
+
+    galleryItems.forEach(item => {
+      const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+      const distance = itemCenter - scrollerCenter;
+      const normalizedOffset = distance / scrollerWidth;
+
+      // 3D Y-axis rotation (tilt facing the center)
+      const maxAngle = 35;
+      let angle = -normalizedOffset * 55;
+      angle = Math.max(-maxAngle, Math.min(maxAngle, angle));
+
+      // Z-depth pushing outer cards into the background
+      const maxZ = -150;
+      let z = -Math.abs(normalizedOffset) * 200;
+      z = Math.max(maxZ, z);
+
+      // Scale down outer cards slightly
+      const scale = Math.max(0.85, 1 - Math.abs(normalizedOffset) * 0.15);
+
+      item.style.transform = `rotateY(${angle}deg) translateZ(${z}px) scale(${scale})`;
+    });
+  };
+
+  if (galleryScroller) {
+    galleryScroller.addEventListener('scroll', updateGallery3DEffect);
+    window.addEventListener('resize', updateGallery3DEffect);
+    setTimeout(updateGallery3DEffect, 100);
+    setTimeout(updateGallery3DEffect, 500);
+  }
+
+  // ==========================================
+  // 10. Past Editions Gallery Lightbox Interactivity
+  // ==========================================
   const lightbox = document.getElementById('gallery-lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxCloseBtn = document.querySelector('.lightbox-close');
@@ -1173,26 +1221,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const performDownload = () => {
-        const formatVal = passportExportFormat?.value || 'png';
-        const filename = nameVal.toLowerCase().replace(/\s+/g, '-');
-        const link = document.createElement('a');
+      // Capture canvas state immediately to prevent race conditions during async delays
+      const formatVal = passportExportFormat?.value || 'png';
+      const filename = nameVal.toLowerCase().replace(/\s+/g, '-');
+      const dataUrl = formatVal === 'jpeg'
+        ? canvas.toDataURL('image/jpeg', 0.95)
+        : canvas.toDataURL('image/png');
 
+      const performDownload = () => {
+        const link = document.createElement('a');
         if (formatVal === 'jpeg') {
           link.download = `thirstyclub999-passport-${filename}.jpg`;
-          link.href = canvas.toDataURL('image/jpeg', 0.95);
         } else {
           link.download = `thirstyclub999-passport-${filename}.png`;
-          link.href = canvas.toDataURL('image/png');
         }
+        link.href = dataUrl;
         link.click();
       };
+
+      const processingModal = document.getElementById('processing-modal');
 
       // 1. User is Logged In: Update their profile and download
       if (currentSession) {
         downloadPassportBtn.disabled = true;
         const originalText = downloadPassportBtn.textContent;
         downloadPassportBtn.textContent = "Updating Profile...";
+        
+        if (processingModal) {
+          document.getElementById('processing-status-text').textContent = 'UPDATING PROFILE...';
+          processingModal.showModal();
+        }
         
         try {
           const profilePic = uploadedImage.src; // base64 representation
@@ -1230,6 +1288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
           alert("Error updating passport: " + err.message);
         } finally {
+          if (processingModal) processingModal.close();
           downloadPassportBtn.disabled = false;
           downloadPassportBtn.textContent = originalText;
         }
@@ -1252,11 +1311,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       downloadPassportBtn.disabled = true;
       downloadPassportBtn.textContent = "Processing RSVP...";
+      
+      if (processingModal) {
+        document.getElementById('processing-status-text').textContent = 'VERIFYING CREDENTIALS & SIGNING...';
+        processingModal.showModal();
+      }
 
       try {
         const profilePic = uploadedImage.src; // base64 string
 
-        // Call Supabase SignUp passing username and passport details in options.data
+        // Call Supabase SignUp. We omit avatar_url in auth metadata to keep payload tiny (<1KB) and lightning-fast!
         const { data, error } = await supabase.auth.signUp({
           email: emailVal,
           password: passwordVal,
@@ -1265,8 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
               username: nameVal,
               place_of_thirst: pobVal,
               gender: genderVal,
-              signature: sigVal,
-              avatar_url: profilePic
+              signature: sigVal
             }
           }
         });
@@ -1278,6 +1341,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if user session was active (email confirmation disabled)
         if (data.session) {
+          if (processingModal) {
+            document.getElementById('processing-status-text').textContent = 'CREATING CLUB PROFILE...';
+          }
           // Update profile in DB immediately with the details (trigger already created base record)
           const { error: updateError } = await supabase
             .from('profiles')
@@ -1336,6 +1402,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         alert("RSVP Error: " + err.message);
       } finally {
+        if (processingModal) processingModal.close();
         downloadPassportBtn.disabled = false;
         downloadPassportBtn.textContent = "DOWNLOAD PASSPORT (RSVP)";
       }
