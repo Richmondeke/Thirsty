@@ -35,11 +35,10 @@
     <nav>
       <a href="#lineup">Lineup</a>
       <a href="#gallery">Gallery</a>
-      <a href="#passport">Passport</a>
+      <a href="#" id="nav-members-btn">Members Only</a>
       <a href="#venue">Venue</a>
-      <!-- <a href="#tickets" id="nav-dash-link">Sign In</a> -->
-      <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
-      <!-- <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button> -->
+      <a href="#rsvp" class="nav-btn" id="nav-rsvp-btn">RSVP</a>
+      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
     </nav>
   </header>
 
@@ -280,17 +279,17 @@
       </div>
     </dialog>
 
-    <!-- Passport Generator Section -->
-    <section class="passport-section" id="passport">
+    <!-- RSVP & Passport Generator Section -->
+    <section class="passport-section" id="rsvp">
       <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">PASSPORT</h2>
+        <h2 class="section-title">RSVP</h2>
         <p class="section-subtitle-desc">GENERATE YOUR EXCLUSIVE ACCESS PASSPORT</p>
       </div>
 
       <div class="passport-container reveal-on-scroll">
         <div class="passport-controls-card">
           <div class="control-header">
-            <h3>PASSPORT CREATOR</h3>
+            <h3>RSVP & PASSPORT CREATOR</h3>
             <p>Upload a photo and fill in your details to customize your Thirsty Passport. Export as high-quality PNG or JPG.</p>
           </div>
 
@@ -304,6 +303,16 @@
           </div>
 
           <div class="passport-inputs">
+            <div class="input-row" id="passport-logged-in-status" style="display: none;">
+              <div class="logged-in-info" style="width: 100%; padding: 1rem; background: rgba(255, 62, 62, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+                <div>
+                  <span class="info-label" style="font-size: 0.7rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em; display: block; margin-bottom: 0.2rem;">MEMBERSHIP ACTIVE</span>
+                  <p id="passport-member-id" style="margin: 0; font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; color: var(--text-color);">ThirstyID: T999-XXXX</p>
+                </div>
+                <button type="button" class="logout-link-btn" id="passport-logout-btn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-dim); padding: 0.4rem 0.8rem; border-radius: 2px; font-size: 0.75rem; cursor: pointer; transition: var(--transition-smooth);">Log Out</button>
+              </div>
+            </div>
+
             <div class="input-row split-2">
               <div class="input-group">
                 <label for="passport-input-name">Full Name</label>
@@ -326,6 +335,17 @@
               </div>
             </div>
 
+            <div class="input-row split-2" id="passport-auth-fields">
+              <div class="input-group">
+                <label for="passport-input-email">Email Address</label>
+                <input type="email" id="passport-input-email" placeholder="you@example.com" maxlength="50">
+              </div>
+              <div class="input-group">
+                <label for="passport-input-password">Create Password</label>
+                <input type="password" id="passport-input-password" placeholder="Min. 6 characters" maxlength="30">
+              </div>
+            </div>
+
             <div class="input-row">
               <div class="input-group full-width">
                 <label for="passport-export-format">Export Format</label>
@@ -337,7 +357,7 @@
             </div>
           </div>
 
-          <button class="buy-button" id="download-passport-btn">DOWNLOAD PASSPORT</button>
+          <button class="buy-button" id="download-passport-btn">DOWNLOAD PASSPORT (RSVP)</button>
         </div>
 
         <div class="passport-preview-card">
@@ -601,6 +621,23 @@
         </div>
         <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
       </form>
+    </div>
+  </dialog>
+
+  <!-- Success Dialog Modal -->
+  <dialog id="success-modal">
+    <div class="modal-content success-content">
+      <button class="close-modal" id="close-success-modal" aria-label="Close modal">&times;</button>
+      <div class="success-icon">✨</div>
+      <h3>YOU'RE IN!</h3>
+      <p class="success-title">Welcome to Thirstyclub999</p>
+      <p class="success-desc">Your RSVP is confirmed and your Thirsty ID is generated. Your passport has been successfully downloaded.</p>
+      <div class="success-card">
+        <p class="card-id-label">YOUR ACCESS ID</p>
+        <h4 id="success-member-id">T999-XXXX</h4>
+        <p class="card-note">The passport grants you access to the event. Keep it safe.</p>
+      </div>
+      <button class="buy-button" id="success-modal-close-btn">ENTER CLUBHOUSE</button>
     </div>
   </dialog>
 

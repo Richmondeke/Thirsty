@@ -68,16 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const session = currentSession;
     const profile = currentUserProfile;
     
+    const rsvpPromoCard = document.getElementById('rsvp-promo-card');
+    const userDashboardCard = document.getElementById('user-dashboard-card');
+    const headerLogoutBtn = document.getElementById('header-logout-btn');
+    
     if (session && profile) {
       // User is Logged In
       if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'block';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
-      
-      if (navDashLink) {
-        navDashLink.textContent = 'Dashboard';
-        navDashLink.href = '#tickets';
-      }
 
       // Update Dashboard contents
       if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
@@ -95,35 +94,94 @@ document.addEventListener('DOMContentLoaded', () => {
         profileAvatarPreview.src = profile.avatar_url || defaultAvatar;
       }
 
-      // Update Passport Generator Inputs
+      // Update Passport Generator Inputs & State
       const passportInputName = document.getElementById('passport-input-name');
-      const passportInputId = document.getElementById('passport-input-id');
-      if (passportInputName && !passportInputName.value) {
-        passportInputName.value = profile.username;
+      const passportInputPob = document.getElementById('passport-input-pob');
+      const passportInputGender = document.getElementById('passport-input-gender');
+      const passportInputSig = document.getElementById('passport-input-sig');
+      const passportAuthFields = document.getElementById('passport-auth-fields');
+      const passportLoggedInStatus = document.getElementById('passport-logged-in-status');
+      const passportMemberId = document.getElementById('passport-member-id');
+      const downloadPassportBtn = document.getElementById('download-passport-btn');
+      const navMembersBtn = document.getElementById('nav-members-btn');
+
+      if (navMembersBtn) {
+        navMembersBtn.textContent = 'My Passport';
+        navMembersBtn.href = '#rsvp';
       }
-      if (passportInputId && !passportInputId.value) {
-        passportInputId.value = profile.thirstyclub_id || 'T999-XXXX';
+
+      if (passportAuthFields) passportAuthFields.style.display = 'none';
+      if (passportLoggedInStatus) passportLoggedInStatus.style.display = 'block';
+      if (passportMemberId) {
+        passportMemberId.textContent = 'ThirstyID: ' + (profile.thirstyclub_id || 'T999-XXXX');
       }
-      drawPassport();
+      if (downloadPassportBtn) {
+        downloadPassportBtn.textContent = 'DOWNLOAD PASSPORT';
+      }
+
+      if (passportInputName) passportInputName.value = profile.username || '';
+      if (passportInputPob) passportInputPob.value = profile.socials?.place_of_thirst || 'MANCHESTER';
+      if (passportInputGender) passportInputGender.value = profile.socials?.gender || 'F';
+      if (passportInputSig) passportInputSig.value = profile.socials?.signature || 'A. Palmerston';
+
+      // Load avatar image into the canvas representation
+      if (profile.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
+        const img = new Image();
+        img.onload = () => {
+          uploadedImage = img;
+          drawPassport();
+          const fileInfo = document.getElementById('passport-file-info');
+          if (fileInfo) {
+            fileInfo.textContent = "Stored Passport Photo loaded";
+            fileInfo.style.color = 'var(--accent-color)';
+          }
+        };
+        img.src = profile.avatar_url;
+      } else {
+        drawPassport();
+      }
     } else {
       // User is Logged Out
       if (rsvpPromoCard) rsvpPromoCard.style.display = 'block';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
-      
-      if (navDashLink) {
-        navDashLink.textContent = 'Sign In';
-        navDashLink.href = '#tickets';
+
+      // Default or clear Passport Generator Inputs & State
+      const passportInputName = document.getElementById('passport-input-name');
+      const passportInputPob = document.getElementById('passport-input-pob');
+      const passportInputGender = document.getElementById('passport-input-gender');
+      const passportInputSig = document.getElementById('passport-input-sig');
+      const passportAuthFields = document.getElementById('passport-auth-fields');
+      const passportLoggedInStatus = document.getElementById('passport-logged-in-status');
+      const downloadPassportBtn = document.getElementById('download-passport-btn');
+      const navMembersBtn = document.getElementById('nav-members-btn');
+
+      if (navMembersBtn) {
+        navMembersBtn.textContent = 'Members Only';
+        navMembersBtn.href = '#';
       }
 
-      // Default or clear Passport Generator Inputs
-      const passportInputName = document.getElementById('passport-input-name');
-      const passportInputId = document.getElementById('passport-input-id');
-      if (passportInputName) {
-        passportInputName.value = '';
+      if (passportAuthFields) passportAuthFields.style.display = 'flex';
+      if (passportLoggedInStatus) passportLoggedInStatus.style.display = 'none';
+      if (downloadPassportBtn) {
+        downloadPassportBtn.textContent = 'DOWNLOAD PASSPORT (RSVP)';
       }
-      if (passportInputId) {
-        passportInputId.value = '';
+
+      if (passportInputName) passportInputName.value = 'ADELINE PALMERSTON';
+      if (passportInputPob) passportInputPob.value = 'MANCHESTER';
+      if (passportInputGender) passportInputGender.value = 'F';
+      if (passportInputSig) passportInputSig.value = 'A. Palmerston';
+
+      const passportInputEmail = document.getElementById('passport-input-email');
+      const passportInputPassword = document.getElementById('passport-input-password');
+      if (passportInputEmail) passportInputEmail.value = '';
+      if (passportInputPassword) passportInputPassword.value = '';
+
+      uploadedImage = null;
+      const fileInfo = document.getElementById('passport-file-info');
+      if (fileInfo) {
+        fileInfo.textContent = "JPG or PNG (Max 5MB)";
+        fileInfo.style.color = 'var(--text-dim)';
       }
       drawPassport();
     }
@@ -177,26 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const modal = document.getElementById('ticket-modal');
   const openAuthBtn = document.getElementById('open-auth-btn');
-  const navDashLinkClick = document.getElementById('nav-dash-link');
+  const navMembersBtn = document.getElementById('nav-members-btn');
   const closeModalBtn = document.querySelector('.close-modal');
 
   const openAuthModal = () => {
     if (currentSession) {
-      // If logged in, navigate straight to tickets/dashboard section
-      const ticketsSection = document.getElementById('tickets');
-      if (ticketsSection) ticketsSection.scrollIntoView({ behavior: 'smooth' });
+      // If logged in, navigate straight to rsvp section
+      const rsvpSection = document.getElementById('rsvp');
+      if (rsvpSection) rsvpSection.scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
+      showLoginForm();
       modal.showModal();
     }
   };
 
   if (openAuthBtn) openAuthBtn.addEventListener('click', openAuthModal);
-  if (navDashLinkClick) {
-    navDashLinkClick.addEventListener('click', (e) => {
-      if (!currentSession) {
-        e.preventDefault();
-        openAuthModal();
-      }
+  if (navMembersBtn) {
+    navMembersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAuthModal();
     });
   }
 
@@ -245,6 +302,39 @@ document.addEventListener('DOMContentLoaded', () => {
   if (tabSignupBtn) tabSignupBtn.addEventListener('click', showSignupForm);
   if (switchToSignup) switchToSignup.addEventListener('click', showSignupForm);
   if (switchToLogin) switchToLogin.addEventListener('click', showLoginForm);
+
+  // Success Modal Dialog management
+  const successModal = document.getElementById('success-modal');
+  const closeSuccessModalBtn = document.getElementById('close-success-modal');
+  const successModalCloseBtn = document.getElementById('success-modal-close-btn');
+
+  const closeSuccessModal = () => {
+    if (successModal) {
+      successModal.close();
+    }
+  };
+
+  if (closeSuccessModalBtn) {
+    closeSuccessModalBtn.addEventListener('click', closeSuccessModal);
+  }
+  if (successModalCloseBtn) {
+    successModalCloseBtn.addEventListener('click', closeSuccessModal);
+  }
+
+  // Close success modal on backdrop click
+  if (successModal) {
+    successModal.addEventListener('click', (e) => {
+      const rect = successModal.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        successModal.close();
+      }
+    });
+  }
 
   // ==========================================
   // 5. Supabase Auth Handlers (Signup / Login)
@@ -364,6 +454,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.close();
         loginForm.reset();
+        
+        // Scroll directly to passport/rsvp section on login
+        setTimeout(() => {
+          const rsvpSection = document.getElementById('rsvp');
+          if (rsvpSection) rsvpSection.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
       } catch (err) {
         alert("Login Error: " + err.message);
       } finally {
@@ -384,6 +480,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (headerLogoutBtn) headerLogoutBtn.addEventListener('click', handleLogout);
   const dashLogoutBtn = document.getElementById('dash-logout-btn');
   if (dashLogoutBtn) dashLogoutBtn.addEventListener('click', handleLogout);
+
+  // Use event delegation for dynamically shown passport logout button
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'passport-logout-btn') {
+      handleLogout();
+    }
+  });
 
   // ==========================================
   // 6. User Dashboard Tab Switching
@@ -1050,22 +1153,192 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Download action
   if (downloadPassportBtn) {
-    downloadPassportBtn.addEventListener('click', () => {
+    downloadPassportBtn.addEventListener('click', async () => {
       const canvas = document.getElementById('passport-canvas');
       if (!canvas) return;
 
-      const formatVal = passportExportFormat?.value || 'png';
-      const nameVal = (passportInputName?.value || 'guest').toLowerCase().replace(/\s+/g, '-');
-      const link = document.createElement('a');
+      const nameVal = (passportInputName?.value || '').trim();
+      const pobVal = (passportInputPob?.value || '').trim();
+      const genderVal = (passportInputGender?.value || '').trim();
+      const sigVal = (passportInputSig?.value || '').trim();
 
-      if (formatVal === 'jpeg') {
-        link.download = `thirstyclub999-passport-${nameVal}.jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 0.95);
-      } else {
-        link.download = `thirstyclub999-passport-${nameVal}.png`;
-        link.href = canvas.toDataURL('image/png');
+      // Basic fields validation
+      if (!nameVal || !pobVal || !genderVal || !sigVal) {
+        alert("Please fill in all passport details: Name, Place of Thirst, Gender, and Signature Text.");
+        return;
       }
-      link.click();
+
+      if (!uploadedImage) {
+        alert("Please upload a portrait picture first.");
+        return;
+      }
+
+      const performDownload = () => {
+        const formatVal = passportExportFormat?.value || 'png';
+        const filename = nameVal.toLowerCase().replace(/\s+/g, '-');
+        const link = document.createElement('a');
+
+        if (formatVal === 'jpeg') {
+          link.download = `thirstyclub999-passport-${filename}.jpg`;
+          link.href = canvas.toDataURL('image/jpeg', 0.95);
+        } else {
+          link.download = `thirstyclub999-passport-${filename}.png`;
+          link.href = canvas.toDataURL('image/png');
+        }
+        link.click();
+      };
+
+      // 1. User is Logged In: Update their profile and download
+      if (currentSession) {
+        downloadPassportBtn.disabled = true;
+        const originalText = downloadPassportBtn.textContent;
+        downloadPassportBtn.textContent = "Updating Profile...";
+        
+        try {
+          const profilePic = uploadedImage.src; // base64 representation
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({
+              username: nameVal,
+              avatar_url: profilePic,
+              socials: {
+                instagram: currentUserProfile?.socials?.instagram || "",
+                twitter: currentUserProfile?.socials?.twitter || "",
+                discord: currentUserProfile?.socials?.discord || "",
+                place_of_thirst: pobVal,
+                gender: genderVal,
+                signature: sigVal
+              }
+            })
+            .eq('id', currentSession.user.id);
+
+          if (updateError) throw updateError;
+
+          // Re-fetch profile to keep local state synced
+          const { data: refreshedProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentSession.user.id)
+            .single();
+          
+          currentUserProfile = refreshedProfile;
+          updateUI();
+          
+          // Download the passport
+          performDownload();
+          alert("Passport updated and downloaded successfully!");
+        } catch (err) {
+          alert("Error updating passport: " + err.message);
+        } finally {
+          downloadPassportBtn.disabled = false;
+          downloadPassportBtn.textContent = originalText;
+        }
+        return;
+      }
+
+      // 2. User is Logged Out: Sign up, store details, download, show success modal
+      const emailVal = document.getElementById('passport-input-email')?.value.trim();
+      const passwordVal = document.getElementById('passport-input-password')?.value;
+
+      if (!emailVal || !passwordVal) {
+        alert("Please enter both Email Address and Password to RSVP and download your passport.");
+        return;
+      }
+
+      if (passwordVal.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return;
+      }
+
+      downloadPassportBtn.disabled = true;
+      downloadPassportBtn.textContent = "Processing RSVP...";
+
+      try {
+        const profilePic = uploadedImage.src; // base64 string
+
+        // Call Supabase SignUp passing username and passport details in options.data
+        const { data, error } = await supabase.auth.signUp({
+          email: emailVal,
+          password: passwordVal,
+          options: {
+            data: {
+              username: nameVal,
+              place_of_thirst: pobVal,
+              gender: genderVal,
+              signature: sigVal,
+              avatar_url: profilePic
+            }
+          }
+        });
+
+        if (error) throw error;
+
+        // Download passport immediately
+        performDownload();
+
+        // Check if user session was active (email confirmation disabled)
+        if (data.session) {
+          // Update profile in DB immediately with the details (trigger already created base record)
+          const { error: updateError } = await supabase
+            .from('profiles')
+            .update({
+              username: nameVal,
+              avatar_url: profilePic,
+              socials: {
+                instagram: "",
+                twitter: "",
+                discord: "",
+                place_of_thirst: pobVal,
+                gender: genderVal,
+                signature: sigVal
+              }
+            })
+            .eq('id', data.session.user.id);
+
+          if (updateError) {
+            console.error("Profile update error:", updateError);
+          }
+
+          // Fetch the full updated profile and sync state
+          const { data: refreshedProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.session.user.id)
+            .single();
+
+          currentUserProfile = refreshedProfile;
+          currentSession = data.session;
+          updateUI();
+
+          // Show success modal
+          const successModal = document.getElementById('success-modal');
+          const successMemberId = document.getElementById('success-member-id');
+          if (successMemberId) {
+            successMemberId.textContent = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
+          }
+          if (successModal) {
+            successModal.showModal();
+          }
+        } else {
+          // Session is not active yet (requires email confirmation)
+          alert("RSVP Pending!\n\nPlease check your email inbox to confirm your account and activate your ThirstyID.");
+          
+          // Even if email verification is enabled, show success modal with access details
+          const successModal = document.getElementById('success-modal');
+          const successMemberId = document.getElementById('success-member-id');
+          if (successMemberId) {
+            successMemberId.textContent = 'PENDING VERIFICATION';
+          }
+          if (successModal) {
+            successModal.showModal();
+          }
+        }
+      } catch (err) {
+        alert("RSVP Error: " + err.message);
+      } finally {
+        downloadPassportBtn.disabled = false;
+        downloadPassportBtn.textContent = "DOWNLOAD PASSPORT (RSVP)";
+      }
     });
   }
 
