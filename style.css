@@ -115,16 +115,41 @@ header nav a:hover {
 
 header nav .nav-btn {
   padding: 0.6rem 1.2rem;
-  background: var(--text-color);
-  color: var(--bg-color);
   border-radius: 2px;
   font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: var(--transition-smooth);
+  display: inline-block;
+  text-align: center;
 }
 
-header nav .nav-btn:hover {
+header nav .nav-btn.rsvp-red {
   background: var(--accent-color);
   color: var(--text-color);
-  box-shadow: 0 0 15px var(--accent-glow);
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+header nav .nav-btn.rsvp-red:hover {
+  background: #ff5555;
+  border-color: #ff5555;
+  color: var(--text-color);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+header nav .nav-btn.members-white {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border: 1px solid var(--text-color);
+}
+
+header nav .nav-btn.members-white:hover {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 /* --- Hero Section --- */
@@ -1899,22 +1924,30 @@ header .logout-btn {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.15); /* Very subtle tint, no dark wash */
   opacity: 0;
   transition: var(--transition-smooth);
+  pointer-events: none; /* Let clicks pass directly to the card link */
 }
 
 .gallery-zoom-icon {
-  font-size: 1.8rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
   color: var(--accent-color);
   text-shadow: 0 0 10px var(--accent-glow);
   transform: scale(0.8);
   transition: var(--transition-smooth);
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent circle background */
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: auto;
 }
 
 .gallery-item:hover {

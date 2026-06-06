@@ -1023,7 +1023,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (uploadedImage) {
       ctx.save();
-      // No grayscale filter -> colored as requested!
+      // Apply grayscale filter to make the passport photo black and white
+      ctx.filter = 'grayscale(100%)';
       const imgW = uploadedImage.width;
       const imgH = uploadedImage.height;
       const aspect = uPhotoW / uPhotoH;
