@@ -469,32 +469,71 @@ header nav .nav-btn:hover {
 }
 
 .static-artist {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.01);
+  cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.static-artist img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.static-artist .artist-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%);
+  z-index: 2;
+  transition: var(--transition-smooth);
+}
+
+.static-artist .artist-name {
   font-family: 'Kyrilla', sans-serif;
   font-weight: 900;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   letter-spacing: 0.05em;
   color: var(--text-color);
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-radius: 4px;
-  transition: var(--transition-smooth);
-  cursor: default;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 110px;
-  padding: 1rem;
   text-align: center;
   line-height: 1.2;
+  z-index: 3;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  transition: var(--transition-smooth);
+  padding: 0 1rem;
+}
+
+.static-artist:hover img {
+  transform: scale(1.08);
+}
+
+.static-artist:hover .artist-overlay {
+  background: linear-gradient(180deg, rgba(255, 62, 62, 0.15) 0%, rgba(0, 0, 0, 0.9) 100%);
 }
 
 .static-artist:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.static-artist:hover .artist-name {
   color: var(--accent-color);
-  background: rgba(255, 62, 62, 0.02);
-  border-color: rgba(255, 62, 62, 0.15);
-  box-shadow: 0 0 15px rgba(255, 62, 62, 0.08);
   text-shadow: 0 0 10px var(--accent-glow);
 }
 
@@ -1616,9 +1655,10 @@ header .logout-btn {
     gap: 1.5rem 1rem;
   }
   .static-artist {
+    height: 140px;
+  }
+  .static-artist .artist-name {
     font-size: 1.1rem;
-    height: 80px;
-    padding: 0.5rem;
   }
   .lineup-toggle-btn {
     font-size: 0.9rem;
@@ -1743,9 +1783,10 @@ header .logout-btn {
     gap: 1rem 0.8rem;
   }
   .static-artist {
+    height: 120px;
+  }
+  .static-artist .artist-name {
     font-size: 1rem;
-    height: 70px;
-    padding: 0.3rem;
   }
 }
 
@@ -1796,16 +1837,19 @@ header .logout-btn {
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 3rem 0;
+  padding: 3rem 4rem;
   scroll-behavior: smooth;
   scrollbar-width: none; /* Hide Firefox scrollbar */
   -webkit-overflow-scrolling: touch;
   z-index: 2;
   position: relative;
   transform-style: preserve-3d;
-  /* Center snap padding */
-  padding-left: calc(50vw - var(--gallery-card-width) / 2);
-  padding-right: calc(50vw - var(--gallery-card-width) / 2);
+}
+
+@media (max-width: 768px) {
+  .gallery-scroller {
+    padding: 3rem 2rem;
+  }
 }
 
 .gallery-scroller::-webkit-scrollbar {
@@ -1826,10 +1870,19 @@ header .logout-btn {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+  transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
               border-color 0.3s ease,
               box-shadow 0.3s ease;
   transform: rotateY(0deg) translateZ(0);
+}
+
+.gallery-item:first-child {
+  scroll-snap-align: start;
+}
+
+.gallery-item:last-child {
+  scroll-snap-align: end;
 }
 
 .gallery-item img {
@@ -1865,7 +1918,8 @@ header .logout-btn {
 }
 
 .gallery-item:hover {
-  transform: scale(1.08) translateZ(80px) rotateY(0deg) !important;
+  width: calc(var(--gallery-card-width) * 1.8) !important;
+  transform: scale(1.04) translateZ(50px) rotateY(0deg) !important;
   border-color: var(--accent-color);
   box-shadow: 0 12px 30px rgba(255, 62, 62, 0.25),
               0 0 15px var(--accent-glow);

@@ -680,6 +680,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateGallery3DEffect);
     setTimeout(updateGallery3DEffect, 100);
     setTimeout(updateGallery3DEffect, 500);
+
+    // Update 3D calculations when hovering to adapt neighboring cards' tilts as they shift
+    galleryItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        setTimeout(updateGallery3DEffect, 50);
+      });
+      item.addEventListener('mouseleave', () => {
+        setTimeout(updateGallery3DEffect, 50);
+      });
+    });
   }
 
   // ==========================================
@@ -845,6 +855,12 @@ document.addEventListener('DOMContentLoaded', () => {
     drawPassport();
   };
 
+  const passportBlendImage = new Image();
+  passportBlendImage.src = 'images/Passportblend.JPG';
+  passportBlendImage.onload = () => {
+    drawPassport();
+  };
+
   if (document.fonts) {
     document.fonts.ready.then(() => {
       drawPassport();
@@ -962,43 +978,21 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText(sigText, 0, 0);
     ctx.restore();
 
-    // Middle Watermark: Biohazard Symbol (reduced opacity)
-    const drawBiohazard = (x0, y0) => {
-      ctx.strokeStyle = 'rgba(139, 131, 120, 0.16)';
-      ctx.fillStyle = 'rgba(139, 131, 120, 0.16)';
+    // Middle Watermark: Preloaded Passportblend.JPG (reduced opacity)
+    if (passportBlendImage.complete && passportBlendImage.naturalWidth > 0) {
+      ctx.save();
+      // Clip to top page
+      ctx.beginPath();
+      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+      ctx.clip();
       
-      ctx.lineWidth = 9;
-      const rOuter = 35;
-      const offset = 26;
+      ctx.globalAlpha = 0.16; // reduced opacity (watermark)
       
-      // Top Circle
-      ctx.beginPath();
-      ctx.arc(x0, y0 - offset, rOuter, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      // Bottom Left Circle
-      ctx.beginPath();
-      ctx.arc(x0 - offset * Math.cos(Math.PI/6), y0 + offset * Math.sin(Math.PI/6), rOuter, 0, Math.PI * 2);
-      ctx.stroke();
-      
-      // Bottom Right Circle
-      ctx.beginPath();
-      ctx.arc(x0 + offset * Math.cos(Math.PI/6), y0 + offset * Math.sin(Math.PI/6), rOuter, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Center circle ring
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(x0, y0, 48, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Central small core
-      ctx.beginPath();
-      ctx.arc(x0, y0, 9, 0, Math.PI * 2);
-      ctx.fill();
-    };
-    
-    drawBiohazard(300, 202);
+      const imgW = 450;
+      const imgH = 300;
+      ctx.drawImage(passportBlendImage, 300 - imgW / 2, 202 - imgH / 2, imgW, imgH);
+      ctx.restore();
+    }
 
     // Right vertical title
     ctx.save();
@@ -1007,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'center';
     ctx.font = '900 28px "Kyrilla", sans-serif';
-    ctx.fillText("Thirstyclub999", 0, -8);
+    ctx.fillText("THIRSTYCLUB999", 0, -8);
     ctx.font = '700 13px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 0, 18);
     ctx.restore();
@@ -1017,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillStyle = '#000000';
     ctx.textAlign = 'left';
     ctx.font = '900 22px "Kyrilla", sans-serif';
-    ctx.fillText("ThirstyClub999", 45, 452);
+    ctx.fillText("THIRSTYCLUB999", 45, 452);
     ctx.font = '700 11px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 45 + 5, 470);
 
