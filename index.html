@@ -707,11 +707,7 @@
     <div class="modal-content">
       <button class="close-modal" aria-label="Close modal">&times;</button>
       
-      <!-- Tab Headers for Dialog -->
-      <div class="auth-tabs">
-        <button class="auth-tab-btn active" id="auth-login-tab-btn">LOGIN</button>
-        <button class="auth-tab-btn" id="auth-signup-tab-btn">SIGN UP</button>
-      </div>
+      <h3 class="auth-title">MEMBERS LOGIN</h3>
 
       <!-- Login Form -->
       <form id="login-form">
@@ -724,31 +720,7 @@
           <label for="login-password">Password</label>
           <input type="password" id="login-password" placeholder="enter password..." required>
         </div>
-        <div class="auth-toggle-link">
-          Don't have an ID? <span id="switch-to-signup">Sign up here</span>
-        </div>
         <button type="submit" class="submit-ticket-btn">Login</button>
-      </form>
-
-      <!-- Signup Form (Hidden by default) -->
-      <form id="signup-form" style="display: none;">
-        <p class="modal-desc">Create your profile to get a ThirstyID and RSVP.</p>
-        <div class="input-group">
-          <label for="signup-username">Username</label>
-          <input type="text" id="signup-username" placeholder="Username" required>
-        </div>
-        <div class="input-group">
-          <label for="signup-email">Email Address</label>
-          <input type="email" id="signup-email" placeholder="email..." required>
-        </div>
-        <div class="input-group">
-          <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" placeholder="enter password..." required>
-        </div>
-        <div class="auth-toggle-link">
-          Already have an ID? <span id="switch-to-login">Login here</span>
-        </div>
-        <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
       </form>
     </div>
   </dialog>

@@ -175,7 +175,7 @@ header nav .nav-btn.members-white:hover {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.5s ease;
   pointer-events: none;
 }
@@ -188,7 +188,7 @@ header nav .nav-btn.members-white:hover {
   height: 100%;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
   z-index: 2;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.5s ease;
   pointer-events: none;
 }
@@ -203,15 +203,9 @@ header nav .nav-btn.members-white:hover {
     radial-gradient(circle at bottom left, rgba(0, 0, 0, calc(0.35 + 0.6 * var(--video-progress, 0))) 0%, transparent calc(40% + 30% * var(--video-progress, 0))),
     radial-gradient(circle at bottom right, rgba(0, 0, 0, calc(0.35 + 0.6 * var(--video-progress, 0))) 0%, transparent calc(40% + 30% * var(--video-progress, 0)));
   z-index: 3;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.5s ease;
   pointer-events: none;
-}
-
-.hero.video-active .hero-bg-video,
-.hero.video-active .hero-video-overlay,
-.hero.video-active .hero-corner-vignette {
-  opacity: 1;
 }
 
 .hero-scroll-overlay {
@@ -1098,6 +1092,16 @@ dialog::backdrop {
 
 .close-modal:hover {
   color: var(--text-color);
+}
+
+.auth-title {
+  font-family: 'Kyrilla', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+  color: var(--accent-color);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(255, 62, 62, 0.4);
 }
 
 .auth-tabs {

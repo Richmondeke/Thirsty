@@ -237,7 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('ticket-modal');
   const openAuthBtn = document.getElementById('open-auth-btn');
   const navMembersBtn = document.getElementById('nav-members-btn');
-  const closeModalBtn = document.querySelector('.close-modal');
+  const closeModalBtn = document.querySelector('#ticket-modal .close-modal');
+  const loginForm = document.getElementById('login-form');
 
   const openAuthModal = () => {
     if (currentSession) {
@@ -245,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const rsvpSection = document.getElementById('rsvp');
       if (rsvpSection) rsvpSection.scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
-      showLoginForm();
+      if (loginForm) loginForm.reset();
       modal.showModal();
     }
   };
@@ -276,33 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
-  // Modal Auth Tabs switching
-  const tabLoginBtn = document.getElementById('auth-login-tab-btn');
-  const tabSignupBtn = document.getElementById('auth-signup-tab-btn');
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  const switchToSignup = document.getElementById('switch-to-signup');
-  const switchToLogin = document.getElementById('switch-to-login');
-
-  const showLoginForm = () => {
-    if (tabLoginBtn) tabLoginBtn.classList.add('active');
-    if (tabSignupBtn) tabSignupBtn.classList.remove('active');
-    if (loginForm) loginForm.style.display = 'block';
-    if (signupForm) signupForm.style.display = 'none';
-  };
-
-  const showSignupForm = () => {
-    if (tabSignupBtn) tabSignupBtn.classList.add('active');
-    if (tabLoginBtn) tabLoginBtn.classList.remove('active');
-    if (signupForm) signupForm.style.display = 'block';
-    if (loginForm) loginForm.style.display = 'none';
-  };
-
-  if (tabLoginBtn) tabLoginBtn.addEventListener('click', showLoginForm);
-  if (tabSignupBtn) tabSignupBtn.addEventListener('click', showSignupForm);
-  if (switchToSignup) switchToSignup.addEventListener('click', showSignupForm);
-  if (switchToLogin) switchToLogin.addEventListener('click', showLoginForm);
 
   // Success Modal Dialog management
   const successModal = document.getElementById('success-modal');
@@ -345,78 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 5. Supabase Auth Handlers (Signup / Login)
+  // 5. Supabase Auth Handlers (Login)
   // ==========================================
-  
-  // Sign Up Submit
-  if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const submitBtn = signupForm.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Processing...";
-      }
-      
-      const username = document.getElementById('signup-username').value.trim();
-      const email = document.getElementById('signup-email').value.trim().toLowerCase();
-      const password = document.getElementById('signup-password').value;
-
-      try {
-        // Validate username locally first
-        const { data: existingProfiles, error: profileCheckError } = await supabase
-          .from('profiles')
-          .select('id')
-          .ilike('username', username);
-
-        if (profileCheckError) {
-          throw new Error("Could not check username availability.");
-        }
-
-        if (existingProfiles && existingProfiles.length > 0) {
-          alert("This username is already taken.");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Get ThirstyID & Passport";
-          }
-          return;
-        }
-
-        // Sign Up with Supabase Auth
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username: username
-            }
-          }
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        if (data.session) {
-          alert("Registration Successful!\n\nYour account is active, and your ThirstyID has been generated.");
-          modal.close();
-          signupForm.reset();
-        } else {
-          alert("Registration Successful!\n\nPlease check your email inbox to verify your account. Once verified, your unique ThirstyID will be generated and you can log in.");
-          modal.close();
-          signupForm.reset();
-        }
-      } catch (err) {
-        alert("Sign Up Error: " + err.message);
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Get ThirstyID & Passport";
-        }
-      }
-    });
-  }
 
   // Login Submit
   if (loginForm) {
