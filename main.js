@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email.startsWith('admin@') || 
         session.user.email.endsWith('@thirstyclub999.com') ||
         session.user.email === 'richmond@guava.earth' ||
+        session.user.email === 'richmonde@guava.earth' ||
         profile.role === 'admin' ||
         profile.socials?.role === 'admin'
       );
@@ -904,6 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 11. Thirsty Passport Generator Logic
   // ==========================================
   let uploadedImage = null;
+  let adminFetchedUsers = [];
   const pantherImage = new Image();
   pantherImage.src = 'images/Heroimage.png';
   pantherImage.onload = () => {
@@ -1776,6 +1778,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (error) throw error;
 
+      adminFetchedUsers = users; // Store user profiles globally in the scope for reference
+
       let maleCount = 0;
       let femaleCount = 0;
       let otherCount = 0;
@@ -1809,6 +1813,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
             <td>${escapeHtml(user.socials?.place_of_thirst || 'N/A')}</td>
             <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
+            <td>
+              <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
+            </td>
           `;
           tbody.appendChild(tr);
         });
@@ -1830,6 +1837,343 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("Error loading admin dashboard: " + err.message);
     }
   };
+
+  // Helper to draw admin passport
+  const drawAdminPassportOnCanvas = (canvasId, profile, userImage) => {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    const w = 600;
+    const h = 800;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, w, h);
+    
+    // 1. Draw Burgundy Cover
+    ctx.fillStyle = '#5A060C';
+    ctx.beginPath();
+    ctx.roundRect(0, 0, w, h, 24);
+    ctx.fill();
+    
+    // Page Dimensions
+    const pageW = 560;
+    const pageH = 365;
+    const pageBgColor = '#EDE8DC';
+    
+    // 2. Draw Top Page
+    ctx.fillStyle = pageBgColor;
+    ctx.beginPath();
+    ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    
+    // 3. Draw Bottom Page
+    ctx.fillStyle = pageBgColor;
+    ctx.beginPath();
+    ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+    ctx.fill();
+    ctx.stroke();
+    
+    // Helper to draw security waves
+    const drawWaves = (topY, bottomY) => {
+      ctx.strokeStyle = 'rgba(139, 131, 120, 0.11)';
+      ctx.lineWidth = 1.0;
+      for (let y = topY - 15; y < bottomY + 15; y += 12) {
+        ctx.beginPath();
+        for (let x = 20; x <= 580; x += 10) {
+          const waveY = y + Math.sin((x - 20) * 0.03) * 6 + Math.cos((x - 20) * 0.015) * 3;
+          if (x === 20) ctx.moveTo(x, waveY);
+          else ctx.lineTo(x, waveY);
+        }
+        ctx.stroke();
+      }
+    };
+    
+    // Clip security waves to Top Page
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+    ctx.clip();
+    drawWaves(20, 385);
+    ctx.restore();
+    
+    // Clip security waves to Bottom Page
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+    ctx.clip();
+    drawWaves(415, 780);
+    ctx.restore();
+    
+    // 4. Draw Crease and Shadows
+    // Top page crease shadow
+    let gradTop = ctx.createLinearGradient(0, 350, 0, 385);
+    gradTop.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    gradTop.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+    ctx.fillStyle = gradTop;
+    ctx.fillRect(20, 350, pageW, 35);
+
+    // Bottom page crease shadow
+    let gradBottom = ctx.createLinearGradient(0, 415, 0, 450);
+    gradBottom.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
+    gradBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradBottom;
+    ctx.fillRect(20, 415, pageW, 35);
+
+    // The dark spine line itself
+    let gradSpine = ctx.createLinearGradient(0, 385, 0, 415);
+    gradSpine.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+    gradSpine.addColorStop(0.5, 'rgba(0, 0, 0, 0.85)');
+    gradSpine.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+    ctx.fillStyle = gradSpine;
+    ctx.fillRect(0, 385, w, 30);
+    
+    // 5. Draw Top Page Content
+    const sigText = profile.socials?.signature || 'A. Palmerston';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(85, 60);
+    ctx.lineTo(85, 345);
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(65, 202);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = '#000000';
+    ctx.font = 'italic 24px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(sigText, 0, 0);
+    ctx.restore();
+
+    // Middle Watermark
+    if (passportBlendImage.complete && passportBlendImage.naturalWidth > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+      ctx.clip();
+      ctx.globalAlpha = 0.16;
+      const imgW = 450;
+      const imgH = 300;
+      ctx.drawImage(passportBlendImage, 300 - imgW / 2, 202 - imgH / 2, imgW, imgH);
+      ctx.restore();
+    }
+
+    // Right vertical title
+    ctx.save();
+    ctx.translate(505, 202);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center';
+    ctx.font = '900 28px "Kyrilla", sans-serif';
+    ctx.fillText("THIRSTYCLUB999", 0, -8);
+    ctx.font = '700 13px "Kyrilla", sans-serif';
+    ctx.fillText("PASSPORT", 0, 18);
+    ctx.restore();
+
+    // Stamp
+    const isCheckedIn = (profile.socials?.checked_in === true || profile.checked_in === true);
+    if (isCheckedIn) {
+      drawStamp(ctx, 300, 202);
+    }
+
+    // 6. Draw Bottom Page Content
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'left';
+    ctx.font = '900 22px "Kyrilla", sans-serif';
+    ctx.fillText("THIRSTYCLUB999", 45, 452);
+    ctx.font = '700 11px "Kyrilla", sans-serif';
+    ctx.fillText("PASSPORT", 45 + 5, 470);
+
+    // Left photo
+    const uPhotoX = 45;
+    const uPhotoY = 492;
+    const uPhotoW = 185;
+    const uPhotoH = 245;
+
+    if (userImage) {
+      ctx.save();
+      ctx.filter = 'grayscale(100%)';
+      const imgW = userImage.width;
+      const imgH = userImage.height;
+      const aspect = uPhotoW / uPhotoH;
+      let srcW, srcH, srcX, srcY;
+      
+      if (imgW / imgH > aspect) {
+        srcH = imgH;
+        srcW = imgH * aspect;
+        srcX = (imgW - srcW) / 2;
+        srcY = 0;
+      } else {
+        srcW = userImage.width;
+        srcH = userImage.width / aspect;
+        srcX = 0;
+        srcY = (imgH - srcH) / 2;
+      }
+      ctx.drawImage(userImage, srcX, srcY, srcW, srcH, uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.beginPath();
+      ctx.arc(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH/3, 28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH * 0.72, 52, 36, 0, Math.PI, 0);
+      ctx.fill();
+    }
+    
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+
+    // Right details table
+    const tblX = 250;
+    const tblY = 495;
+    const tblW = 295;
+    const tblH = 240;
+    const rowH = 60;
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(tblX, tblY, tblW, tblH);
+
+    for (let r = 1; r < 4; r++) {
+      ctx.beginPath();
+      ctx.moveTo(tblX, tblY + r * rowH);
+      ctx.lineTo(tblX + tblW, tblY + r * rowH);
+      ctx.stroke();
+    }
+
+    const nameVal = (profile.username || 'ADELINE PALMERSTON').toUpperCase();
+    const pobVal = (profile.socials?.place_of_thirst || 'MANCHESTER').toUpperCase();
+    const genderVal = (profile.socials?.gender || 'F').toUpperCase();
+    const finalSigVal = profile.socials?.signature || sigText;
+
+    const drawRowFull = (label, value, rx, ry, rw, isCursive = false) => {
+      ctx.fillStyle = '#1b4d3e';
+      ctx.textAlign = 'left';
+      ctx.font = 'italic 10px sans-serif';
+      ctx.fillText(label, rx + 8, ry + 16);
+
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      if (isCursive) {
+        ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+        ctx.fillText(value, rx + rw / 2, ry + 42);
+      } else {
+        ctx.font = '900 13px "Kyrilla", sans-serif';
+        ctx.fillText(value, rx + rw / 2, ry + 42);
+      }
+    };
+
+    drawRowFull("Name:", nameVal, tblX, tblY, tblW);
+    drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
+    drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
+    drawRowFull("Signature:", finalSigVal, tblX, tblY + 3 * rowH, tblW, true);
+
+    if (logoImage.complete && logoImage.naturalWidth > 0) {
+      ctx.save();
+      ctx.filter = 'grayscale(100%)';
+      const logoSize = 36;
+      ctx.drawImage(logoImage, 505, 440, logoSize, logoSize);
+      ctx.restore();
+    }
+  };
+
+  // Wire up admin passport view events
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.classList.contains('admin-view-passport-btn')) {
+      e.preventDefault();
+      const email = e.target.getAttribute('data-email');
+      const user = adminFetchedUsers.find(u => u.email === email);
+      if (!user) return;
+
+      const modal = document.getElementById('admin-passport-modal');
+      if (!modal) return;
+
+      modal.showModal();
+
+      const canvas = document.getElementById('admin-passport-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fff';
+        ctx.font = '16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Loading Passport Photo...', canvas.width / 2, canvas.height / 2);
+      }
+
+      const drawIt = (userImg) => {
+        drawAdminPassportOnCanvas('admin-passport-canvas', user, userImg);
+      };
+
+      if (user.avatar_url) {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          drawIt(img);
+        };
+        img.onerror = () => {
+          console.warn("Could not load user avatar for admin drawing");
+          drawIt(null);
+        };
+        img.src = user.avatar_url;
+      } else {
+        drawIt(null);
+      }
+
+      // Hook up download in modal
+      const dlBtn = document.getElementById('admin-download-passport-btn');
+      if (dlBtn) {
+        const newDlBtn = dlBtn.cloneNode(true);
+        dlBtn.parentNode.replaceChild(newDlBtn, dlBtn);
+        newDlBtn.addEventListener('click', () => {
+          if (!canvas) return;
+          const formatVal = passportExportFormat?.value || 'png';
+          const filename = (user.username || 'user').toLowerCase().replace(/\s+/g, '-');
+          const dataUrl = formatVal === 'jpeg'
+            ? canvas.toDataURL('image/jpeg', 0.95)
+            : canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.download = `thirstyclub999-passport-${filename}.${formatVal === 'jpeg' ? 'jpg' : 'png'}`;
+          link.href = dataUrl;
+          link.click();
+        });
+      }
+    }
+  });
+
+  // Modal Dialog Close handlers
+  const adminPassportModal = document.getElementById('admin-passport-modal');
+  const closeAdminPassportModalBtn = document.getElementById('close-admin-passport-modal');
+  if (closeAdminPassportModalBtn && adminPassportModal) {
+    closeAdminPassportModalBtn.addEventListener('click', () => {
+      adminPassportModal.close();
+    });
+  }
+
+  if (adminPassportModal) {
+    adminPassportModal.addEventListener('click', (e) => {
+      const rect = adminPassportModal.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        adminPassportModal.close();
+      }
+    });
+  }
 
   // Wire up hero download button click
   const heroDownloadBtn = document.getElementById('hero-download-passport-btn');

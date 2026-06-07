@@ -2971,8 +2971,9 @@ body.logged-in-user #home .hero-logo-badge {
 /* --- Passport Viewer Section --- */
 .passport-viewer-section {
   position: relative;
+  height: auto !important;
   min-height: 100vh;
-  padding: 100px 1.5rem;
+  padding: 120px 1.5rem 80px 1.5rem !important;
   background: #0a0606;
   display: flex;
   flex-direction: column;
@@ -3139,6 +3140,35 @@ body.logged-in-user #home .hero-logo-badge {
     padding: 60px 1rem;
     height: auto !important;
   }
+}
+
+.table-action-btn {
+  background: var(--accent-color);
+  color: #fff;
+  border: 1px solid rgba(255, 62, 62, 0.4);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 5px var(--accent-glow);
+}
+
+.table-action-btn:hover {
+  background: #ff4d4d;
+  box-shadow: 0 0 10px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+#admin-passport-modal {
+  max-width: 680px !important;
+  width: 90% !important;
+  padding: 2.5rem !important;
+}
+
+#admin-passport-modal .modal-content {
+  align-items: center;
 }
 
 

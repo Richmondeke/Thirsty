@@ -73,10 +73,34 @@
         <a href="#rsvp" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
       </div>
 
-      <!-- Logged In Hero View (hidden by default) -->
-      <div class="hero-logged-in-container" id="hero-logged-in" style="display: none;">
-        <!-- 2. Logged-In Dashboard State -->
-        <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
+      <!-- Floating Logo Badge in Bottom Right -->
+      <div class="hero-logo-badge">
+        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
+      </div>
+
+      <div class="scroll-indicator">
+        <div class="mouse">
+          <div class="wheel"></div>
+        </div>
+        <span>Scroll Down</span>
+      </div>
+    </section>
+
+    <!-- Logged In Passport & QR Viewer Section -->
+    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
+      <!-- Looping Concert Background Video -->
+      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
+        <source src="images/Tiger2.mp4" type="video/mp4">
+      </video>
+      <div class="hero-video-overlay"></div>
+      
+      <!-- Vignette at both top and bottom -->
+      <div class="vignette-top-bottom"></div>
+
+      <!-- Passport Grid View -->
+      <div class="hero-logged-in-container" style="display: block;">
+        <!-- 2. Logged-In Dashboard State (Moved here from home section) -->
+        <div class="dashboard-card" id="user-dashboard-card" style="display: none; margin-bottom: 3rem; width: 100%;">
           <div class="dashboard-header">
             <div class="dash-logo-title">
               <span class="dash-logo">THIRSTYCLUB999</span>
@@ -230,6 +254,7 @@
                       <th>Gender</th>
                       <th>Place of Thirst</th>
                       <th>Registered At</th>
+                      <th>Passport</th>
                     </tr>
                   </thead>
                   <tbody id="admin-users-list">
@@ -240,34 +265,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Floating Logo Badge in Bottom Right -->
-      <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
-      </div>
-
-      <div class="scroll-indicator">
-        <div class="mouse">
-          <div class="wheel"></div>
-        </div>
-        <span>Scroll Down</span>
-      </div>
-    </section>
-
-    <!-- Logged In Passport & QR Viewer Section -->
-    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay"></div>
-      
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
-
-      <!-- Passport Grid View -->
-      <div class="hero-logged-in-container" style="display: block;">
         <div class="hero-logged-in-grid">
           <div class="hero-passport-column">
             <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
@@ -913,6 +910,19 @@
         <span class="status-dot pulsed" style="width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; display: inline-block;"></span>
         <span id="processing-status-text" style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.05em;">VERIFYING CREDENTIALS...</span>
       </div>
+    </div>
+  </dialog>
+
+  <!-- Admin Passport View Dialog -->
+  <dialog id="admin-passport-modal" style="background: #0a0a0a; border: 1px solid var(--glass-border); padding: 2.5rem; max-width: 680px; width: 90%;">
+    <div class="modal-content" style="align-items: center; justify-content: center; position: relative;">
+      <button class="close-modal" id="close-admin-passport-modal" aria-label="Close modal">&times;</button>
+      <h3 style="font-family: 'Kyrilla', sans-serif; font-weight: 950; font-size: 1.8rem; color: var(--accent-color); margin-bottom: 1.5rem; text-align: center; letter-spacing: 0.15em;">MEMBER PASSPORT</h3>
+      <div class="canvas-wrapper vertical-passport-wrapper" style="margin-bottom: 1.5rem; width: 100%; max-width: 450px;">
+        <div class="passport-glow-border"></div>
+        <canvas id="admin-passport-canvas" width="600" height="800" style="width: 100%; height: auto; border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);"></canvas>
+      </div>
+      <button class="buy-button" id="admin-download-passport-btn">DOWNLOAD PASSPORT</button>
     </div>
   </dialog>
 
