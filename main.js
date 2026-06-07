@@ -1468,7 +1468,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: currentSession.user.email,
                 username: nameVal,
                 thirstyclub_id: currentUserProfile?.thirstyclub_id || 'T999-XXXX',
-                place_of_thirst: pobVal
+                place_of_thirst: pobVal,
+                passport_image: dataUrl
               })
             }).catch(e => console.warn('Email trigger error (non-blocking):', e));
           } catch (e) {
@@ -1664,7 +1665,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: emailVal,
                 username: nameVal,
                 thirstyclub_id: memberIdVal,
-                place_of_thirst: pobVal
+                place_of_thirst: pobVal,
+                passport_image: dataUrl
               })
             }).catch(e => console.warn('Email trigger error (non-blocking):', e));
           } catch (e) {
@@ -1871,6 +1873,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (maleEl) maleEl.textContent = maleCount;
       if (femaleEl) femaleEl.textContent = femaleCount;
       if (otherEl) otherEl.textContent = otherCount;
+
+      // Populate welcome email settings from DB
+      try {
+        const { data: adminProfile } = await supabase
+          .from('profiles')
+          .select('socials')
+          .eq('id', currentSession.user.id)
+          .single();
+
+        if (adminProfile && adminProfile.socials) {
+          const subjectEl = document.getElementById('admin-email-subject');
+          const messageEl = document.getElementById('admin-email-message');
+          if (subjectEl) subjectEl.value = adminProfile.socials.welcome_email_subject || '';
+          if (messageEl) messageEl.value = adminProfile.socials.welcome_email_message || '';
+        }
+      } catch (templateErr) {
+        console.warn("Failed to load email template configuration:", templateErr);
+      }
 
     } catch (err) {
       console.error("Error loading admin dashboard:", err);
@@ -2269,5 +2289,131 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI,
     loadAdminDashboard
   };
+
+  // Welcome Template Saving
+  const saveWelcomeBtn = document.getElementById('admin-save-email-template-btn');
+  if (saveWelcomeBtn) {
+    saveWelcomeBtn.addEventListener('click', async () => {
+      const subject = document.getElementById('admin-email-subject')?.value.trim();
+      const message = document.getElementById('admin-email-message')?.value.trim();
+
+      if (!currentSession) return;
+
+      try {
+        saveWelcomeBtn.disabled = true;
+        saveWelcomeBtn.textContent = 'SAVING...';
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('socials')
+          .eq('id', currentSession.user.id)
+          .single();
+
+        const updatedSocials = {
+          ...(profile?.socials || {}),
+          welcome_email_subject: subject,
+          welcome_email_message: message
+        };
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ socials: updatedSocials })
+          .eq('id', currentSession.user.id);
+
+        if (error) throw error;
+
+        alert('Welcome email template saved successfully!');
+      } catch (err) {
+        console.error('Error saving welcome template:', err);
+        alert('Failed to save welcome template: ' + err.message);
+      } finally {
+        saveWelcomeBtn.disabled = false;
+        saveWelcomeBtn.textContent = 'SAVE WELCOME TEMPLATE';
+      }
+    });
+  }
+
+  // Broadcast Email Blast
+  const broadcastBtn = document.getElementById('admin-broadcast-email-btn');
+  const broadcastSubject = document.getElementById('admin-broadcast-subject');
+  const broadcastMessage = document.getElementById('admin-broadcast-message');
+  const broadcastStatusContainer = document.getElementById('broadcast-status-container');
+  const broadcastProgressBar = document.getElementById('broadcast-progress-bar');
+  const broadcastStatusText = document.getElementById('broadcast-status-text');
+
+  if (broadcastBtn) {
+    broadcastBtn.addEventListener('click', async () => {
+      const subject = broadcastSubject?.value.trim();
+      const message = broadcastMessage?.value.trim();
+
+      if (!subject || !message) {
+        alert("Please enter both Subject and Message body for the broadcast.");
+        return;
+      }
+
+      if (!adminFetchedUsers || adminFetchedUsers.length === 0) {
+        alert("No registered users found to send broadcast.");
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to send this broadcast email to all ${adminFetchedUsers.length} users?`)) {
+        return;
+      }
+
+      try {
+        broadcastBtn.disabled = true;
+        if (broadcastStatusContainer) broadcastStatusContainer.style.display = 'block';
+
+        let sentCount = 0;
+        let failedCount = 0;
+
+        for (let i = 0; i < adminFetchedUsers.length; i++) {
+          const user = adminFetchedUsers[i];
+          const pct = Math.round(((i + 1) / adminFetchedUsers.length) * 100);
+          
+          if (broadcastProgressBar) broadcastProgressBar.style.width = `${pct}%`;
+          if (broadcastStatusText) {
+            broadcastStatusText.textContent = `Sending to ${user.email} (${i + 1}/${adminFetchedUsers.length})...`;
+          }
+
+          try {
+            const res = await fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: user.email,
+                username: user.username,
+                thirstyclub_id: user.thirstyclub_id || 'T999-XXXX',
+                place_of_thirst: user.socials?.place_of_thirst || '',
+                custom_subject: subject,
+                custom_message: message
+              })
+            });
+
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            sentCount++;
+          } catch (e) {
+            console.error(`Failed to send broadcast to ${user.email}:`, e);
+            failedCount++;
+          }
+        }
+
+        if (broadcastStatusText) {
+          broadcastStatusText.textContent = `Broadcast completed! Sent: ${sentCount}, Failed: ${failedCount}`;
+        }
+        alert(`Broadcast complete. Sent: ${sentCount}, Failed: ${failedCount}`);
+
+      } catch (err) {
+        console.error("Broadcast failed:", err);
+        alert("Failed to send broadcast: " + err.message);
+      } finally {
+        broadcastBtn.disabled = false;
+        setTimeout(() => {
+          if (broadcastStatusContainer) broadcastStatusContainer.style.display = 'none';
+          if (broadcastProgressBar) broadcastProgressBar.style.width = '0%';
+        }, 5000);
+      }
+    });
+  }
 });
 /* force redeploy Sun Jun  7 03:48:39 WAT 2026 */

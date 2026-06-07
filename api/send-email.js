@@ -1,9 +1,15 @@
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, username, thirstyclub_id, place_of_thirst } = req.body;
+  const { email, username, thirstyclub_id, place_of_thirst, passport_image, custom_subject, custom_message } = req.body;
 
   if (!email || !username || !thirstyclub_id) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -11,11 +17,64 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.key || process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY;
   if (!apiKey) {
-    console.error('Mailchimp Transactional API key is not configured (checked process.env.key, process.env.MAILCHIMP_TRANSACTIONAL_API_KEY, process.env.MANDRILL_API_KEY)');
+    console.error('Mailchimp Transactional API key is not configured');
     return res.status(500).json({ error: 'Email configuration error' });
   }
 
   try {
+    // 1. Determine subject and message template
+    let emailSubject = custom_subject || 'YOUR ENTRY PASS GRANTED - ThirstyClub999';
+    let welcomeMessage = custom_message || 'Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club.';
+
+    // If not custom (i.e. this is the automatic signup email), try fetching the customized template saved in admin profiles
+    if (!custom_subject && !custom_message) {
+      const { data: adminProfiles } = await supabase
+        .from('profiles')
+        .select('socials')
+        .in('email', ['guavanigeria@gmail.com', 'richmond@guava.earth', 'richmonde@guava.earth'])
+        .not('socials', 'is', null);
+
+      if (adminProfiles && adminProfiles.length > 0) {
+        // Find the first admin profile that has welcome email configurations
+        for (const admin of adminProfiles) {
+          if (admin.socials?.welcome_email_subject) {
+            emailSubject = admin.socials.welcome_email_subject;
+          }
+          if (admin.socials?.welcome_email_message) {
+            welcomeMessage = admin.socials.welcome_email_message;
+          }
+        }
+      }
+    }
+
+    // Replace placeholders
+    emailSubject = emailSubject
+      .replace(/{username}/g, username)
+      .replace(/{thirstyclub_id}/g, thirstyclub_id)
+      .replace(/{place_of_thirst}/g, place_of_thirst || 'MANCHESTER');
+
+    welcomeMessage = welcomeMessage
+      .replace(/{username}/g, username)
+      .replace(/{thirstyclub_id}/g, thirstyclub_id)
+      .replace(/{place_of_thirst}/g, place_of_thirst || 'MANCHESTER');
+
+    // 2. Prepare attachments if passport image is provided
+    const attachments = [];
+    if (passport_image && passport_image.startsWith('data:')) {
+      const parts = passport_image.split(';base64,');
+      if (parts.length === 2) {
+        const attachmentType = parts[0].replace('data:', '');
+        const attachmentContent = parts[1];
+        const ext = attachmentType.split('/')[1] || 'png';
+        attachments.push({
+          type: attachmentType,
+          name: `thirstyclub999-passport-${thirstyclub_id.toLowerCase()}.${ext}`,
+          content: attachmentContent
+        });
+      }
+    }
+
+    // 3. Send via Mailchimp Transactional
     const response = await fetch('https://mandrillapp.com/api/1.0/messages/send', {
       method: 'POST',
       headers: {
@@ -26,7 +85,7 @@ export default async function handler(req, res) {
         message: {
           from_email: 'hello@thirstyclub999.com',
           from_name: 'ThirstyClub999',
-          subject: 'YOUR ENTRY PASS GRANTED - ThirstyClub999',
+          subject: emailSubject,
           to: [
             {
               email: email,
@@ -35,9 +94,13 @@ export default async function handler(req, res) {
           ],
           html: `
             <div style="font-family: Arial, sans-serif; background-color: #050505; color: #ffffff; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto; border: 1px solid #ff3e3e;">
-              <h2 style="color: #ff3e3e; text-align: center; font-size: 24px; letter-spacing: 2px;">YOU'RE IN THE CLUB</h2>
+              <h2 style="color: #ff3e3e; text-align: center; font-size: 24px; letter-spacing: 2px;">THIRSTYCLUB999</h2>
+              
               <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;">Hi <strong>${username}</strong>,</p>
-              <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;">Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready.</p>
+              
+              <div style="font-size: 16px; line-height: 1.6; color: #e0e0e0; margin: 20px 0; white-space: pre-line;">
+                ${welcomeMessage}
+              </div>
               
               <div style="background-color: #121212; padding: 20px; border-radius: 4px; margin: 25px 0; border: 1px dashed rgba(255, 62, 62, 0.4); text-align: center;">
                 <p style="margin: 0; font-size: 14px; color: #888888; text-transform: uppercase; letter-spacing: 1px;">Your Access ID</p>
@@ -46,12 +109,13 @@ export default async function handler(req, res) {
               
               <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;"><strong>Place of Thirst:</strong> ${place_of_thirst || 'MANCHESTER'}</p>
               
-              <p style="font-size: 14px; line-height: 1.6; color: #888888; margin-top: 30px;">To view your live passport and entry pass QR code at any time, log in to the clubhouse using your credentials or your Access ID on our website.</p>
+              <p style="font-size: 14px; line-height: 1.6; color: #888888; margin-top: 30px;">Your entry passport card has been attached to this email. You can also view your live passport and entry pass QR code at any time by logging in to the clubhouse on our website.</p>
               
               <hr style="border: 0; border-top: 1px solid #333333; margin: 30px 0;" />
               <p style="font-size: 12px; color: #555555; text-align: center;">ThirstyClub999. Keep it safe.</p>
             </div>
-          `
+          `,
+          attachments: attachments
         }
       })
     });
