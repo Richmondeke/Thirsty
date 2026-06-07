@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (navMembersBtn) {
         navMembersBtn.textContent = 'My Passport';
-        navMembersBtn.href = '#home'; // scroll to top/hero since passport is there
+        navMembersBtn.href = '#passport-viewer';
       }
 
       if (passportAuthFields) passportAuthFields.style.display = 'none';
@@ -352,9 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const openAuthModal = () => {
     if (currentSession) {
-      // If logged in, navigate straight to home section
-      const homeSection = document.getElementById('home');
-      if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
+      // If logged in, navigate straight to passport-viewer section
+      const passportViewer = document.getElementById('passport-viewer');
+      if (passportViewer) passportViewer.scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
       if (loginForm) loginForm.reset();
       modal.showModal();
