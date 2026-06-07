@@ -540,10 +540,10 @@
           ctx.textAlign = 'center';
           if (isCursive) {
             ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
-            ctx.fillText(value, rx + 90, ry + 42); // centered left half
+            ctx.fillText(value, rx + rw / 2, ry + 42); // centered
           } else {
             ctx.font = '900 13px "Kyrilla", sans-serif';
-            ctx.fillText(value, rx + 90, ry + 42); // centered left half
+            ctx.fillText(value, rx + rw / 2, ry + 42); // centered
           }
         };
 
@@ -552,18 +552,12 @@
         drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
         drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
 
-        // Draw logo oval in bottom-right corner of bottom page
-        ctx.fillStyle = '#FFFFFF';
-        ctx.beginPath();
-        ctx.ellipse(490, 615, 45, 30, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
         if (logoImage.complete && logoImage.naturalWidth > 0) {
-          const logoSize = 48;
-          ctx.drawImage(logoImage, 490 - logoSize / 2, 615 - logoSize / 2, logoSize, logoSize);
+          ctx.save();
+          ctx.filter = 'grayscale(100%)';
+          const logoSize = 36;
+          ctx.drawImage(logoImage, 505, 440, logoSize, logoSize);
+          ctx.restore();
         }
       };
 

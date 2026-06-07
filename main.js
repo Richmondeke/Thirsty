@@ -309,9 +309,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const openAuthModal = () => {
     if (currentSession) {
-      // If logged in, navigate straight to rsvp section
-      const rsvpSection = document.getElementById('rsvp');
-      if (rsvpSection) rsvpSection.scrollIntoView({ behavior: 'smooth' });
+      // If logged in, navigate straight to home section
+      const homeSection = document.getElementById('home');
+      if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
     } else if (modal) {
       if (loginForm) loginForm.reset();
       modal.showModal();
@@ -434,10 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.close();
         loginForm.reset();
         
-        // Scroll directly to passport/rsvp section on login
+        // Scroll directly to passport section on login
         setTimeout(() => {
-          const rsvpSection = document.getElementById('rsvp');
-          if (rsvpSection) rsvpSection.scrollIntoView({ behavior: 'smooth' });
+          const homeSection = document.getElementById('home');
+          if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
         }, 300);
       } catch (err) {
         alert("Login Error: " + err.message);
@@ -1123,10 +1123,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.textAlign = 'center';
       if (isCursive) {
         ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
-        ctx.fillText(value, rx + 90, ry + 42); // centered left half
+        ctx.fillText(value, rx + rw / 2, ry + 42); // centered
       } else {
         ctx.font = '900 13px "Kyrilla", sans-serif';
-        ctx.fillText(value, rx + 90, ry + 42); // centered left half
+        ctx.fillText(value, rx + rw / 2, ry + 42); // centered
       }
     };
 
@@ -1135,18 +1135,12 @@ document.addEventListener('DOMContentLoaded', () => {
     drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
     drawRowFull("Signature:", finalSigVal, tblX, tblY + 3 * rowH, tblW, true);
 
-    // Draw logo oval in bottom-right corner of bottom page
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath();
-    ctx.ellipse(490, 615, 45, 30, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
     if (logoImage.complete && logoImage.naturalWidth > 0) {
-      const logoSize = 48;
-      ctx.drawImage(logoImage, 490 - logoSize / 2, 615 - logoSize / 2, logoSize, logoSize);
+      ctx.save();
+      ctx.filter = 'grayscale(100%)';
+      const logoSize = 36;
+      ctx.drawImage(logoImage, 505, 440, logoSize, logoSize);
+      ctx.restore();
     }
   };
 
