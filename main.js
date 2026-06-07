@@ -2478,5 +2478,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── Mailchimp Sync Button ──────────────────────────────────
+  const adminSyncMailchimpBtn = document.getElementById('admin-sync-mailchimp-btn');
+  if (adminSyncMailchimpBtn) {
+    adminSyncMailchimpBtn.addEventListener('click', async () => {
+      if (!confirm("Are you sure you want to sync all registered profiles with Mailchimp? This will add or update them in your audience list.")) {
+        return;
+      }
+      adminSyncMailchimpBtn.textContent = '🐒 Syncing...';
+      adminSyncMailchimpBtn.disabled = true;
+      try {
+        const res = await fetch('/api/mailchimp-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ admin_email: currentSession?.user?.email })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert(`Mailchimp Sync Completed!\n\nTotal Profiles: ${data.total_profiles}\nNew Subscribers: ${data.new_subscribers}\nUpdated: ${data.updated}\nErrors: ${data.errors}`);
+        } else {
+          alert(`Sync failed: ${data.error || 'Unknown error'}`);
+        }
+      } catch (err) {
+        console.error("Mailchimp sync error:", err);
+        alert("Sync failed: " + err.message);
+      } finally {
+        adminSyncMailchimpBtn.textContent = '🐒 Sync Mailchimp';
+        adminSyncMailchimpBtn.disabled = false;
+      }
+    });
+  }
+
 });
-/* force redeploy Sun Jun  7 03:48:39 WAT 2026 */
+/* force redeploy Sun Jun  7 04:10:00 WAT 2026 */
