@@ -1373,6 +1373,7 @@ document.addEventListener('DOMContentLoaded', () => {
           processingModal.showModal();
         }
         
+        let shouldShowSuccess = false;
         try {
           // Step 1: Download passport IMMEDIATELY (before any DB ops)
           if (processingModal) document.getElementById('processing-status-text').textContent = 'DOWNLOADING PASSPORT...';
@@ -1420,10 +1421,11 @@ document.addEventListener('DOMContentLoaded', () => {
               .from('profiles').select('*').eq('id', currentSession.user.id).single();
             if (refreshedProfile) { currentUserProfile = refreshedProfile; updateUI(); }
           }
-
+          shouldShowSuccess = true;
         } catch (err) {
           // Download already happened — don't block user with error
           console.error('Profile sync error (download complete):', err);
+          shouldShowSuccess = true;
         } finally {
           // Always close modal — never get stuck
           const elapsed = Date.now() - startTime;
@@ -1432,6 +1434,18 @@ document.addEventListener('DOMContentLoaded', () => {
           if (processingModal) processingModal.close();
           downloadPassportBtn.disabled = false;
           downloadPassportBtn.textContent = originalText;
+
+          // Open success modal after closing processing modal
+          if (shouldShowSuccess) {
+            const successModal = document.getElementById('success-modal');
+            const successMemberId = document.getElementById('success-member-id');
+            if (successMemberId) {
+              successMemberId.textContent = currentUserProfile?.thirstyclub_id || 'T999-XXXX';
+            }
+            if (successModal) {
+              successModal.showModal();
+            }
+          }
         }
         return;
       }
@@ -1458,6 +1472,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('processing-status-text').textContent = 'VERIFYING CREDENTIALS & SIGNING...';
         processingModal.showModal();
       }
+
+      let shouldShowSuccess = false;
+      let memberIdVal = 'T999-XXXX';
+      let isPending = false;
 
       try {
         const profilePic = uploadedImage ? uploadedImage.src : ""; // base64 string
@@ -1548,28 +1566,13 @@ document.addEventListener('DOMContentLoaded', () => {
           currentSession = signUpData.session;
           updateUI();
 
-          // Show success modal
-          const successModal = document.getElementById('success-modal');
-          const successMemberId = document.getElementById('success-member-id');
-          if (successMemberId) {
-            successMemberId.textContent = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
-          }
-          if (successModal) {
-            successModal.showModal();
-          }
+          memberIdVal = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
+          shouldShowSuccess = true;
         } else {
           // Session is not active yet (requires email confirmation)
-          alert("RSVP Pending!\n\nPlease check your email inbox to confirm your account and activate your ThirstyID.");
-          
-          // Even if email verification is enabled, show success modal with access details
-          const successModal = document.getElementById('success-modal');
-          const successMemberId = document.getElementById('success-member-id');
-          if (successMemberId) {
-            successMemberId.textContent = 'PENDING VERIFICATION';
-          }
-          if (successModal) {
-            successModal.showModal();
-          }
+          isPending = true;
+          memberIdVal = 'PENDING VERIFICATION';
+          shouldShowSuccess = true;
         }
       } catch (err) {
         alert("RSVP Error: " + err.message);
@@ -1582,6 +1585,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (processingModal) processingModal.close();
         downloadPassportBtn.disabled = false;
         downloadPassportBtn.textContent = "DOWNLOAD PASSPORT (RSVP)";
+
+        if (shouldShowSuccess) {
+          if (isPending) {
+            alert("RSVP Pending!\n\nPlease check your email inbox to confirm your account and activate your ThirstyID.");
+          }
+          const successModal = document.getElementById('success-modal');
+          const successMemberId = document.getElementById('success-member-id');
+          if (successMemberId) {
+            successMemberId.textContent = memberIdVal;
+          }
+          if (successModal) {
+            successModal.showModal();
+          }
+        }
       }
     });
   }
