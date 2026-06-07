@@ -9,9 +9,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const apiKey = process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY;
+  const apiKey = process.env.key || process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY;
   if (!apiKey) {
-    console.error('Mailchimp Transactional API key is not configured');
+    console.error('Mailchimp Transactional API key is not configured (checked process.env.key, process.env.MAILCHIMP_TRANSACTIONAL_API_KEY, process.env.MANDRILL_API_KEY)');
     return res.status(500).json({ error: 'Email configuration error' });
   }
 
