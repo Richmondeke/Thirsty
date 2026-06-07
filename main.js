@@ -115,13 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroLoggedIn = document.getElementById('hero-logged-in');
     const passportViewerSection = document.getElementById('passport-viewer');
 
+    const homeSection = document.getElementById('home');
+    const lineupSection = document.getElementById('lineup');
+    const gallerySection = document.getElementById('gallery');
+    const rsvpSection = document.getElementById('rsvp');
+    const logo = document.querySelector('.logo');
+
     if (session && profile) {
       // User is Logged In
       document.body.classList.add('logged-in-user');
       
-      if (heroLoggedOut) heroLoggedOut.style.display = 'none';
-      if (heroLoggedIn) heroLoggedIn.style.display = 'block';
-      if (passportViewerSection) passportViewerSection.style.display = 'block';
+      if (logo) logo.href = '#passport-viewer';
+      if (homeSection) homeSection.style.display = 'none';
+      if (lineupSection) lineupSection.style.display = 'none';
+      if (gallerySection) gallerySection.style.display = 'none';
+      if (rsvpSection) rsvpSection.style.display = 'none';
+      if (ticketsSection) ticketsSection.style.display = 'none';
+      if (passportViewerSection) passportViewerSection.style.display = 'flex';
 
       // Generate QR Code
       const qrContainer = document.getElementById('hero-qr-code');
@@ -224,8 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // User is Logged Out
       document.body.classList.remove('logged-in-user');
 
-      if (heroLoggedOut) heroLoggedOut.style.display = 'flex';
-      if (heroLoggedIn) heroLoggedIn.style.display = 'none';
+      if (logo) logo.href = '#home';
+      if (homeSection) homeSection.style.display = 'flex';
+      if (lineupSection) lineupSection.style.display = '';
+      if (gallerySection) gallerySection.style.display = '';
+      if (rsvpSection) rsvpSection.style.display = '';
       if (passportViewerSection) passportViewerSection.style.display = 'none';
 
       const ticketsSection = document.getElementById('tickets');
@@ -1433,6 +1446,23 @@ document.addEventListener('DOMContentLoaded', () => {
               .from('profiles').select('*').eq('id', currentSession.user.id).single();
             if (refreshedProfile) { currentUserProfile = refreshedProfile; updateUI(); }
           }
+
+          // Trigger transactional email
+          try {
+            fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: currentSession.user.email,
+                username: nameVal,
+                thirstyclub_id: currentUserProfile?.thirstyclub_id || 'T999-XXXX',
+                place_of_thirst: pobVal
+              })
+            }).catch(e => console.warn('Email trigger error (non-blocking):', e));
+          } catch (e) {
+            console.warn('Email trigger call failed:', e);
+          }
+
           shouldShowSuccess = true;
         } catch (err) {
           // Download already happened — don't block user with error
@@ -1588,6 +1618,23 @@ document.addEventListener('DOMContentLoaded', () => {
           updateUI();
 
           memberIdVal = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
+
+          // Trigger transactional email
+          try {
+            fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: emailVal,
+                username: nameVal,
+                thirstyclub_id: memberIdVal,
+                place_of_thirst: pobVal
+              })
+            }).catch(e => console.warn('Email trigger error (non-blocking):', e));
+          } catch (e) {
+            console.warn('Email trigger call failed:', e);
+          }
+
           shouldShowSuccess = true;
         } else {
           // Session is not active yet (requires email confirmation)
