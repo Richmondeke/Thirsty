@@ -1188,6 +1188,41 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
       };
 
+      const performDownloadAndShare = async () => {
+        // Standard download first
+        performDownload();
+
+        // Share via Web Share API if supported
+        if (navigator.share) {
+          try {
+            const fileExt = formatVal === 'jpeg' ? 'jpg' : 'png';
+            const fileMime = formatVal === 'jpeg' ? 'image/jpeg' : 'image/png';
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+            const file = new File([blob], `thirstyclub999-passport-${filename}.${fileExt}`, {
+              type: fileMime
+            });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: 'ThirstyClub999 Passport',
+                text: 'Hi Join the ThirstyClub999 Club'
+              });
+            } else {
+              // Fallback to text sharing if file sharing not supported
+              await navigator.share({
+                title: 'ThirstyClub999 Passport',
+                text: 'Hi Join the ThirstyClub999 Club',
+                url: window.location.origin
+              });
+            }
+          } catch (err) {
+            console.warn('Web Share failed or cancelled:', err);
+          }
+        }
+      };
+
       const processingModal = document.getElementById('processing-modal');
 
       // 1. User is Logged In: Update their profile and download
@@ -1231,8 +1266,8 @@ document.addEventListener('DOMContentLoaded', () => {
           currentUserProfile = refreshedProfile;
           updateUI();
           
-          // Download the passport
-          performDownload();
+          // Download and share the passport
+          await performDownloadAndShare();
           alert("Passport updated and downloaded successfully!");
         } catch (err) {
           alert("Error updating passport: " + err.message);
