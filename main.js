@@ -681,6 +681,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Login Submit
   if (loginForm) {
+    // Submit immediately on touchstart to prevent double-click requirement caused by keyboard blur layout shifts on mobile
+    const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
+    if (loginSubmitBtn) {
+      loginSubmitBtn.addEventListener('touchstart', (e) => {
+        if (loginForm.reportValidity()) {
+          e.preventDefault();
+          loginForm.requestSubmit();
+        }
+      }, { passive: false });
+    }
+
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
