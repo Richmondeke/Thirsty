@@ -1,761 +1,27 @@
-
-    <header class="site-header">
-      <div class="header-container">
-        <a href="index.html" class="logo" style="text-decoration: none;">THIRSTYCLUB<span class="accent">999</span></a>
-        
-        <!-- Desktop Nav -->
-        <nav class="desktop-nav">
-          <ul class="nav-list">
-            <li><a href="index.html" class="nav-link">Back to Dashboard</a></li>
-          </ul>
-        </nav>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
-          <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-          </span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
-      <nav class="mobile-nav-menu">
-        <ul class="mobile-nav-list">
-          <li><a href="index.html" class="mobile-nav-link">Back to Dashboard</a></li>
-        </ul>
-      </nav>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline>
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay"></div>
-      
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
-
-      <!-- Hero Content (Logged Out State - Default) -->
-      <div class="hero-logo-overlay">
-        <h1 class="hero-main-title">THIRSTYCLUB<span class="accent">999</span></h1>
-        <p class="hero-subtitle">JUNE 14TH 2026, LAGOS</p>
-      </div>
-    </section>
-<section class="lineup-section" id="lineup">
-      <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">THE LINEUP</h2>
-      </div>
-
-      <!-- Marquee 1 (Left Scrolling) -->
-      <div class="marquee-wrapper reveal-on-scroll" id="marquee-wrapper">
-        <div class="marquee-container">
-          <div class="marquee marquee-left">
-            <div class="marquee-track">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Marquee 2 (Right Scrolling) -->
-        <div class="marquee-container">
-          <div class="marquee marquee-right">
-            <div class="marquee-track">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Static Lineup Grid (Visible when toggled) -->
-      <div class="static-lineup-container" id="static-lineup-container" style="display: none;">
-        <div class="static-lineup-grid">
-          <div class="static-artist">
-            <img src="images/artists/zlatan_ibile.jpg" alt="ZLATAN IBILE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZLATAN IBILE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/odumodublvck.jpg" alt="ODUMODUBLVCK" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ODUMODUBLVCK</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/jeriq.jpg" alt="JERIQ" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">JERIQ</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/straffitti.jpg" alt="$TRAFFITTI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$TRAFFITTI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/ayjay_bobo.jpg" alt="AYJAY BOBO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">AYJAY BOBO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/wavestar.jpg" alt="WAVE$TAR" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">WAVE$TAR</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/artsalghul.jpg" alt="ARTSALGHUL" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ARTSALGHUL</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/scottyolorin.jpg" alt="$COTTYOLORIN" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$COTTYOLORIN</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/r33nzo.jpg" alt="R33NZO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">R33NZO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/davetheoracle.jpg" alt="DAVETHEORACLE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">DAVETHEORACLE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/suono_sai.jpg" alt="SUonO SAI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">SUonO SAI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/monochrome.jpg" alt="MONOCHROME" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MONOCHROME</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/maeverse.jpg" alt="MAEVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MAEVERSE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/erigothi.jpg" alt="ERIGOTHI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ERIGOTHI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/zenuniverse.jpg" alt="ZENUNIVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZENUNIVERSE</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Toggle View Button -->
-      <div class="toggle-btn-wrap reveal-on-scroll">
-        <button class="lineup-toggle-btn" id="lineup-toggle-btn">View Full Lineup</button>
-      </div>
-    </section>
-
-    <!-- Gallery Section (Past Editions) -->
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThirstyClub999 | The Concert</title>
-  <meta name="description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://thirstynalia.com">
-  <meta property="og:title" content="ThirstyClub999 | The Concert">
-  <meta property="og:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  <meta property="og:image" content="https://thirstynalia.com/images/999social.png">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://thirstynalia.com">
-  <meta property="twitter:title" content="ThirstyClub999 | The Concert">
-  <meta property="twitter:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  <meta property="twitter:image" content="https://thirstynalia.com/images/999social.png">
-
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260607.4">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
-
-  <!-- Dynamic Cursor Glow Background -->
-  <div id="cursor-glow"></div>
-
-  <!-- Header Navigation -->
-  <header>
-    <a href="#home" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
-    <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-    <nav id="nav-menu">
-      <a href="#lineup">Lineup</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#venue">Venue</a>
-      <a href="#rsvp" class="nav-btn rsvp-red" id="nav-rsvp-btn">RSVP</a>
-      <a href="#" class="nav-btn members-white" id="nav-members-btn">Members Only</a>
-      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-      <!-- Background Video (plays on RSVP hover) -->
-      <video class="hero-bg-video" id="hero-bg-video" preload="auto" muted playsinline>
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay" id="hero-video-overlay"></div>
-      <div class="hero-corner-vignette" id="hero-corner-vignette"></div>
-      <!-- Scroll dimming layer -->
-      <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
-      <div class="hero-overlay"></div>
-      
-      <!-- Default Hero Content (Logged Out) -->
-      <div class="hero-content" id="hero-logged-out-content">
-        <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
-        <p class="hero-subtitle">MEMBERS ONLY</p>
-        <div class="hero-details">
-          <span>JUNE 14TH 2026</span>
-          <span class="divider">|</span>
-          <span>6PM</span>
-        </div>
-        <a href="#rsvp" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
-      </div>
-
-      <!-- Floating Logo Badge in Bottom Right -->
-      <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
-      </div>
-
-      <div class="scroll-indicator">
-        <div class="mouse">
-          <div class="wheel"></div>
-        </div>
-        <span>Scroll Down</span>
-      </div>
-    </section>
-
-    <!-- Logged In Passport & QR Viewer Section -->
-    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay"></div>
-      
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
-
-      <!-- Passport Grid View -->
-      <div class="hero-logged-in-container" style="display: block;">
-        <!-- 2. Logged-In Dashboard State (Moved here from home section) -->
-        <div class="dashboard-card" id="user-dashboard-card" style="display: none; margin-bottom: 3rem; width: 100%;">
-          <div class="dashboard-header">
-            <div class="dash-logo-title">
-              <span class="dash-logo">THIRSTYCLUB999</span>
-              <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
-            </div>
-            <button class="logout-btn" id="dash-logout-btn">Logout</button>
-          </div>
-
-          <!-- Tabs Navigation -->
-          <div class="dash-tabs">
-            <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
-            <button class="tab-btn" data-tab="profile-tab">Profile</button>
-            <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
-          </div>
-
-          <!-- Tab 1: Tickets -->
-          <div class="tab-content active" id="tickets-tab">
-            <a href="event.html" class="events-card-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.3s ease;">
-              <div class="vip-ticket" style="margin-bottom: 0;">
-                <div class="ticket-stub-left">
-                  <div class="ticket-logo">T999</div>
-                  <div class="ticket-meta">
-                    <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                    <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                    <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                    <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
-                    <div class="meta-row"><span class="meta-label">ACCESS:</span> <span id="ticket-access-level" style="color: var(--accent-color); font-weight: bold;">REGULAR ACCESS</span></div>
-                  </div>
-                </div>
-                <div class="ticket-stub-right">
-                  <!-- Mock QR Code SVG -->
-                  <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100" height="100" fill="transparent"/>
-                    <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                    <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                    <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-                  </svg>
-                  <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
-                </div>
-              </div>
-
-              <!-- Venue Section Moved into Events Card -->
-              <div class="venue-container" style="padding: 0; min-height: auto;">
-                <div class="venue-card" style="width: 100%; border: 1px solid rgba(255,107,129,0.2);">
-                  <div class="venue-header">
-                    <h3>VENUE</h3>
-                    <h2 class="venue-title" style="font-size: 2rem;">TBD</h2>
-                    <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
-                  </div>
-                  <div class="sound-policy">
-                    <div class="label">SOUND SYSTEM POLICY:</div>
-                    <div class="sound-names">
-                      <span>CRAYVELLI</span>
-                      <span class="amp">&amp;</span>
-                      <span>DJ PALMER</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-
-
-          <!-- Tab 3: Profile -->
-          <div class="tab-content" id="profile-tab">
-            <div class="profile-container">
-              <h4 class="tab-title">EDIT PROFILE</h4>
-              <form id="profile-form">
-                <!-- Avatar Upload -->
-                <div class="avatar-upload-group">
-                  <div class="avatar-preview-wrapper">
-                    <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
-                  </div>
-                  <div class="avatar-input-wrapper">
-                    <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
-                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                    <span class="input-tip">Max size 2MB</span>
-                  </div>
-                </div>
-
-                <!-- Username Edit -->
-                <div class="input-group">
-                  <label for="profile-username">Username</label>
-                  <input type="text" id="profile-username" placeholder="Username" required>
-                </div>
-
-                <!-- Social IDs -->
-                <div class="input-group">
-                  <label for="profile-instagram">Instagram ID</label>
-                  <input type="text" id="profile-instagram" placeholder="@instagram">
-                </div>
-                <div class="input-group">
-                  <label for="profile-twitter">Twitter ID</label>
-                  <input type="text" id="profile-twitter" placeholder="@twitter">
-                </div>
-                <div class="input-group">
-                  <label for="profile-discord">Discord Username</label>
-                  <input type="text" id="profile-discord" placeholder="username#1234">
-                </div>
-
-                <button type="submit" class="submit-ticket-btn">Save Profile</button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
-          <div class="tab-content" id="admin-tab">
-            <div class="admin-container">
-              <h4 class="tab-title">ADMIN DASHBOARD</h4>
-              
-              <!-- Summary Stats -->
-              <div class="admin-stats-grid">
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-total">0</span>
-                  <span class="stat-label">Total Signups</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-male" style="color: #4a90e2;">0</span>
-                  <span class="stat-label">Male (M)</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-female" style="color: #ff6b81;">0</span>
-                  <span class="stat-label">Female (F)</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-other" style="color: #a8a8a8;">0</span>
-                  <span class="stat-label">Other/Unspecified</span>
-                </div>
-              </div>
-
-              <!-- User List Table -->
-              <div class="admin-users-table-wrapper">
-                <table class="admin-users-table">
-                  <thead>
-                    <tr>
-                      <th>ThirstyID</th>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Access</th>
-                      <th>Registered At</th>
-                      <th>Passport</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-users-list">
-                    <!-- Dynamic rows go here -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-logged-in-grid">
-          <div class="hero-passport-column">
-            <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
-              <div class="passport-glow-border"></div>
-              <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
-            </div>
-            <div class="hero-passport-actions">
-              <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
-            </div>
-          </div>
-          <div class="hero-qr-column">
-            <div class="qr-card">
-              <div class="qr-header">
-                <h3>ENTRY PASS QR</h3>
-                <p>Scan at the gate to check-in</p>
-              </div>
-              <div class="qr-code-wrapper">
-                <div id="hero-qr-code" class="qr-code-img"></div>
-              </div>
-              <p class="qr-tip">Admin will scan this to verify your ticket</p>
-            </div>
-            <div class="hero-logged-in-cta">
-              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">VIEW RSVP EVENTS</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Scrolling Artist Lineup Section -->
-    <section class="lineup-section" id="lineup">
-      <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">THE LINEUP</h2>
-      </div>
-
-      <!-- Marquee 1 (Left Scrolling) -->
-      <div class="marquee-wrapper reveal-on-scroll" id="marquee-wrapper">
-        <div class="marquee-container">
-          <div class="marquee marquee-left">
-            <div class="marquee-track">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Marquee 2 (Right Scrolling) -->
-        <div class="marquee-container">
-          <div class="marquee marquee-right">
-            <div class="marquee-track">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Static Lineup Grid (Visible when toggled) -->
-      <div class="static-lineup-container" id="static-lineup-container" style="display: none;">
-        <div class="static-lineup-grid">
-          <div class="static-artist">
-            <img src="images/artists/zlatan_ibile.jpg" alt="ZLATAN IBILE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZLATAN IBILE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/odumodublvck.jpg" alt="ODUMODUBLVCK" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ODUMODUBLVCK</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/jeriq.jpg" alt="JERIQ" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">JERIQ</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/straffitti.jpg" alt="$TRAFFITTI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$TRAFFITTI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/ayjay_bobo.jpg" alt="AYJAY BOBO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">AYJAY BOBO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/wavestar.jpg" alt="WAVE$TAR" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">WAVE$TAR</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/artsalghul.jpg" alt="ARTSALGHUL" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ARTSALGHUL</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/scottyolorin.jpg" alt="$COTTYOLORIN" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$COTTYOLORIN</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/r33nzo.jpg" alt="R33NZO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">R33NZO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/davetheoracle.jpg" alt="DAVETHEORACLE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">DAVETHEORACLE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/suono_sai.jpg" alt="SUonO SAI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">SUonO SAI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/monochrome.jpg" alt="MONOCHROME" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MONOCHROME</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/maeverse.jpg" alt="MAEVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MAEVERSE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/erigothi.jpg" alt="ERIGOTHI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ERIGOTHI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/zenuniverse.jpg" alt="ZENUNIVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZENUNIVERSE</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Toggle View Button -->
-      <div class="toggle-btn-wrap reveal-on-scroll">
-        <button class="lineup-toggle-btn" id="lineup-toggle-btn">View Full Lineup</button>
-      </div>
-    </section>
-
-    <!-- Gallery Section (Past Editions) -->
-        <section class="venue-section" id="venue">
-      <div class="venue-container reveal-on-scroll">
-        <!-- Address & Sound Details -->
-        <div class="venue-card">
-          <div class="venue-header">
-            <h3>VENUE</h3>
-            <h2 class="venue-title">TBD</h2>
-            <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
-          </div>
-          <div class="sound-policy">
-            <div class="label">SOUND SYSTEM POLICY:</div>
-            <div class="sound-names">
-              <span>CRAYVELLI</span>
-              <span class="amp">&amp;</span>
-              <span>DJ PALMER</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Custom Dark Vector Map Mockup -->
-        <div class="map-card">
-          <div class="radar-grid">
-            <div class="radar-sweep"></div>
-            <!-- Coordinate grids -->
-            <div class="grid-line horizontal"></div>
-            <div class="grid-line vertical"></div>
-            <div class="radar-circle circle-1"></div>
-            <div class="radar-circle circle-2"></div>
-            <div class="radar-circle circle-3"></div>
-            <!-- Location Pin -->
-            <div class="map-marker">
-              <div class="marker-pulse"></div>
-              <div class="marker-dot"></div>
-              <div class="marker-label">TBD (LEKKI, LAGOS)</div>
-            </div>
-            <!-- Map Details Overlay -->
-            <div class="map-hud">
-              <div class="hud-item"><span class="hud-label">LAT:</span> 6.4311&deg; N</div>
-              <div class="hud-item"><span class="hud-label">LNG:</span> 3.4758&deg; E</div>
-            </div>
-          </div>
-          <a href="#" class="map-link-btn" onclick="event.preventDefault(); alert('Location will be announced soon to guestlist holders.');">
-            LOCATION ANNOUNCED SOON
-          </a>
-        </div>
-      </div>
-    </section>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThirstyClub999 | The Concert</title>
+  <title>ThirstyClub999 | RSVP</title>
   <meta name="description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://thirstynalia.com">
-  <meta property="og:title" content="ThirstyClub999 | The Concert">
+  <meta property="og:title" content="ThirstyClub999 | RSVP">
   <meta property="og:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   <meta property="og:image" content="https://thirstynalia.com/images/999social.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://thirstynalia.com">
-  <meta property="twitter:title" content="ThirstyClub999 | The Concert">
+  <meta property="twitter:title" content="ThirstyClub999 | RSVP">
   <meta property="twitter:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   <meta property="twitter:image" content="https://thirstynalia.com/images/999social.png">
 
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260607.4">
+  <link rel="stylesheet" href="style.css?v=20260607.1810">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -764,261 +30,35 @@
   <div id="cursor-glow"></div>
 
   <!-- Header Navigation -->
+  
   <header>
-    <a href="#home" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
+    <a href="index.html" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
     <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
     </button>
     <nav id="nav-menu">
-      <a href="#lineup">Lineup</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#venue">Venue</a>
-      <a href="#rsvp" class="nav-btn rsvp-red" id="nav-rsvp-btn">RSVP</a>
-      <a href="#" class="nav-btn members-white" id="nav-members-btn">Members Only</a>
-      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
+      <a href="index.html" class="nav-btn members-white">Back to Dashboard</a>
     </nav>
   </header>
 
-  <!-- Main Content -->
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
-      <!-- Background Video (plays on RSVP hover) -->
-      <video class="hero-bg-video" id="hero-bg-video" preload="auto" muted playsinline>
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay" id="hero-video-overlay"></div>
-      <div class="hero-corner-vignette" id="hero-corner-vignette"></div>
-      <!-- Scroll dimming layer -->
-      <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
-      <div class="hero-overlay"></div>
-      
-      <!-- Default Hero Content (Logged Out) -->
-      <div class="hero-content" id="hero-logged-out-content">
-        <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
-        <p class="hero-subtitle">MEMBERS ONLY</p>
-        <div class="hero-details">
-          <span>JUNE 14TH 2026</span>
-          <span class="divider">|</span>
-          <span>6PM</span>
-        </div>
-        <a href="#rsvp" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
-      </div>
-
-      <!-- Floating Logo Badge in Bottom Right -->
-      <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
-      </div>
-
-      <div class="scroll-indicator">
-        <div class="mouse">
-          <div class="wheel"></div>
-        </div>
-        <span>Scroll Down</span>
-      </div>
-    </section>
-
-    <!-- Logged In Passport & QR Viewer Section -->
-    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
+      <video class="hero-bg-video" autoplay loop muted playsinline style="object-fit: cover; opacity: 0.85;">
         <source src="images/Tiger2.mp4" type="video/mp4">
       </video>
       <div class="hero-video-overlay"></div>
+      <div class="hero-corner-vignette"></div>
+      <div class="hero-overlay"></div>
       
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
-
-      <!-- Passport Grid View -->
-      <div class="hero-logged-in-container" style="display: block;">
-        <!-- 2. Logged-In Dashboard State (Moved here from home section) -->
-        <div class="dashboard-card" id="user-dashboard-card" style="display: none; margin-bottom: 3rem; width: 100%;">
-          <div class="dashboard-header">
-            <div class="dash-logo-title">
-              <span class="dash-logo">THIRSTYCLUB999</span>
-              <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
-            </div>
-            <button class="logout-btn" id="dash-logout-btn">Logout</button>
-          </div>
-
-          <!-- Tabs Navigation -->
-          <div class="dash-tabs">
-            <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
-            <button class="tab-btn" data-tab="profile-tab">Profile</button>
-            <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
-          </div>
-
-          <!-- Tab 1: Tickets -->
-          <div class="tab-content active" id="tickets-tab">
-            <a href="event.html" class="events-card-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.3s ease;">
-              <div class="vip-ticket" style="margin-bottom: 0;">
-                <div class="ticket-stub-left">
-                  <div class="ticket-logo">T999</div>
-                  <div class="ticket-meta">
-                    <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                    <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                    <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                    <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
-                    <div class="meta-row"><span class="meta-label">ACCESS:</span> <span id="ticket-access-level" style="color: var(--accent-color); font-weight: bold;">REGULAR ACCESS</span></div>
-                  </div>
-                </div>
-                <div class="ticket-stub-right">
-                  <!-- Mock QR Code SVG -->
-                  <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100" height="100" fill="transparent"/>
-                    <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                    <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                    <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-                  </svg>
-                  <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
-                </div>
-              </div>
-
-              <!-- Venue Section Moved into Events Card -->
-              <div class="venue-container" style="padding: 0; min-height: auto;">
-                <div class="venue-card" style="width: 100%; border: 1px solid rgba(255,107,129,0.2);">
-                  <div class="venue-header">
-                    <h3>VENUE</h3>
-                    <h2 class="venue-title" style="font-size: 2rem;">TBD</h2>
-                    <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
-                  </div>
-                  <div class="sound-policy">
-                    <div class="label">SOUND SYSTEM POLICY:</div>
-                    <div class="sound-names">
-                      <span>CRAYVELLI</span>
-                      <span class="amp">&amp;</span>
-                      <span>DJ PALMER</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-
-
-          <!-- Tab 3: Profile -->
-          <div class="tab-content" id="profile-tab">
-            <div class="profile-container">
-              <h4 class="tab-title">EDIT PROFILE</h4>
-              <form id="profile-form">
-                <!-- Avatar Upload -->
-                <div class="avatar-upload-group">
-                  <div class="avatar-preview-wrapper">
-                    <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
-                  </div>
-                  <div class="avatar-input-wrapper">
-                    <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
-                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                    <span class="input-tip">Max size 2MB</span>
-                  </div>
-                </div>
-
-                <!-- Username Edit -->
-                <div class="input-group">
-                  <label for="profile-username">Username</label>
-                  <input type="text" id="profile-username" placeholder="Username" required>
-                </div>
-
-                <!-- Social IDs -->
-                <div class="input-group">
-                  <label for="profile-instagram">Instagram ID</label>
-                  <input type="text" id="profile-instagram" placeholder="@instagram">
-                </div>
-                <div class="input-group">
-                  <label for="profile-twitter">Twitter ID</label>
-                  <input type="text" id="profile-twitter" placeholder="@twitter">
-                </div>
-                <div class="input-group">
-                  <label for="profile-discord">Discord Username</label>
-                  <input type="text" id="profile-discord" placeholder="username#1234">
-                </div>
-
-                <button type="submit" class="submit-ticket-btn">Save Profile</button>
-              </form>
-            </div>
-          </div>
-
-          <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
-          <div class="tab-content" id="admin-tab">
-            <div class="admin-container">
-              <h4 class="tab-title">ADMIN DASHBOARD</h4>
-              
-              <!-- Summary Stats -->
-              <div class="admin-stats-grid">
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-total">0</span>
-                  <span class="stat-label">Total Signups</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-male" style="color: #4a90e2;">0</span>
-                  <span class="stat-label">Male (M)</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-female" style="color: #ff6b81;">0</span>
-                  <span class="stat-label">Female (F)</span>
-                </div>
-                <div class="admin-stat-card">
-                  <span class="stat-value" id="admin-stat-other" style="color: #a8a8a8;">0</span>
-                  <span class="stat-label">Other/Unspecified</span>
-                </div>
-              </div>
-
-              <!-- User List Table -->
-              <div class="admin-users-table-wrapper">
-                <table class="admin-users-table">
-                  <thead>
-                    <tr>
-                      <th>ThirstyID</th>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Access</th>
-                      <th>Registered At</th>
-                      <th>Passport</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-users-list">
-                    <!-- Dynamic rows go here -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-logged-in-grid">
-          <div class="hero-passport-column">
-            <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
-              <div class="passport-glow-border"></div>
-              <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
-            </div>
-            <div class="hero-passport-actions">
-              <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
-            </div>
-          </div>
-          <div class="hero-qr-column">
-            <div class="qr-card">
-              <div class="qr-header">
-                <h3>ENTRY PASS QR</h3>
-                <p>Scan at the gate to check-in</p>
-              </div>
-              <div class="qr-code-wrapper">
-                <div id="hero-qr-code" class="qr-code-img"></div>
-              </div>
-              <p class="qr-tip">Admin will scan this to verify your ticket</p>
-            </div>
-            <div class="hero-logged-in-cta">
-              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">VIEW RSVP EVENTS</a>
-            </div>
-          </div>
-        </div>
+      <div class="hero-content">
+        <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
+        <p class="hero-subtitle">JUNE 14TH 2026, LAGOS</p>
       </div>
     </section>
-
-    <!-- Scrolling Artist Lineup Section -->
-    <section class="lineup-section" id="lineup">
+<section class="lineup-section" id="lineup">
       <div class="section-title-wrap reveal-on-scroll">
         <h2 class="section-title">THE LINEUP</h2>
       </div>
@@ -1381,136 +421,54 @@
     </dialog>
 
     <!-- RSVP & Passport Generator Section -->
-    <section class="passport-section" id="rsvp">
-      <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">RSVP</h2>
-        <p class="section-subtitle-desc">GENERATE YOUR EXCLUSIVE ACCESS PASSPORT</p>
-      </div>
-
-      <div class="passport-container reveal-on-scroll">
-        <div class="passport-controls-card">
-          <div class="control-header">
-            <h3>RSVP & PASSPORT CREATOR</h3>
-            <p>Upload a photo and fill in your details to customize your Thirsty Passport. Export as high-quality PNG or JPG.</p>
+        <section class="venue-section" id="venue">
+      <div class="venue-container reveal-on-scroll">
+        <!-- Address & Sound Details -->
+        <div class="venue-card">
+          <div class="venue-header">
+            <h3>VENUE</h3>
+            <h2 class="venue-title">TBD</h2>
+            <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
           </div>
-
-          <div class="upload-dropzone" id="passport-dropzone">
-            <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
-            <div class="dropzone-content">
-              <span class="upload-icon">📷</span>
-              <p class="dropzone-text">Drag & drop portrait picture or <span class="browse-link">browse</span></p>
-              <span class="file-info" id="passport-file-info">JPG or PNG (Max 5MB)</span>
+          <div class="sound-policy">
+            <div class="label">SOUND SYSTEM POLICY:</div>
+            <div class="sound-names">
+              <span>CRAYVELLI</span>
+              <span class="amp">&amp;</span>
+              <span>DJ PALMER</span>
             </div>
           </div>
-
-          <div class="passport-inputs">
-            <div class="input-row" id="passport-logged-in-status" style="display: none;">
-              <div class="logged-in-info" style="width: 100%; padding: 1rem; background: rgba(255, 62, 62, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
-                <div>
-                  <span class="info-label" style="font-size: 0.7rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em; display: block; margin-bottom: 0.2rem;">MEMBERSHIP ACTIVE</span>
-                  <p id="passport-member-id" style="margin: 0; font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; color: var(--text-color);">ThirstyID: T999-XXXX</p>
-                </div>
-                <button type="button" class="logout-link-btn" id="passport-logout-btn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-dim); padding: 0.4rem 0.8rem; border-radius: 2px; font-size: 0.75rem; cursor: pointer; transition: var(--transition-smooth);">Log Out</button>
-              </div>
-            </div>
-
-            <div class="input-row split-2">
-              <div class="input-group">
-                <label for="passport-input-name">Full Name</label>
-                <input type="text" id="passport-input-name" value="ADELINE PALMERSTON" maxlength="30">
-              </div>
-              <div class="input-group">
-                <label for="passport-input-pob">Place of Thirst</label>
-                <input type="text" id="passport-input-pob" value="MANCHESTER" maxlength="20">
-              </div>
-            </div>
-
-            <div class="input-row split-2">
-              <div class="input-group">
-                <label for="passport-input-gender">Gender</label>
-                <input type="text" id="passport-input-gender" value="F" maxlength="5">
-              </div>
-              <div class="input-group">
-                <label for="passport-input-sig">Signature Text</label>
-                <input type="text" id="passport-input-sig" value="A. Palmerston" maxlength="20">
-              </div>
-            </div>
-
-            <div class="input-row split-2" id="passport-auth-fields">
-              <div class="input-group">
-                <label for="passport-input-email">Email Address</label>
-                <input type="email" id="passport-input-email" placeholder="you@example.com" maxlength="50">
-              </div>
-              <div class="input-group">
-                <label for="passport-input-password">Create Password</label>
-                <input type="password" id="passport-input-password" placeholder="Min. 6 characters" maxlength="30">
-              </div>
-            </div>
-
-            <div class="input-row">
-              <div class="input-group full-width">
-                <label for="passport-export-format">Export Format</label>
-                <select id="passport-export-format">
-                  <option value="png">PNG (High Quality Lossless)</option>
-                  <option value="jpeg">JPG (Standard Web Format)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <button class="buy-button" id="download-passport-btn">DOWNLOAD PASSPORT (RSVP)</button>
         </div>
 
-        <div class="passport-preview-card">
-          <div class="canvas-wrapper vertical-passport-wrapper">
-            <div class="passport-glow-border"></div>
-            <canvas id="passport-canvas" width="600" height="800"></canvas>
+        <!-- Custom Dark Vector Map Mockup -->
+        <div class="map-card">
+          <div class="radar-grid">
+            <div class="radar-sweep"></div>
+            <!-- Coordinate grids -->
+            <div class="grid-line horizontal"></div>
+            <div class="grid-line vertical"></div>
+            <div class="radar-circle circle-1"></div>
+            <div class="radar-circle circle-2"></div>
+            <div class="radar-circle circle-3"></div>
+            <!-- Location Pin -->
+            <div class="map-marker">
+              <div class="marker-pulse"></div>
+              <div class="marker-dot"></div>
+              <div class="marker-label">TBD (LEKKI, LAGOS)</div>
+            </div>
+            <!-- Map Details Overlay -->
+            <div class="map-hud">
+              <div class="hud-item"><span class="hud-label">LAT:</span> 6.4311&deg; N</div>
+              <div class="hud-item"><span class="hud-label">LNG:</span> 3.4758&deg; E</div>
+            </div>
           </div>
-          <p class="canvas-tip">Real-time booklet preview. Click Download to export.</p>
+          <a href="#" class="map-link-btn" onclick="event.preventDefault(); alert('Location will be announced soon to guestlist holders.');">
+            LOCATION ANNOUNCED SOON
+          </a>
         </div>
       </div>
     </section>
-
-    <!-- Venue Section with Map Layout -->
-
-
-    <!-- Dynamic Ticket/RSVP & Dashboard Section -->
-    <section class="tickets-section" id="tickets" style="display: none;">
-      <div class="events-container">
-        <h3 class="section-title text-center" style="margin-bottom: 2rem;">MY EVENTS</h3>
-        <div class="event-card">
-          <div class="event-card-glow"></div>
-          <div class="event-card-header">
-            <span class="event-status-badge">CONFIRMED RSVP</span>
-            <span class="event-access" id="homepage-event-access">REGULAR ACCESS</span>
-          </div>
-          <h2 class="event-title">THIRSTYCLUB999</h2>
-          <div class="event-details-grid">
-            <div class="event-detail-item">
-              <span class="detail-label">DATE</span>
-              <span class="detail-value">JUNE 14TH 2026</span>
-            </div>
-            <div class="event-detail-item">
-              <span class="detail-label">TIME</span>
-              <span class="detail-value">6:00 PM</span>
-            </div>
-            <div class="event-detail-item">
-              <span class="detail-label">LOCATION</span>
-              <span class="detail-value">LEKKI, LAGOS (TBD)</span>
-            </div>
-            <div class="event-detail-item">
-              <span class="detail-label">PASS TYPE</span>
-              <span class="detail-value" id="homepage-access-pass">REGULAR ACCESS PASS</span>
-            </div>
-          </div>
-          <button class="event-card-action-btn" onclick="document.getElementById('passport-viewer').scrollIntoView({ behavior: 'smooth' });">VIEW ENTRY PASS</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
+<footer>
     <div class="footer-content">
       <p>&copy; 2026 THIRSTYCLUB999. ALL RIGHTS RESERVED.</p>
       <div class="socials">
@@ -1536,7 +494,10 @@
           <input type="text" id="login-id" placeholder="T999-XXXX or email..." required>
         </div>
         <div class="input-group">
-          <label for="login-password">Password</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <label for="login-password" style="margin-bottom: 0;">Password</label>
+            <button type="button" id="forgot-password-btn" style="background: none; border: none; color: var(--accent-color); font-size: 0.75rem; cursor: pointer; padding: 0; font-family: inherit; text-decoration: underline; text-transform: uppercase; letter-spacing: 0.05em; transition: var(--transition-smooth);">Forgot Password?</button>
+          </div>
           <input type="password" id="login-password" placeholder="enter password..." required>
         </div>
         <button type="submit" class="submit-ticket-btn">Login</button>
@@ -1603,7 +564,7 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=20260607.4"></script>
+  <script src="main.js?v=20260607.1810"></script>
 
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -1611,27 +572,6 @@
 
     <script>
       gsap.registerPlugin(ScrollTrigger);
-
-      // Mobile Menu Toggle
-      const mobileBtn = document.getElementById('mobile-menu-btn');
-      const mobileNav = document.getElementById('mobile-nav-overlay');
-      const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-
-      if (mobileBtn && mobileNav) {
-        mobileBtn.addEventListener('click', () => {
-          mobileBtn.classList.toggle('active');
-          mobileNav.classList.toggle('active');
-          document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
-        });
-
-        mobileLinks.forEach(link => {
-          link.addEventListener('click', () => {
-            mobileBtn.classList.remove('active');
-            mobileNav.classList.remove('active');
-            document.body.style.overflow = '';
-          });
-        });
-      }
 
       // Parallax text in lineup
       gsap.to('.marquee-text', {

@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // 3. Supabase Client Integration & Session Manager
   // ==========================================
-  const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+  const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // Global Session State
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rsvpSection = document.getElementById('rsvp');
     const logo = document.querySelector('.logo');
 
-    if (session && profile) {
+    if (session) {
       // User is Logged In
       document.body.classList.add('logged-in-user');
       
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Generate QR Code
       const qrContainer = document.getElementById('hero-qr-code');
       if (qrContainer) {
-        const checkinUrl = window.location.origin + '/checkin.html?id=' + (profile.thirstyclub_id || 'T999-XXXX');
+        const checkinUrl = window.location.origin + '/checkin.html?id=' + (profile?.thirstyclub_id || 'T999-XXXX');
         const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=255-62-62&bgcolor=ffffff&data=${encodeURIComponent(checkinUrl)}`;
         qrContainer.innerHTML = `<img src="${qrApiUrl}" alt="Entry Pass QR" />`;
       }
@@ -157,10 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email === 'guavanigeria@gmail.com' ||
         session.user.email === 'thirstynalia@gmail.com' ||
         session.user.email === 'straffitti@hotmail.com' ||
-        session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
         session.user.email === 'bookthirsty234@gmail.com' ||
-        profile.role === 'admin' ||
-        profile.socials?.role === 'admin'
+        profile?.role === 'admin' ||
+        profile?.socials?.role === 'admin'
       );
       
       const adminTabBtn = document.getElementById('admin-tab-btn');
@@ -172,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const accessLvl = profile.socials?.access_level || 'REGULAR';
+      const accessLvl = profile?.socials?.access_level || 'REGULAR';
       
       const ticketAccessLevel = document.getElementById('ticket-access-level');
       if (ticketAccessLevel) ticketAccessLevel.textContent = accessLvl + ' ACCESS';
@@ -184,18 +183,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (homepageAccessPass) homepageAccessPass.textContent = accessLvl + ' ACCESS PASS';
 
       // Update Dashboard contents
-      if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
-      if (ticketUserId) ticketUserId.textContent = profile.thirstyclub_id || 'T999-XXXX';
-      if (ticketUserName) ticketUserName.textContent = profile.username;
-      if (ticketBarcodeId) ticketBarcodeId.textContent = profile.thirstyclub_id || 'T999-XXXX';
+      if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile?.username || session.user.email.split('@')[0]}`;
+      if (ticketUserId) ticketUserId.textContent = profile?.thirstyclub_id || 'T999-XXXX';
+      if (ticketUserName) ticketUserName.textContent = profile?.username || 'Guest';
+      if (ticketBarcodeId) ticketBarcodeId.textContent = profile?.thirstyclub_id || 'T999-XXXX';
 
       // Update Profile Inputs
-      if (profileUsername) profileUsername.value = profile.username;
-      if (profileInstagram) profileInstagram.value = profile.socials?.instagram || '';
-      if (profileTwitter) profileTwitter.value = profile.socials?.twitter || '';
-      if (profileDiscord) profileDiscord.value = profile.socials?.discord || '';
+      if (profileUsername) profileUsername.value = profile?.username || '';
+      if (profileInstagram) profileInstagram.value = profile?.socials?.instagram || '';
+      if (profileTwitter) profileTwitter.value = profile?.socials?.twitter || '';
+      if (profileDiscord) profileDiscord.value = profile?.socials?.discord || '';
       if (profileAvatarPreview) {
-        profileAvatarPreview.src = profile.avatar_url || defaultAvatar;
+        profileAvatarPreview.src = profile?.avatar_url || defaultAvatar;
       }
 
       // Update Passport Generator Inputs & State
@@ -216,19 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (passportAuthFields) passportAuthFields.style.display = 'none';
       if (passportLoggedInStatus) passportLoggedInStatus.style.display = 'block';
       if (passportMemberId) {
-        passportMemberId.textContent = 'ThirstyID: ' + (profile.thirstyclub_id || 'T999-XXXX');
+        passportMemberId.textContent = 'ThirstyID: ' + (profile?.thirstyclub_id || 'T999-XXXX');
       }
       if (downloadPassportBtn) {
         downloadPassportBtn.textContent = 'DOWNLOAD PASSPORT';
       }
 
-      if (passportInputName) passportInputName.value = profile.username || '';
-      if (passportInputPob) passportInputPob.value = profile.socials?.place_of_thirst || 'MANCHESTER';
-      if (passportInputGender) passportInputGender.value = profile.socials?.gender || 'F';
-      if (passportInputSig) passportInputSig.value = profile.socials?.signature || 'A. Palmerston';
+      if (passportInputName) passportInputName.value = profile?.username || '';
+      if (passportInputPob) passportInputPob.value = profile?.socials?.place_of_thirst || 'MANCHESTER';
+      if (passportInputGender) passportInputGender.value = profile?.socials?.gender || 'F';
+      if (passportInputSig) passportInputSig.value = profile?.socials?.signature || 'A. Palmerston';
 
       // Load avatar image into the canvas representation
-      if (profile.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
+      if (profile?.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.onload = () => {
@@ -330,15 +329,45 @@ document.addEventListener('DOMContentLoaded', () => {
     if (session) {
       try {
         // Fetch profile
-        const { data: profile, error: profileError } = await supabase
+        let { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single();
         
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-        } else {
+        if (profileError || !profile) {
+          console.error("Profile not found or error, attempting fallback upsert:", profileError);
+          const fallbackUsername = session.user.user_metadata?.username || session.user.email.split('@')[0];
+          const fallbackId = 'T999-' + Math.floor(1000 + Math.random() * 9000);
+          
+          const { data: upsertedProfile, error: upsertError } = await supabase
+            .from('profiles')
+            .upsert({
+              id: session.user.id,
+              email: session.user.email,
+              username: fallbackUsername,
+              thirstyclub_id: fallbackId,
+              role: 'user',
+              socials: {
+                instagram: "",
+                twitter: "",
+                discord: "",
+                place_of_thirst: "MANCHESTER",
+                gender: "F",
+                signature: "A. Palmerston"
+              }
+            }, { onConflict: 'id' })
+            .select()
+            .single();
+
+          if (upsertError) {
+            console.error("Fallback profile upsert failed:", upsertError);
+          } else {
+            profile = upsertedProfile;
+          }
+        }
+
+        if (profile) {
           currentUserProfile = profile;
         }
 
@@ -376,6 +405,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listen to auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      setTimeout(async () => {
+        const newPassword = prompt("Please enter your new password:");
+        if (newPassword) {
+          try {
+            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            if (error) {
+              alert("Error updating password: " + error.message);
+            } else {
+              alert("Password updated successfully! You are now logged in.");
+            }
+          } catch (err) {
+            alert("Error updating password: " + err.message);
+          }
+        }
+      }, 500);
+    }
     await syncSessionAndProfile(session);
   });
 
@@ -389,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
 
   const openAuthModal = () => {
-    if (currentSession) {
+    if (currentSession && currentUserProfile) {
       // If logged in, navigate straight to passport-viewer section
       const passportViewer = document.getElementById('passport-viewer');
       if (passportViewer) passportViewer.scrollIntoView({ behavior: 'smooth' });
@@ -445,6 +491,11 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       closeSuccessModal();
 
+      if (!document.getElementById('passport-viewer')) {
+        window.location.href = 'index.html#passport-viewer';
+        return;
+      }
+
       // Ensure UI is updated then navigate to clubhouse
       updateUI();
       setTimeout(() => {
@@ -475,6 +526,57 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // 5. Supabase Auth Handlers (Login)
   // ==========================================
+
+  // Forgot Password Trigger
+  const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener('click', async () => {
+      let loginIdVal = document.getElementById('login-id').value.trim();
+      
+      if (!loginIdVal) {
+        loginIdVal = prompt("Enter your ThirstyID or Email to reset your password:");
+        if (!loginIdVal) return;
+        loginIdVal = loginIdVal.trim();
+      }
+
+      let email = loginIdVal.toLowerCase();
+
+      // Resolve ThirstyID to Email if necessary
+      if (loginIdVal.toUpperCase().startsWith("T999-")) {
+        try {
+          const { data: profile, error: profileErr } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('thirstyclub_id', loginIdVal.toUpperCase())
+            .single();
+
+          if (profileErr || !profile || !profile.email) {
+            alert("Could not find an account with that ThirstyID. Make sure it is correct.");
+            return;
+          }
+          email = profile.email;
+        } catch (err) {
+          alert("Error resolving ThirstyID: " + err.message);
+          return;
+        }
+      }
+
+      // Trigger reset password email via Supabase
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin,
+        });
+
+        if (error) {
+          alert("Error sending reset password link: " + error.message);
+        } else {
+          alert(`Password reset link has been sent to ${email}. Please check your inbox.`);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  }
 
   // Login Submit
   if (loginForm) {
@@ -524,19 +626,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Explicitly sync profile and navigate to clubhouse
         const { data: { session: freshSession } } = await supabase.auth.getSession();
         if (freshSession) {
-          const { data: freshProfile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', freshSession.user.id)
-            .single();
-          
-          currentSession = freshSession;
-          currentUserProfile = freshProfile || currentUserProfile;
-          updateUI();
+          await syncSessionAndProfile(freshSession);
         }
 
         // Navigate to passport-viewer (clubhouse)
         setTimeout(() => {
+          if (!document.getElementById('passport-viewer')) {
+            window.location.href = 'index.html#passport-viewer';
+            return;
+          }
           const passportViewer = document.getElementById('passport-viewer');
           if (passportViewer) {
             passportViewer.style.display = 'flex'; // ensure visible
@@ -1659,13 +1757,15 @@ document.addEventListener('DOMContentLoaded', () => {
               .single();
 
             if (finalProfile) refreshedProfile = finalProfile;
-          } else {
-            console.error("Failed to fetch profile after signup race condition.");
           }
-
-          currentUserProfile = refreshedProfile;
-          currentSession = signUpData.session;
-          updateUI();
+          if (!refreshedProfile) {
+            console.warn("Falling back to robust syncSessionAndProfile...");
+            await syncSessionAndProfile(signUpData.session);
+          } else {
+            currentUserProfile = refreshedProfile;
+            currentSession = signUpData.session;
+            updateUI();
+          }
 
           memberIdVal = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
 

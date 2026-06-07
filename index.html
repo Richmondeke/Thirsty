@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThirstyClub999 | The Concert</title>
+  <title>ThirstyClub999 | RSVP</title>
   <meta name="description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://thirstynalia.com">
-  <meta property="og:title" content="ThirstyClub999 | The Concert">
+  <meta property="og:title" content="ThirstyClub999 | RSVP">
   <meta property="og:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   <meta property="og:image" content="https://thirstynalia.com/images/999social.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://thirstynalia.com">
-  <meta property="twitter:title" content="ThirstyClub999 | The Concert">
+  <meta property="twitter:title" content="ThirstyClub999 | RSVP">
   <meta property="twitter:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
   <meta property="twitter:image" content="https://thirstynalia.com/images/999social.png">
 
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260607.4">
+  <link rel="stylesheet" href="style.css?v=20260607.1810">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -889,7 +889,10 @@
           <input type="text" id="login-id" placeholder="T999-XXXX or email..." required>
         </div>
         <div class="input-group">
-          <label for="login-password">Password</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+            <label for="login-password" style="margin-bottom: 0;">Password</label>
+            <button type="button" id="forgot-password-btn" style="background: none; border: none; color: var(--accent-color); font-size: 0.75rem; cursor: pointer; padding: 0; font-family: inherit; text-decoration: underline; text-transform: uppercase; letter-spacing: 0.05em; transition: var(--transition-smooth);">Forgot Password?</button>
+          </div>
           <input type="password" id="login-password" placeholder="enter password..." required>
         </div>
         <button type="submit" class="submit-ticket-btn">Login</button>
@@ -956,6 +959,6 @@
     </div>
   </dialog>
 
-  <script src="main.js?v=20260607.4"></script>
+  <script src="main.js?v=20260607.1810"></script>
 </body>
 </html>

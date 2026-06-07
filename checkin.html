@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThirstyClub999 | Guest Verification</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260607.4">
+  <link rel="stylesheet" href="style.css?v=20260607.1810">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     .checkin-body {
@@ -266,8 +266,8 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+      const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       // Get target guest id
@@ -630,6 +630,7 @@
               session.user.email.startsWith('admin@') || 
               session.user.email.endsWith('@thirstyclub999.com') ||
               session.user.email === 'richmond@guava.earth' ||
+              session.user.email === 'richmonde@guava.earth' ||
               (currentUserProfile && currentUserProfile.role === 'admin') ||
               (currentUserProfile && currentUserProfile.socials?.role === 'admin')
             );

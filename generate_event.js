@@ -2,80 +2,77 @@ const fs = require('fs');
 
 const html = fs.readFileSync('index.html', 'utf8');
 
-// We want to extract:
-// 1. Everything up to the <header>
-// 2. The header, but we replace the nav
-// 3. The hero background and logo overlay
-// 4. The lineup section
-// 5. The gallery section
-// 6. The venue section (read from /tmp/venue_section.html)
-// 7. The footer and the end of the file
+// Find start indices of key sections in index.html
+const headerStart = html.indexOf('<header>');
+const lineupStart = html.indexOf('<section class="lineup-section" id="lineup">');
+const galleryStart = html.indexOf('<section class="gallery-section" id="gallery">');
+const galleryEnd = html.indexOf('<section class="passport-section" id="rsvp">');
+const footerStart = html.indexOf('<footer>');
 
-let newHtml = html.substring(0, html.indexOf('<header class="site-header">'));
+console.log('headerStart:', headerStart);
+console.log('lineupStart:', lineupStart);
+console.log('galleryStart:', galleryStart);
+console.log('galleryEnd:', galleryEnd);
+console.log('footerStart:', footerStart);
 
+if (headerStart === -1 || lineupStart === -1 || galleryStart === -1 || galleryEnd === -1 || footerStart === -1) {
+  console.error("Error: Could not find one of the required sections in index.html");
+  process.exit(1);
+}
+
+// 1. Everything up to <header>
+let newHtml = html.substring(0, headerStart);
+
+// 2. Custom header and simplified hero section for event.html
 newHtml += `
-    <header class="site-header">
-      <div class="header-container">
-        <a href="index.html" class="logo" style="text-decoration: none;">THIRSTYCLUB<span class="accent">999</span></a>
-        
-        <!-- Desktop Nav -->
-        <nav class="desktop-nav">
-          <ul class="nav-list">
-            <li><a href="index.html" class="nav-link">Back to Dashboard</a></li>
-          </ul>
-        </nav>
+  <header>
+    <a href="index.html" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
+    <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <nav id="nav-menu">
+      <a href="index.html" class="nav-btn members-white">Back to Dashboard</a>
+    </nav>
+  </header>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
-          <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-          </span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Mobile Nav -->
-    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
-      <nav class="mobile-nav-menu">
-        <ul class="mobile-nav-list">
-          <li><a href="index.html" class="mobile-nav-link">Back to Dashboard</a></li>
-        </ul>
-      </nav>
-    </div>
-
+  <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline>
+      <video class="hero-bg-video" autoplay loop muted playsinline style="object-fit: cover; opacity: 0.85;">
         <source src="images/Tiger2.mp4" type="video/mp4">
       </video>
       <div class="hero-video-overlay"></div>
+      <div class="hero-corner-vignette"></div>
+      <div class="hero-overlay"></div>
       
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
-
-      <!-- Hero Content (Logged Out State - Default) -->
-      <div class="hero-logo-overlay">
-        <h1 class="hero-main-title">THIRSTYCLUB<span class="accent">999</span></h1>
+      <div class="hero-content">
+        <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
         <p class="hero-subtitle">JUNE 14TH 2026, LAGOS</p>
       </div>
     </section>
 `;
 
-const lineupStart = html.indexOf('<section class="lineup-section" id="lineup">');
-const galleryStart = html.indexOf('<section class="gallery-section" id="gallery">');
-const galleryEnd = html.indexOf('<section class="rsvp-section" id="rsvp">'); // The section after gallery
-
+// 3. Lineup and Gallery sections from index.html
 newHtml += html.substring(lineupStart, galleryStart);
 newHtml += html.substring(galleryStart, galleryEnd);
 
-// Venue section
+// 4. Venue section
 const venueSection = fs.readFileSync('/tmp/venue_section.html', 'utf8');
 newHtml += venueSection;
 
-const footerStart = html.indexOf('<footer class="site-footer">');
-newHtml += html.substring(footerStart, html.indexOf('</body>'));
+// 5. Footer, Modals, and scripts from index.html (excluding </body></html> from index.html)
+let footerContent = html.substring(footerStart);
+// Strip closing tags if they exist at the end of index.html, since we will append them cleanly
+const closingBodyIndex = footerContent.indexOf('</body>');
+if (closingBodyIndex !== -1) {
+  footerContent = footerContent.substring(0, closingBodyIndex);
+}
 
+newHtml += footerContent;
+
+// 6. Close tags and event.html specific scripts (GSAP, etc.)
 newHtml += `
     <!-- GSAP for Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -83,27 +80,6 @@ newHtml += `
 
     <script>
       gsap.registerPlugin(ScrollTrigger);
-
-      // Mobile Menu Toggle
-      const mobileBtn = document.getElementById('mobile-menu-btn');
-      const mobileNav = document.getElementById('mobile-nav-overlay');
-      const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-
-      if (mobileBtn && mobileNav) {
-        mobileBtn.addEventListener('click', () => {
-          mobileBtn.classList.toggle('active');
-          mobileNav.classList.toggle('active');
-          document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
-        });
-
-        mobileLinks.forEach(link => {
-          link.addEventListener('click', () => {
-            mobileBtn.classList.remove('active');
-            mobileNav.classList.remove('active');
-            document.body.style.overflow = '';
-          });
-        });
-      }
 
       // Parallax text in lineup
       gsap.to('.marquee-text', {

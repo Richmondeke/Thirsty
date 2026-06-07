@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default async function handler(req, res) {
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const apiKey = process.env.key || process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY;
+  const apiKey = process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY || process.env.key;
   if (!apiKey) {
     console.error('Mailchimp Transactional API key is not configured');
     return res.status(500).json({ error: 'Email configuration error' });
@@ -37,7 +37,6 @@ export default async function handler(req, res) {
           'richmonde@guava.earth',
           'thirstynalia@gmail.com',
           'straffitti@hotmail.com',
-          'ogunwuyi.olumide@yahoo.com',
           'bookthirsty234@gmail.com'
         ])
         .not('socials', 'is', null);
@@ -91,7 +90,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         key: apiKey,
         message: {
-          from_email: 'hello@thirstynalia.com',
+          from_email: 'info@thirstynalia.com',
           from_name: 'ThirstyClub999',
           subject: emailSubject,
           to: [

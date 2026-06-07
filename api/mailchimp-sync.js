@@ -7,8 +7,8 @@
  */
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const ADMIN_EMAILS = [
@@ -17,7 +17,6 @@ const ADMIN_EMAILS = [
   'guavanigeria@gmail.com',
   'thirstynalia@gmail.com',
   'straffitti@hotmail.com',
-  'ogunwuyi.olumide@yahoo.com',
   'bookthirsty234@gmail.com'
 ];
 
@@ -110,12 +109,42 @@ export default async function handler(req, res) {
       }
     }
 
+    // 4. Apply 'Thirstclub999app' tag to all synced members (triggers Mailchimp automation)
+    const crypto = await import('crypto');
+    let taggedCount = 0;
+    for (const member of members) {
+      try {
+        const emailHash = crypto.createHash('md5').update(member.email_address.toLowerCase()).digest('hex');
+        await fetch(
+          `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members/${emailHash}/tags`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Basic ${Buffer.from(`anystring:${apiKey}`).toString('base64')}`,
+            },
+            body: JSON.stringify({
+              tags: [
+                { name: 'ThirstyClub999', status: 'active' },
+                { name: 'Guestlist', status: 'active' },
+                { name: 'Thirstclub999app', status: 'active' }
+              ],
+            }),
+          }
+        );
+        taggedCount++;
+      } catch (tagErr) {
+        console.warn('Tag apply error for', member.email_address, tagErr.message);
+      }
+    }
+
     return res.status(200).json({
       success: true,
       total_profiles: profiles.length,
       new_subscribers: totalAdded,
       updated: totalUpdated,
       errors: totalErrors,
+      tagged: taggedCount,
     });
 
   } catch (err) {
