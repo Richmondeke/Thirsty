@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSession = null;
   let currentUserProfile = null;
   let currentUserTicket = null;
+  let initialScrollDone = false;
 
   // DOM elements to toggle based on auth
   const rsvpPromoCard = document.getElementById('rsvp-promo-card');
@@ -325,6 +326,17 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error("Error fetching tickets:", ticketError);
         } else if (tickets && tickets.length > 0) {
           currentUserTicket = tickets[0];
+        }
+
+        // Scroll to passport-viewer on initial page load if already logged in
+        if (!initialScrollDone) {
+          initialScrollDone = true;
+          setTimeout(() => {
+            const passportViewer = document.getElementById('passport-viewer');
+            if (passportViewer) {
+              passportViewer.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 800);
         }
       } catch (err) {
         console.error("Error syncing profile:", err);
