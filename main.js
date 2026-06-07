@@ -1350,6 +1350,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalText = downloadPassportBtn.textContent;
         downloadPassportBtn.textContent = "Updating Profile...";
         
+        const startTime = Date.now();
         if (processingModal) {
           document.getElementById('processing-status-text').textContent = 'UPDATING PROFILE...';
           processingModal.showModal();
@@ -1391,6 +1392,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
           alert("Error updating passport: " + err.message);
         } finally {
+          const elapsed = Date.now() - startTime;
+          const remainingDelay = Math.max(0, 3000 - elapsed);
+          if (remainingDelay > 0) {
+            await new Promise(resolve => setTimeout(resolve, remainingDelay));
+          }
           if (processingModal) processingModal.close();
           downloadPassportBtn.disabled = false;
           downloadPassportBtn.textContent = originalText;
@@ -1415,6 +1421,7 @@ document.addEventListener('DOMContentLoaded', () => {
       downloadPassportBtn.disabled = true;
       downloadPassportBtn.textContent = "Processing RSVP...";
       
+      const startTime = Date.now();
       if (processingModal) {
         document.getElementById('processing-status-text').textContent = 'VERIFYING CREDENTIALS & SIGNING...';
         processingModal.showModal();
@@ -1505,6 +1512,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         alert("RSVP Error: " + err.message);
       } finally {
+        const elapsed = Date.now() - startTime;
+        const remainingDelay = Math.max(0, 3000 - elapsed);
+        if (remainingDelay > 0) {
+          await new Promise(resolve => setTimeout(resolve, remainingDelay));
+        }
         if (processingModal) processingModal.close();
         downloadPassportBtn.disabled = false;
         downloadPassportBtn.textContent = "DOWNLOAD PASSPORT (RSVP)";
