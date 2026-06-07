@@ -222,9 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (passportInputName) passportInputName.value = profile?.username || '';
-      if (passportInputPob) passportInputPob.value = profile?.socials?.place_of_thirst || 'MANCHESTER';
+      if (passportInputPob) passportInputPob.value = profile?.socials?.place_of_thirst || 'LAGOS';
       if (passportInputGender) passportInputGender.value = profile?.socials?.gender || 'F';
-      if (passportInputSig) passportInputSig.value = profile?.socials?.signature || 'A. Palmerston';
+      if (passportInputSig) passportInputSig.value = profile?.socials?.signature || 'Thirstyzoid';
 
       // Load avatar image into the canvas representation
       if (profile?.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
@@ -304,10 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPassportBtn.textContent = 'DOWNLOAD PASSPORT (RSVP)';
       }
 
-      if (passportInputName) passportInputName.value = 'ADELINE PALMERSTON';
-      if (passportInputPob) passportInputPob.value = 'MANCHESTER';
+      if (passportInputName) passportInputName.value = 'THIRSTYZOID';
+      if (passportInputPob) passportInputPob.value = 'LAGOS';
       if (passportInputGender) passportInputGender.value = 'F';
-      if (passportInputSig) passportInputSig.value = 'A. Palmerston';
+      if (passportInputSig) passportInputSig.value = 'Thirstyzoid';
 
       const passportInputEmail = document.getElementById('passport-input-email');
       const passportInputPassword = document.getElementById('passport-input-password');
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
           email: profile.email,
           username: profile.username,
           thirstyclub_id: profile.thirstyclub_id || 'T999-XXXX',
-          place_of_thirst: profile.socials?.place_of_thirst || 'MANCHESTER',
+          place_of_thirst: profile.socials?.place_of_thirst || 'LAGOS',
           passport_image: dataUrl
         })
       });
@@ -394,9 +394,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 instagram: "",
                 twitter: "",
                 discord: "",
-                place_of_thirst: "MANCHESTER",
+                place_of_thirst: "LAGOS",
                 gender: "F",
-                signature: "A. Palmerston"
+                signature: "Thirstyzoid"
               }
             }, { onConflict: 'id' })
             .select()
@@ -1265,7 +1265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 5. Draw Top Page Content
     // Left vertical signature
-    const sigText = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || 'A. Palmerston';
+    const sigText = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || 'Thirstyzoid';
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -1398,8 +1398,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetch form values
-    const nameVal = (document.getElementById('passport-input-name')?.value || currentUserProfile?.username || 'ADELINE PALMERSTON').toUpperCase();
-    const pobVal = (document.getElementById('passport-input-pob')?.value || currentUserProfile?.socials?.place_of_thirst || 'MANCHESTER').toUpperCase();
+    const nameVal = (document.getElementById('passport-input-name')?.value || currentUserProfile?.username || 'THIRSTYZOID').toUpperCase();
+    const pobVal = (document.getElementById('passport-input-pob')?.value || currentUserProfile?.socials?.place_of_thirst || 'LAGOS').toUpperCase();
     const genderVal = (document.getElementById('passport-input-gender')?.value || currentUserProfile?.socials?.gender || 'F').toUpperCase();
     const finalSigVal = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || sigText;
 
@@ -1773,6 +1773,7 @@ document.addEventListener('DOMContentLoaded', () => {
             email: emailVal,
             password: passwordVal,
             options: {
+              redirectTo: window.location.origin,
               data: {
                 username: nameVal,
                 place_of_thirst: pobVal,
@@ -2234,7 +2235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillRect(0, 385, w, 30);
     
     // 5. Draw Top Page Content
-    const sigText = profile.socials?.signature || 'A. Palmerston';
+    const sigText = profile.socials?.signature || 'Thirstyzoid';
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -2355,8 +2356,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.stroke();
     }
 
-    const nameVal = (profile.username || 'ADELINE PALMERSTON').toUpperCase();
-    const pobVal = (profile.socials?.place_of_thirst || 'MANCHESTER').toUpperCase();
+    const nameVal = (profile.username || 'THIRSTYZOID').toUpperCase();
+    const pobVal = (profile.socials?.place_of_thirst || 'LAGOS').toUpperCase();
     const genderVal = (profile.socials?.gender || 'F').toUpperCase();
     const finalSigVal = profile.socials?.signature || sigText;
 
