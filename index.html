@@ -31,7 +31,7 @@
 
   <!-- Header Navigation -->
   <header>
-    <div class="logo">THIRSTYCLUB<span id="logo-counter">999</span></div>
+    <a href="#home" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
     <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
       <span class="bar"></span>
       <span class="bar"></span>
@@ -318,6 +318,8 @@
               <span class="star">★</span>
               <span>AYJAY BOBO</span>
               <span class="star">★</span>
+              <span>ZENUNIVERSE</span>
+              <span class="star">★</span>
             </div>
             <!-- Duplicate for seamless loop -->
             <div class="marquee-track" aria-hidden="true">
@@ -330,6 +332,8 @@
               <span>$TRAFFITTI</span>
               <span class="star">★</span>
               <span>AYJAY BOBO</span>
+              <span class="star">★</span>
+              <span>ZENUNIVERSE</span>
               <span class="star">★</span>
             </div>
           </div>
@@ -455,6 +459,11 @@
             <img src="images/artists/erigothi.jpg" alt="ERIGOTHI" loading="lazy" onerror="this.style.display='none'">
             <div class="artist-overlay"></div>
             <span class="artist-name">ERIGOTHI</span>
+          </div>
+          <div class="static-artist">
+            <img src="images/artists/zenuniverse.jpg" alt="ZENUNIVERSE" loading="lazy" onerror="this.style.display='none'">
+            <div class="artist-overlay"></div>
+            <span class="artist-name">ZENUNIVERSE</span>
           </div>
         </div>
       </div>
@@ -866,9 +875,9 @@
     <div class="modal-content success-content">
       <button class="close-modal" id="close-success-modal" aria-label="Close modal">&times;</button>
       <div class="success-icon">✨</div>
-      <h3>YOU'RE IN!</h3>
-      <p class="success-title">Welcome to Thirstyclub999</p>
-      <p class="success-desc">Your RSVP is confirmed and your Thirsty ID is generated. Your passport has been successfully downloaded.</p>
+      <h3 id="success-modal-heading">YOU'RE IN!</h3>
+      <p class="success-title" id="success-modal-title">Welcome to Thirstyclub999</p>
+      <p class="success-desc" id="success-modal-desc">Your RSVP is confirmed and your Thirsty ID is generated. Your passport has been successfully downloaded.</p>
       <div class="success-card">
         <p class="card-id-label">YOUR ACCESS ID</p>
         <h4 id="success-member-id">T999-XXXX</h4>

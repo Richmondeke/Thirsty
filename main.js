@@ -1437,6 +1437,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Open success modal after closing processing modal
           if (shouldShowSuccess) {
+            const heading = document.getElementById('success-modal-heading');
+            const title = document.getElementById('success-modal-title');
+            const desc = document.getElementById('success-modal-desc');
+            if (heading) heading.textContent = "ALREADY RSVP'D!";
+            if (title) title.textContent = "Welcome Back to Thirstyclub999";
+            if (desc) desc.textContent = "You have already RSVP'd for this event. Your passport has been successfully downloaded.";
+
             const successModal = document.getElementById('success-modal');
             const successMemberId = document.getElementById('success-member-id');
             if (successMemberId) {
@@ -1476,6 +1483,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let shouldShowSuccess = false;
       let memberIdVal = 'T999-XXXX';
       let isPending = false;
+      let wasAlreadyRegistered = false;
 
       try {
         const profilePic = uploadedImage ? uploadedImage.src : ""; // base64 string
@@ -1506,6 +1514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (signUpError) {
           const errMsg = signUpError.message ? signUpError.message.toLowerCase() : "";
           if (errMsg.includes("user already registered") || errMsg.includes("already exists") || errMsg.includes("email_exists")) {
+            wasAlreadyRegistered = true;
             if (processingModal) {
               document.getElementById('processing-status-text').textContent = 'ALREADY RSVP\'D. LOGGING IN...';
             }
@@ -1590,6 +1599,21 @@ document.addEventListener('DOMContentLoaded', () => {
           if (isPending) {
             alert("RSVP Pending!\n\nPlease check your email inbox to confirm your account and activate your ThirstyID.");
           }
+
+          const heading = document.getElementById('success-modal-heading');
+          const title = document.getElementById('success-modal-title');
+          const desc = document.getElementById('success-modal-desc');
+
+          if (wasAlreadyRegistered) {
+            if (heading) heading.textContent = "ALREADY RSVP'D!";
+            if (title) title.textContent = "Welcome Back to Thirstyclub999";
+            if (desc) desc.textContent = "You have already RSVP'd for this event. Your passport has been successfully downloaded.";
+          } else {
+            if (heading) heading.textContent = "YOU'RE IN!";
+            if (title) title.textContent = "Welcome to Thirstyclub999";
+            if (desc) desc.textContent = "Your RSVP is confirmed and your Thirsty ID is generated. Your passport has been successfully downloaded.";
+          }
+
           const successModal = document.getElementById('success-modal');
           const successMemberId = document.getElementById('success-member-id');
           if (successMemberId) {
