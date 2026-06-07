@@ -143,6 +143,19 @@ header nav .nav-btn.members-white {
   background: var(--text-color);
   color: var(--bg-color);
   border: 1px solid var(--text-color);
+  /* reset button defaults */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: normal;
 }
 
 header nav .nav-btn.members-white:hover {

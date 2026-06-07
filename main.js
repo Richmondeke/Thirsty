@@ -211,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (navMembersBtn) {
         navMembersBtn.textContent = 'My Passport';
-        navMembersBtn.href = '#passport-viewer';
       }
 
       if (passportAuthFields) passportAuthFields.style.display = 'none';
@@ -298,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (navMembersBtn) {
         navMembersBtn.textContent = 'Members Only';
-        navMembersBtn.href = '#';
       }
 
       if (passportAuthFields) passportAuthFields.style.display = 'flex';
