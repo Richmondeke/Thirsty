@@ -91,7 +91,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         key: apiKey,
         message: {
-          from_email: 'hello@thirstyclub999.com',
+          from_email: 'hello@thirstynalia.com',
           from_name: 'ThirstyClub999',
           subject: emailSubject,
           to: [
