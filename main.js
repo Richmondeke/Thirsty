@@ -10,6 +10,44 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
+  // Mobile Navigation Menu Toggle (Hamburger)
+  // ==========================================
+  const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
+
+  if (mobileNavToggle && navMenu) {
+    const toggleMenu = () => {
+      const isExpanded = mobileNavToggle.getAttribute('aria-expanded') === 'true';
+      mobileNavToggle.setAttribute('aria-expanded', !isExpanded);
+      mobileNavToggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      document.body.classList.toggle('no-scroll', !isExpanded);
+    };
+
+    mobileNavToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    // Close menu when a link/button is clicked
+    const navLinks = navMenu.querySelectorAll('a, button');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (navMenu.classList.contains('active')) {
+          toggleMenu();
+        }
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && e.target !== mobileNavToggle) {
+        toggleMenu();
+      }
+    });
+  }
+
+  // ==========================================
   // 2. Intersection Observer for Scroll Reveals
   // ==========================================
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
