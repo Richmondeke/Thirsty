@@ -1667,7 +1667,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           memberIdVal = refreshedProfile?.thirstyclub_id || 'T999-XXXX';
 
-          // Trigger transactional email
+          // Trigger transactional email (non-blocking)
           try {
             fetch('/api/send-email', {
               method: 'POST',
@@ -1682,6 +1682,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }).catch(e => console.warn('Email trigger error (non-blocking):', e));
           } catch (e) {
             console.warn('Email trigger call failed:', e);
+          }
+
+          // Add to Mailchimp Marketing audience/contacts (non-blocking)
+          try {
+            fetch('/api/mailchimp-subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: emailVal,
+                username: nameVal,
+                thirstyclub_id: memberIdVal,
+                gender: genderVal || '',
+                place_of_thirst: pobVal || ''
+              })
+            }).catch(e => console.warn('Mailchimp subscribe error (non-blocking):', e));
+          } catch (e) {
+            console.warn('Mailchimp subscribe call failed:', e);
           }
 
           shouldShowSuccess = true;
@@ -2426,5 +2443,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ── Admin Table Live Search ───────────────────────────────
+  const adminTableSearch = document.getElementById('admin-table-search');
+  if (adminTableSearch) {
+    adminTableSearch.addEventListener('input', () => {
+      const query = adminTableSearch.value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#admin-users-list tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    });
+  }
+
+  // ── Admin Refresh Button ──────────────────────────────────
+  const adminRefreshBtn = document.getElementById('admin-refresh-btn');
+  if (adminRefreshBtn) {
+    adminRefreshBtn.addEventListener('click', async () => {
+      adminRefreshBtn.textContent = '↻ Refreshing...';
+      adminRefreshBtn.disabled = true;
+      try {
+        // Re-fetch admin data by triggering tab click logic
+        const adminTab = document.getElementById('admin-tab-btn');
+        if (adminTab) adminTab.click();
+      } finally {
+        setTimeout(() => {
+          adminRefreshBtn.textContent = '↻ Refresh';
+          adminRefreshBtn.disabled = false;
+        }, 1500);
+      }
+    });
+  }
+
 });
 /* force redeploy Sun Jun  7 03:48:39 WAT 2026 */

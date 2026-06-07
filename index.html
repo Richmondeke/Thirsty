@@ -210,8 +210,16 @@
           <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
           <div class="tab-content" id="admin-tab">
             <div class="admin-container">
-              <h4 class="tab-title">ADMIN DASHBOARD</h4>
-              
+
+              <!-- Dashboard Header -->
+              <div class="admin-header-bar">
+                <div>
+                  <h4 class="admin-dashboard-title">ADMIN DASHBOARD</h4>
+                  <p class="admin-dashboard-sub">ThirstyClub999 Guestlist Management</p>
+                </div>
+                <button id="admin-refresh-btn" class="admin-refresh-btn">↻ Refresh</button>
+              </div>
+
               <!-- Summary Stats -->
               <div class="admin-stats-grid">
                 <div class="admin-stat-card">
@@ -228,72 +236,106 @@
                 </div>
                 <div class="admin-stat-card">
                   <span class="stat-value" id="admin-stat-other" style="color: #a8a8a8;">0</span>
-                  <span class="stat-label">Other/Unspecified</span>
+                  <span class="stat-label">Other / N/A</span>
                 </div>
               </div>
 
-              <!-- User List Table -->
-              <div class="admin-users-table-wrapper">
-                <table class="admin-users-table">
-                  <thead>
-                    <tr>
-                      <th>ThirstyID</th>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Access</th>
-                      <th>Registered At</th>
-                      <th>Passport</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-users-list">
-                    <!-- Dynamic rows go here -->
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Welcome Email Template Settings -->
-              <div class="admin-card" style="margin-top: 2.5rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px;">
-                <h5 style="margin-top: 0; color: var(--accent-color); font-size: 1.1rem; letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">1. WELCOME EMAIL CONFIGURATION</h5>
-                <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.4;">Configure the automatic welcome email sent to guests upon signup. You can use placeholders: <strong style="color: var(--text-color);">{username}</strong>, <strong style="color: var(--text-color);">{thirstyclub_id}</strong>, <strong style="color: var(--text-color);">{place_of_thirst}</strong>. The user's passport card is automatically attached.</p>
-                
-                <div class="form-group" style="margin-bottom: 1.2rem;">
-                  <label for="admin-email-subject" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); letter-spacing: 0.5px;">Email Subject</label>
-                  <input type="text" id="admin-email-subject" style="width: 100%; padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-family: inherit; font-size: 0.9rem;" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                  <label for="admin-email-message" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); letter-spacing: 0.5px;">Welcome Message (HTML/Plain text)</label>
-                  <textarea id="admin-email-message" rows="4" style="width: 100%; padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-family: inherit; font-size: 0.9rem; resize: vertical; line-height: 1.4;" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club."></textarea>
-                </div>
-
-                <button id="admin-save-email-template-btn" class="form-submit-btn" style="width: auto; padding: 0.75rem 2rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;">SAVE WELCOME TEMPLATE</button>
-              </div>
-
-              <!-- Broadcast Email Panel -->
-              <div class="admin-card" style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px;">
-                <h5 style="margin-top: 0; color: var(--accent-color); font-size: 1.1rem; letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">2. BROADCAST EMAIL BLAST</h5>
-                <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.4;">Send a custom manual email blast to all registered guestlist users. Uses your configured Mailchimp API key. Placeholders are supported.</p>
-                
-                <div class="form-group" style="margin-bottom: 1.2rem;">
-                  <label for="admin-broadcast-subject" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); letter-spacing: 0.5px;">Broadcast Subject</label>
-                  <input type="text" id="admin-broadcast-subject" style="width: 100%; padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-family: inherit; font-size: 0.9rem;" placeholder="ThirstyClub999 - Event Updates & Information">
-                </div>
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                  <label for="admin-broadcast-message" style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); letter-spacing: 0.5px;">Message Body</label>
-                  <textarea id="admin-broadcast-message" rows="5" style="width: 100%; padding: 0.75rem; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-family: inherit; font-size: 0.9rem; resize: vertical; line-height: 1.4;" placeholder="Hi {username}, we have some exciting updates for the upcoming event on June 14th!"></textarea>
-                </div>
-
-                <div id="broadcast-status-container" style="display: none; margin-bottom: 1.2rem; padding: 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-size: 0.85rem;">
-                  <div id="broadcast-progress-bar-wrapper" style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 0.5rem; overflow: hidden;">
-                    <div id="broadcast-progress-bar" style="width: 0%; height: 100%; background: var(--accent-color); transition: width 0.3s ease;"></div>
+              <!-- Section: Guestlist -->
+              <div class="admin-section-card">
+                <div class="admin-section-header">
+                  <div>
+                    <h5 class="admin-section-title">🎟 GUESTLIST</h5>
+                    <p class="admin-section-desc">View and manage all registered guests. Change access level or view their passport.</p>
                   </div>
-                  <div id="broadcast-status-text" style="color: var(--text-dim);">Preparing to blast...</div>
+                  <div class="admin-table-search-wrapper">
+                    <input type="text" id="admin-table-search" class="admin-table-search" placeholder="Search by name, email or ID...">
+                  </div>
                 </div>
 
-                <button id="admin-broadcast-email-btn" class="form-submit-btn" style="width: auto; padding: 0.75rem 2rem; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color);">SEND BROADCAST BLAST</button>
+                <div class="admin-users-table-wrapper">
+                  <table class="admin-users-table" id="admin-users-table-el">
+                    <thead>
+                      <tr>
+                        <th>ThirstyID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Access Level</th>
+                        <th>Registered</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-users-list">
+                      <!-- Dynamic rows go here -->
+                    </tbody>
+                  </table>
+                </div>
+                <p class="admin-table-hint">Scroll horizontally if columns are cut off on smaller screens. Sticky headers keep column names visible as you scroll down.</p>
               </div>
+
+              <!-- Section: Welcome Email Template -->
+              <div class="admin-section-card">
+                <div class="admin-section-header">
+                  <div>
+                    <h5 class="admin-section-title">✉️ WELCOME EMAIL TEMPLATE</h5>
+                    <p class="admin-section-desc">Customise the automatic welcome email sent to guests on RSVP. Supports placeholders: <span class="admin-placeholder-tag">{username}</span> <span class="admin-placeholder-tag">{thirstyclub_id}</span> <span class="admin-placeholder-tag">{place_of_thirst}</span>. Passport image auto-attached.</p>
+                  </div>
+                  <span class="admin-badge-pill auto-badge">AUTO</span>
+                </div>
+
+                <div class="admin-form-row">
+                  <div class="admin-form-group">
+                    <label for="admin-email-subject" class="admin-label">Email Subject</label>
+                    <input type="text" id="admin-email-subject" class="admin-input" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999">
+                  </div>
+                </div>
+                <div class="admin-form-row">
+                  <div class="admin-form-group">
+                    <label for="admin-email-message" class="admin-label">Welcome Message Body</label>
+                    <textarea id="admin-email-message" rows="5" class="admin-textarea" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club."></textarea>
+                  </div>
+                </div>
+                <div class="admin-form-actions">
+                  <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn">SAVE TEMPLATE</button>
+                </div>
+              </div>
+
+              <!-- Section: Broadcast Blast -->
+              <div class="admin-section-card">
+                <div class="admin-section-header">
+                  <div>
+                    <h5 class="admin-section-title">📣 BROADCAST EMAIL BLAST</h5>
+                    <p class="admin-section-desc">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
+                  </div>
+                  <span class="admin-badge-pill manual-badge">MANUAL</span>
+                </div>
+
+                <div class="admin-form-row">
+                  <div class="admin-form-group">
+                    <label for="admin-broadcast-subject" class="admin-label">Subject Line</label>
+                    <input type="text" id="admin-broadcast-subject" class="admin-input" placeholder="ThirstyClub999 — Event Updates & Info">
+                  </div>
+                </div>
+                <div class="admin-form-row">
+                  <div class="admin-form-group">
+                    <label for="admin-broadcast-message" class="admin-label">Message Body</label>
+                    <textarea id="admin-broadcast-message" rows="6" class="admin-textarea" placeholder="Hi {username}, we have exciting updates for the event on June 14th! Doors open at 9PM..."></textarea>
+                  </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="broadcast-status-container" class="broadcast-status-box" style="display:none;">
+                  <div class="broadcast-progress-bar-track">
+                    <div id="broadcast-progress-bar" class="broadcast-progress-bar-fill"></div>
+                  </div>
+                  <div id="broadcast-status-text" class="broadcast-status-text">Preparing to blast...</div>
+                </div>
+
+                <div class="admin-form-actions">
+                  <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn">📨 SEND BLAST TO ALL USERS</button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
