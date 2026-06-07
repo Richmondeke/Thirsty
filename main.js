@@ -72,8 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const headerLogoutBtn = document.getElementById('header-logout-btn');
     const ticketsSection = document.getElementById('tickets');
     
+    const heroLoggedOut = document.getElementById('hero-logged-out-content');
+    const heroLoggedIn = document.getElementById('hero-logged-in');
+
     if (session && profile) {
       // User is Logged In
+      document.body.classList.add('logged-in-user');
+      
+      if (heroLoggedOut) heroLoggedOut.style.display = 'none';
+      if (heroLoggedIn) heroLoggedIn.style.display = 'block';
+
+      // Generate QR Code
+      const qrContainer = document.getElementById('hero-qr-code');
+      if (qrContainer) {
+        const checkinUrl = window.location.origin + '/checkin.html?id=' + (profile.thirstyclub_id || 'T999-XXXX');
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=255-62-62&bgcolor=ffffff&data=${encodeURIComponent(checkinUrl)}`;
+        qrContainer.innerHTML = `<img src="${qrApiUrl}" alt="Entry Pass QR" />`;
+      }
+
       if (ticketsSection) ticketsSection.style.display = 'block';
       if (userDashboardCard) userDashboardCard.style.display = 'block';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
@@ -128,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (navMembersBtn) {
         navMembersBtn.textContent = 'My Passport';
-        navMembersBtn.href = '#rsvp';
+        navMembersBtn.href = '#home'; // scroll to top/hero since passport is there
       }
 
       if (passportAuthFields) passportAuthFields.style.display = 'none';
@@ -163,6 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       // User is Logged Out
+      document.body.classList.remove('logged-in-user');
+
+      if (heroLoggedOut) heroLoggedOut.style.display = 'flex';
+      if (heroLoggedIn) heroLoggedIn.style.display = 'none';
+
       const ticketsSection = document.getElementById('tickets');
       if (ticketsSection) ticketsSection.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
@@ -815,14 +836,52 @@ document.addEventListener('DOMContentLoaded', () => {
     drawPassport();
   };
 
+  const logoImage = new Image();
+  logoImage.src = 'images/ThirstyLOGO 2026.png';
+  logoImage.onload = () => {
+    drawPassport();
+  };
+
   if (document.fonts) {
     document.fonts.ready.then(() => {
       drawPassport();
     });
   }
 
-  const drawPassport = () => {
-    const canvas = document.getElementById('passport-canvas');
+  const drawStamp = (ctx, x, y) => {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(-15 * Math.PI / 180);
+    
+    ctx.strokeStyle = 'rgba(255, 62, 62, 0.85)';
+    ctx.fillStyle = 'rgba(255, 62, 62, 0.85)';
+    ctx.lineWidth = 4;
+    
+    ctx.beginPath();
+    ctx.arc(0, 0, 50, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, 44, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    ctx.font = '900 10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    ctx.fillText("THIRSTYCLUB", 0, -15);
+    ctx.font = '900 14px sans-serif';
+    ctx.fillText("999", 0, 2);
+    ctx.font = '700 8px sans-serif';
+    ctx.fillText("CHECKED IN", 0, 18);
+    ctx.fillText("ACCESS GRANTED", 0, 28);
+    
+    ctx.restore();
+  };
+
+  const drawPassportOnCanvas = (canvasId) => {
+    const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
@@ -915,7 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 5. Draw Top Page Content
     // Left vertical signature
-    const sigText = document.getElementById('passport-input-sig')?.value || 'A. Palmerston';
+    const sigText = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || 'A. Palmerston';
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -959,6 +1018,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.font = '700 13px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 0, 18);
     ctx.restore();
+
+    // Check if user is checked in, and draw stamp on top portion
+    const isCheckedIn = (currentUserProfile && (currentUserProfile.socials?.checked_in === true || currentUserProfile.checked_in === true));
+    if (isCheckedIn) {
+      drawStamp(ctx, 300, 202);
+    }
 
     // 6. Draw Bottom Page Content
     // Left header
@@ -1042,9 +1107,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fetch form values
-    const nameVal = (document.getElementById('passport-input-name')?.value || 'ADELINE PALMERSTON').toUpperCase();
-    const pobVal = (document.getElementById('passport-input-pob')?.value || 'MANCHESTER').toUpperCase();
-    const genderVal = (document.getElementById('passport-input-gender')?.value || 'F').toUpperCase();
+    const nameVal = (document.getElementById('passport-input-name')?.value || currentUserProfile?.username || 'ADELINE PALMERSTON').toUpperCase();
+    const pobVal = (document.getElementById('passport-input-pob')?.value || currentUserProfile?.socials?.place_of_thirst || 'MANCHESTER').toUpperCase();
+    const genderVal = (document.getElementById('passport-input-gender')?.value || currentUserProfile?.socials?.gender || 'F').toUpperCase();
+    const finalSigVal = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || sigText;
 
     // Helpers to draw cell rows
     const drawRowFull = (label, value, rx, ry, rw, isCursive = false) => {
@@ -1057,17 +1123,36 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.textAlign = 'center';
       if (isCursive) {
         ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42);
+        ctx.fillText(value, rx + 90, ry + 42); // centered left half
       } else {
         ctx.font = '900 13px "Kyrilla", sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42);
+        ctx.fillText(value, rx + 90, ry + 42); // centered left half
       }
     };
 
     drawRowFull("Name:", nameVal, tblX, tblY, tblW);
     drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
     drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
-    drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
+    drawRowFull("Signature:", finalSigVal, tblX, tblY + 3 * rowH, tblW, true);
+
+    // Draw logo oval in bottom-right corner of bottom page
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.ellipse(490, 615, 45, 30, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    if (logoImage.complete && logoImage.naturalWidth > 0) {
+      const logoSize = 48;
+      ctx.drawImage(logoImage, 490 - logoSize / 2, 615 - logoSize / 2, logoSize, logoSize);
+    }
+  };
+
+  const drawPassport = () => {
+    drawPassportOnCanvas('passport-canvas');
+    drawPassportOnCanvas('hero-passport-canvas');
   };
 
   // File Upload Handlers
@@ -1151,7 +1236,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Download action
   if (downloadPassportBtn) {
     downloadPassportBtn.addEventListener('click', async () => {
-      const canvas = document.getElementById('passport-canvas');
+      const canvas = currentSession
+        ? document.getElementById('hero-passport-canvas')
+        : document.getElementById('passport-canvas');
       if (!canvas) return;
 
       const nameVal = (passportInputName?.value || '').trim();
@@ -1537,6 +1624,14 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("Error loading admin dashboard: " + err.message);
     }
   };
+
+  // Wire up hero download button click
+  const heroDownloadBtn = document.getElementById('hero-download-passport-btn');
+  if (heroDownloadBtn && downloadPassportBtn) {
+    heroDownloadBtn.addEventListener('click', () => {
+      downloadPassportBtn.click();
+    });
+  }
 
   // Expose internals for testing / debugging
   window.__internals = {

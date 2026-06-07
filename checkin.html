@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThirstyClub999 | Guest Verification</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="style.css?v=20260606.1">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .checkin-body {
+      background: #000000;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 5rem 1.5rem 3rem 1.5rem;
+    }
+
+    .checkin-card {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(18, 18, 18, 0.8);
+      border: 1px solid rgba(255, 62, 62, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      .checkin-card {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
+    }
+
+    .checkin-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .checkin-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .status-pending {
+      background: rgba(255, 152, 0, 0.1);
+      color: #ff9800;
+      border: 1px solid rgba(255, 152, 0, 0.3);
+      box-shadow: 0 0 10px rgba(255, 152, 0, 0.1);
+    }
+
+    .status-checked {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+      border: 1px solid rgba(76, 175, 80, 0.3);
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+    }
+
+    .guest-info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    .guest-info-table tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .guest-info-table td {
+      padding: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    .guest-info-table td.label {
+      color: var(--text-dim);
+      width: 35%;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .guest-info-table td.value {
+      color: var(--text-color);
+      font-weight: 700;
+    }
+
+    .admin-checkin-controls {
+      background: rgba(255, 62, 62, 0.03);
+      border: 1px solid rgba(255, 62, 62, 0.15);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: auto;
+      box-sizing: border-box;
+    }
+
+    .admin-title {
+      font-size: 0.8rem;
+      color: var(--accent-color);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .checkin-btn {
+      width: 100%;
+      background: var(--accent-color);
+      color: var(--text-color);
+      border: none;
+      padding: 1rem;
+      font-family: 'Kyrilla', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--accent-glow);
+      transition: var(--transition-smooth);
+    }
+
+    .checkin-btn:hover:not(:disabled) {
+      background: #e03232;
+      box-shadow: 0 0 25px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .checkin-btn:disabled {
+      background: #444;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .error-container {
+      background: rgba(244, 67, 54, 0.1);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      color: #f44336;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      display: none;
+    }
+
+    .checkin-logo-header {
+      font-family: 'Kyrilla', sans-serif;
+      font-weight: 950;
+      font-size: 2.2rem;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+
+    .checkin-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .nav-home-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-dim);
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      margin-top: 1rem;
+    }
+
+    .nav-home-btn:hover {
+      border-color: var(--text-color);
+      color: var(--text-color);
+    }
+  </style>
+</head>
+<body class="checkin-body">
+
+  <div class="checkin-logo-header">THIRSTYCLUB<span style="color: var(--accent-color);">999</span></div>
+  <div class="checkin-subtitle">Guest Pass Verification</div>
+
+  <div id="error-box" class="error-container"></div>
+
+  <div class="checkin-card" id="guest-card" style="display: none;">
+    <div class="checkin-left">
+      <div class="canvas-wrapper vertical-passport-wrapper" style="transform: scale(0.9); transform-origin: top center; margin-bottom: -60px;">
+        <div class="passport-glow-border"></div>
+        <canvas id="checkin-canvas" width="600" height="800"></canvas>
+      </div>
+    </div>
+    <div class="checkin-right">
+      <div>
+        <div id="status-badge" class="status-badge status-pending">Pending Event Entry</div>
+        <h2 id="guest-username" style="font-family: 'Kyrilla', sans-serif; font-size: 2rem; margin-bottom: 1.5rem;">Adeline Palmerston</h2>
+        
+        <table class="guest-info-table">
+          <tr>
+            <td class="label">ThirstyID</td>
+            <td class="value" id="guest-thirsty-id">-</td>
+          </tr>
+          <tr>
+            <td class="label">Place of Thirst</td>
+            <td class="value" id="guest-pob">-</td>
+          </tr>
+          <tr>
+            <td class="label">Gender</td>
+            <td class="value" id="guest-gender">-</td>
+          </tr>
+          <tr>
+            <td class="label">Ticket Class</td>
+            <td class="value" id="guest-ticket-class">VIP ACCESS</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Admin Actions -->
+      <div class="admin-checkin-controls" id="admin-controls" style="display: none;">
+        <div class="admin-title">ADMINISTRATOR CONTROL</div>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin: 0 0 1rem 0; line-height: 1.4;">Confirm attendance at the gate. This will stamp their passport and log their check-in.</p>
+        <button class="checkin-btn" id="confirm-checkin-btn">CONFIRM EVENT ENTRY</button>
+      </div>
+      <div id="non-admin-msg" style="font-size: 0.75rem; color: var(--text-dim); text-align: center; padding: 1rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px;">
+        Guest signature verified. Admin privileges required to check in.
+      </div>
+    </div>
+  </div>
+
+  <div id="loading-box" style="text-align: center; padding: 3rem;">
+    <div class="status-dot pulsed" style="width: 12px; height: 12px; background-color: var(--accent-color); border-radius: 50%; display: inline-block; margin-bottom: 1rem;"></div>
+    <p style="color: var(--text-dim); font-size: 0.9rem; letter-spacing: 0.05em;">RETRIEVING GUEST RECORD...</p>
+  </div>
+
+  <a href="/" class="nav-home-btn">Go to Clubhouse</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // Get target guest id
+      const params = new URLSearchParams(window.location.search);
+      const guestId = params.get('id');
+
+      if (!guestId) {
+        document.getElementById('loading-box').style.display = 'none';
+        const errBox = document.getElementById('error-box');
+        errBox.textContent = 'Error: No guest ID specified in the verification link.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      let guestProfile = null;
+      let uploadedImage = null;
+
+      // Preload images for passport rendering
+      const logoImage = new Image();
+      logoImage.src = 'images/ThirstyLOGO 2026.png';
+      
+      const passportBlendImage = new Image();
+      passportBlendImage.src = 'images/Passportblend.JPG';
+
+      const drawStamp = (ctx, x, y) => {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-15 * Math.PI / 180);
+        
+        ctx.strokeStyle = 'rgba(255, 62, 62, 0.85)';
+        ctx.fillStyle = 'rgba(255, 62, 62, 0.85)';
+        ctx.lineWidth = 4;
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, 50, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 44, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        ctx.font = '900 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        ctx.fillText("THIRSTYCLUB", 0, -15);
+        ctx.font = '900 14px sans-serif';
+        ctx.fillText("999", 0, 2);
+        ctx.font = '700 8px sans-serif';
+        ctx.fillText("CHECKED IN", 0, 18);
+        ctx.fillText("ACCESS GRANTED", 0, 28);
+        
+        ctx.restore();
+      };
+
+      const drawPassport = () => {
+        const canvas = document.getElementById('checkin-canvas');
+        if (!canvas || !guestProfile) return;
+        const ctx = canvas.getContext('2d');
+        
+        const w = 600;
+        const h = 800;
+        
+        ctx.clearRect(0, 0, w, h);
+        
+        // cover
+        ctx.fillStyle = '#5A060C';
+        ctx.beginPath();
+        ctx.roundRect(0, 0, w, h, 24);
+        ctx.fill();
+        
+        const pageW = 560;
+        const pageH = 365;
+        const pageBgColor = '#EDE8DC';
+        
+        // top page
+        ctx.fillStyle = pageBgColor;
+        ctx.beginPath();
+        ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
+        // bottom page
+        ctx.fillStyle = pageBgColor;
+        ctx.beginPath();
+        ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+        ctx.fill();
+        ctx.stroke();
+        
+        // security waves
+        const drawWaves = (topY, bottomY) => {
+          ctx.strokeStyle = 'rgba(139, 131, 120, 0.11)';
+          ctx.lineWidth = 1.0;
+          for (let y = topY - 15; y < bottomY + 15; y += 12) {
+            ctx.beginPath();
+            for (let x = 20; x <= 580; x += 10) {
+              const waveY = y + Math.sin((x - 20) * 0.03) * 6 + Math.cos((x - 20) * 0.015) * 3;
+              if (x === 20) ctx.moveTo(x, waveY);
+              else ctx.lineTo(x, waveY);
+            }
+            ctx.stroke();
+          }
+        };
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+        ctx.clip();
+        drawWaves(20, 385);
+        ctx.restore();
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+        ctx.clip();
+        drawWaves(415, 780);
+        ctx.restore();
+        
+        // creases
+        let gradTop = ctx.createLinearGradient(0, 350, 0, 385);
+        gradTop.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        gradTop.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(20, 350, pageW, 35);
+
+        let gradBottom = ctx.createLinearGradient(0, 415, 0, 450);
+        gradBottom.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
+        gradBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = gradBottom;
+        ctx.fillRect(20, 415, pageW, 35);
+
+        let gradSpine = ctx.createLinearGradient(0, 385, 0, 415);
+        gradSpine.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+        gradSpine.addColorStop(0.5, 'rgba(0, 0, 0, 0.85)');
+        gradSpine.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+        ctx.fillStyle = gradSpine;
+        ctx.fillRect(0, 385, w, 30);
+        
+        // top content
+        const sigText = guestProfile.socials?.signature || 'A. Palmerston';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(85, 60);
+        ctx.lineTo(85, 345);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(65, 202);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = '#000000';
+        ctx.font = 'italic 24px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(sigText, 0, 0);
+        ctx.restore();
+
+        if (passportBlendImage.complete && passportBlendImage.naturalWidth > 0) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+          ctx.clip();
+          ctx.globalAlpha = 0.16;
+          const imgW = 450;
+          const imgH = 300;
+          ctx.drawImage(passportBlendImage, 300 - imgW / 2, 202 - imgH / 2, imgW, imgH);
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.translate(505, 202);
+        ctx.rotate(Math.PI / 2);
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        ctx.font = '900 28px "Kyrilla", sans-serif';
+        ctx.fillText("THIRSTYCLUB999", 0, -8);
+        ctx.font = '700 13px "Kyrilla", sans-serif';
+        ctx.fillText("PASSPORT", 0, 18);
+        ctx.restore();
+
+        // Check if checked in and draw stamp in top section
+        if (guestProfile.socials?.checked_in === true || guestProfile.checked_in === true) {
+          drawStamp(ctx, 300, 202);
+        }
+
+        // bottom content
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'left';
+        ctx.font = '900 22px "Kyrilla", sans-serif';
+        ctx.fillText("THIRSTYCLUB999", 45, 452);
+        ctx.font = '700 11px "Kyrilla", sans-serif';
+        ctx.fillText("PASSPORT", 45 + 5, 470);
+
+        const uPhotoX = 45;
+        const uPhotoY = 492;
+        const uPhotoW = 185;
+        const uPhotoH = 245;
+
+        if (uploadedImage) {
+          ctx.save();
+          ctx.filter = 'grayscale(100%)';
+          const imgW = uploadedImage.width;
+          const imgH = uploadedImage.height;
+          const aspect = uPhotoW / uPhotoH;
+          let srcW, srcH, srcX, srcY;
+          
+          if (imgW / imgH > aspect) {
+            srcH = imgH;
+            srcW = imgH * aspect;
+            srcX = (imgW - srcW) / 2;
+            srcY = 0;
+          } else {
+            srcW = imgW;
+            srcH = imgW / aspect;
+            srcX = 0;
+            srcY = (imgH - srcH) / 2;
+          }
+          ctx.drawImage(uploadedImage, srcX, srcY, srcW, srcH, uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+          ctx.fillRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.12)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+          
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+          ctx.beginPath();
+          ctx.arc(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH/3, 28, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.ellipse(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH * 0.72, 52, 36, 0, Math.PI, 0);
+          ctx.fill();
+        }
+        
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+
+        const tblX = 250;
+        const tblY = 495;
+        const tblW = 295;
+        const tblH = 240;
+        const rowH = 60;
+
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(tblX, tblY, tblW, tblH);
+
+        for (let r = 1; r < 4; r++) {
+          ctx.beginPath();
+          ctx.moveTo(tblX, tblY + r * rowH);
+          ctx.lineTo(tblX + tblW, tblY + r * rowH);
+          ctx.stroke();
+        }
+
+        const nameVal = (guestProfile.username || 'GUEST').toUpperCase();
+        const pobVal = (guestProfile.socials?.place_of_thirst || 'LAGOS').toUpperCase();
+        const genderVal = (guestProfile.socials?.gender || 'M').toUpperCase();
+
+        const drawRowFull = (label, value, rx, ry, rw, isCursive = false) => {
+          ctx.fillStyle = '#1b4d3e';
+          ctx.textAlign = 'left';
+          ctx.font = 'italic 10px sans-serif';
+          ctx.fillText(label, rx + 8, ry + 16);
+
+          ctx.fillStyle = '#000000';
+          ctx.textAlign = 'center';
+          if (isCursive) {
+            ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+            ctx.fillText(value, rx + 90, ry + 42); // centered left half
+          } else {
+            ctx.font = '900 13px "Kyrilla", sans-serif';
+            ctx.fillText(value, rx + 90, ry + 42); // centered left half
+          }
+        };
+
+        drawRowFull("Name:", nameVal, tblX, tblY, tblW);
+        drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
+        drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
+        drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
+
+        // Draw logo oval in bottom-right corner of bottom page
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.ellipse(490, 615, 45, 30, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        if (logoImage.complete && logoImage.naturalWidth > 0) {
+          const logoSize = 48;
+          ctx.drawImage(logoImage, 490 - logoSize / 2, 615 - logoSize / 2, logoSize, logoSize);
+        }
+      };
+
+      logoImage.onload = () => drawPassport();
+      passportBlendImage.onload = () => drawPassport();
+
+      const loadGuestDetails = async () => {
+        try {
+          // Fetch user profile
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('thirstyclub_id', guestId.toUpperCase())
+            .single();
+
+          if (profileError || !profile) {
+            throw new Error("Guest profile not found. Verify the ThirstyID.");
+          }
+
+          guestProfile = profile;
+
+          // Update guest info texts
+          document.getElementById('guest-username').textContent = profile.username;
+          document.getElementById('guest-thirsty-id').textContent = profile.thirstyclub_id;
+          document.getElementById('guest-pob').textContent = profile.socials?.place_of_thirst || 'N/A';
+          document.getElementById('guest-gender').textContent = profile.socials?.gender || 'N/A';
+
+          const isCheckedIn = profile.socials?.checked_in === true || profile.checked_in === true;
+          const statusEl = document.getElementById('status-badge');
+          
+          if (isCheckedIn) {
+            statusEl.textContent = 'CHECKED IN';
+            statusEl.className = 'status-badge status-checked';
+            const btn = document.getElementById('confirm-checkin-btn');
+            if (btn) {
+              btn.disabled = true;
+              btn.textContent = 'ATTENDANCE LOGGED';
+            }
+          } else {
+            statusEl.textContent = 'Pending Event Entry';
+            statusEl.className = 'status-badge status-pending';
+          }
+
+          // Fetch avatar image
+          if (profile.avatar_url) {
+            const img = new Image();
+            img.onload = () => {
+              uploadedImage = img;
+              drawPassport();
+            };
+            img.src = profile.avatar_url;
+          } else {
+            drawPassport();
+          }
+
+          // Show card
+          document.getElementById('loading-box').style.display = 'none';
+          document.getElementById('guest-card').style.display = 'grid';
+
+          // Check if current user is admin
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            const { data: currentUserProfile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
+
+            const isAdmin = session.user.email && (
+              session.user.email.startsWith('admin@') || 
+              session.user.email.endsWith('@thirstyclub999.com') ||
+              (currentUserProfile && currentUserProfile.role === 'admin') ||
+              (currentUserProfile && currentUserProfile.socials?.role === 'admin')
+            );
+
+            if (isAdmin) {
+              document.getElementById('admin-controls').style.display = 'block';
+              document.getElementById('non-admin-msg').style.display = 'none';
+            }
+          }
+
+        } catch (err) {
+          document.getElementById('loading-box').style.display = 'none';
+          const errBox = document.getElementById('error-box');
+          errBox.textContent = err.message;
+          errBox.style.display = 'block';
+        }
+      };
+
+      await loadGuestDetails();
+
+      // Check-in action handler
+      const checkinBtn = document.getElementById('confirm-checkin-btn');
+      if (checkinBtn) {
+        checkinBtn.addEventListener('click', async () => {
+          checkinBtn.disabled = true;
+          checkinBtn.textContent = 'CONFIRMING...';
+
+          try {
+            // Call the database function
+            const { data, error } = await supabase.rpc('check_in_user', {
+              target_id: guestId.toUpperCase()
+            });
+
+            if (error) throw error;
+            
+            if (data && data.success === false) {
+              throw new Error(data.message);
+            }
+
+            // Success animation/update
+            alert('Guest successfully checked in!');
+            
+            // Reload guest details
+            await loadGuestDetails();
+
+          } catch (err) {
+            alert('Check-in error: ' + err.message);
+            checkinBtn.disabled = false;
+            checkinBtn.textContent = 'CONFIRM EVENT ENTRY';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

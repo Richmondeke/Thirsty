@@ -55,7 +55,9 @@
       <!-- Scroll dimming layer -->
       <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
       <div class="hero-overlay"></div>
-      <div class="hero-content">
+      
+      <!-- Default Hero Content (Logged Out) -->
+      <div class="hero-content" id="hero-logged-out-content">
         <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
         <p class="hero-subtitle">MEMBERS ONLY</p>
         <div class="hero-details">
@@ -65,6 +67,42 @@
         </div>
         <a href="#rsvp" class="cta-button" id="hero-cta-btn">RSVP FOR ACCESS</a>
       </div>
+
+      <!-- Logged In Hero View (hidden by default) -->
+      <div class="hero-logged-in-container" id="hero-logged-in" style="display: none;">
+        <div class="hero-logged-in-grid">
+          <div class="hero-passport-column">
+            <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
+              <div class="passport-glow-border"></div>
+              <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
+            </div>
+            <div class="hero-passport-actions">
+              <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
+            </div>
+          </div>
+          <div class="hero-qr-column">
+            <div class="qr-card">
+              <div class="qr-header">
+                <h3>ENTRY PASS QR</h3>
+                <p>Scan at the gate to check-in</p>
+              </div>
+              <div class="qr-code-wrapper">
+                <div id="hero-qr-code" class="qr-code-img"></div>
+              </div>
+              <p class="qr-tip">Admin will scan this to verify your ticket</p>
+            </div>
+            <div class="hero-logged-in-cta">
+              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">ENTER CLUBHOUSE</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Logo Badge in Bottom Right -->
+      <div class="hero-logo-badge">
+        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
+      </div>
+
       <div class="scroll-indicator">
         <div class="mouse">
           <div class="wheel"></div>
