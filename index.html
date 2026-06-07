@@ -21,7 +21,7 @@
   <meta property="twitter:image" content="https://thirstynalia.com/images/999social.png">
 
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260607.2128">
+  <link rel="stylesheet" href="style.css?v=20260607.2131">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -51,8 +51,8 @@
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
-      <!-- Background Video (plays on RSVP hover) -->
-      <video class="hero-bg-video" id="hero-bg-video" preload="auto" muted playsinline>
+      <!-- Background Video — single shared instance, JS controls play/pause -->
+      <video class="hero-bg-video" id="hero-bg-video" autoplay loop muted playsinline>
         <source src="images/Tiger2.mp4" type="video/mp4">
       </video>
       <div class="hero-video-overlay" id="hero-video-overlay"></div>
@@ -88,10 +88,7 @@
 
     <!-- Logged In Passport & QR Viewer Section -->
     <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
-      <!-- Looping Concert Background Video -->
-      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
+      <!-- No duplicate video here — the single #hero-bg-video above covers both sections -->
       <div class="hero-video-overlay"></div>
       
       <!-- Vignette at both top and bottom -->

@@ -3347,7 +3347,7 @@ body.logged-in-user #home {
   min-height: 100vh;
   padding: 120px 1.5rem 60px 1.5rem !important;
 }
-body.logged-in-user #home .hero-bg-video,
+/* When logged in, hide logged-out hero decorative layers but keep the video alive */
 body.logged-in-user #home .hero-video-overlay,
 body.logged-in-user #home .hero-corner-vignette,
 body.logged-in-user #home .hero-scroll-overlay,
@@ -3355,6 +3355,19 @@ body.logged-in-user #home .hero-overlay,
 body.logged-in-user #home .scroll-indicator,
 body.logged-in-user #home .hero-logo-badge {
   display: none !important;
+}
+
+/* Video stays alive but becomes fixed full-viewport background for passport section */
+body.logged-in-user #hero-bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 /* --- Passport Viewer Section --- */
