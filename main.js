@@ -406,10 +406,16 @@ document.addEventListener('DOMContentLoaded', () => {
     successModalCloseBtn.addEventListener('click', (e) => {
       e.preventDefault();
       closeSuccessModal();
-      const ticketsSection = document.getElementById('tickets');
-      if (ticketsSection) {
-        ticketsSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      // Navigate to home to show the logged-in dashboard
+      setTimeout(() => {
+        const homeSection = document.getElementById('home');
+        if (homeSection) {
+          homeSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          const ticketsSection = document.getElementById('tickets');
+          if (ticketsSection) ticketsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 200);
     });
   }
 
@@ -1471,13 +1477,19 @@ document.addEventListener('DOMContentLoaded', () => {
           const errMsg = signUpError.message ? signUpError.message.toLowerCase() : "";
           if (errMsg.includes("user already registered") || errMsg.includes("already exists") || errMsg.includes("email_exists")) {
             if (processingModal) {
-              document.getElementById('processing-status-text').textContent = 'USER ALREADY RSVP\'D. LOGGING IN...';
+              document.getElementById('processing-status-text').textContent = 'ALREADY RSVP\'D. LOGGING IN...';
             }
             const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
               email: emailVal,
               password: passwordVal
             });
-            if (signInError) throw signInError;
+            if (signInError) {
+              // If wrong password, give a helpful message
+              if (signInError.message.toLowerCase().includes('invalid') || signInError.message.toLowerCase().includes('password')) {
+                throw new Error("This email is already registered. Please use your original password to log in.");
+              }
+              throw signInError;
+            }
             signUpData = signInData;
           } else {
             throw signUpError;
