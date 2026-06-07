@@ -31,7 +31,15 @@ export default async function handler(req, res) {
       const { data: adminProfiles } = await supabase
         .from('profiles')
         .select('socials')
-        .in('email', ['guavanigeria@gmail.com', 'richmond@guava.earth', 'richmonde@guava.earth'])
+        .in('email', [
+          'guavanigeria@gmail.com',
+          'richmond@guava.earth',
+          'richmonde@guava.earth',
+          'thirstynalia@gmail.com',
+          'straffitti@hotmail.com',
+          'ogunwuyi.olumide@yahoo.com',
+          'bookthirsty234@gmail.com'
+        ])
         .not('socials', 'is', null);
 
       if (adminProfiles && adminProfiles.length > 0) {
