@@ -1355,23 +1355,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const processingModal = document.getElementById('processing-modal');
 
-      // 1. User is Logged In: Update their profile and download
+      // 1. User is Logged In: Download passport FIRST, then sync profile in background
       if (currentSession) {
         downloadPassportBtn.disabled = true;
         const originalText = downloadPassportBtn.textContent;
-        downloadPassportBtn.textContent = "Updating Profile...";
-        
+        downloadPassportBtn.textContent = "Downloading...";
+
         const startTime = Date.now();
         if (processingModal) {
-          document.getElementById('processing-status-text').textContent = 'UPDATING PROFILE...';
+          document.getElementById('processing-status-text').textContent = 'PREPARING DOWNLOAD...';
           processingModal.showModal();
         }
         
         try {
-          const profilePic = uploadedImage ? uploadedImage.src : (currentUserProfile?.avatar_url || "");
-          const { error: updateError } = await supabase
-            .from('profiles')
-            .update({
+          // Step 1: Download passport IMMEDIATELY (before any DB ops)
+          if (processingModal) document.getElementById('processing-status-text').textContent = 'DOWNLOADING PASSPORT...';
+          performDownload();
+
+          // Step 2: Compress avatar to ~100KB JPEG thumbnail to avoid Supabase row size limits
+          let profilePic = currentUserProfile?.avatar_url || "";
+          if (uploadedImage) {
+            try {
+              const thumbCanvas = document.createElement('canvas');
+              const maxSize = 280;
+              const ratio = Math.min(maxSize / uploadedImage.width, maxSize / uploadedImage.height);
+              thumbCanvas.width = Math.round(uploadedImage.width * ratio);
+              thumbCanvas.height = Math.round(uploadedImage.height * ratio);
+              thumbCanvas.getContext('2d').drawImage(uploadedImage, 0, 0, thumbCanvas.width, thumbCanvas.height);
+              profilePic = thumbCanvas.toDataURL('image/jpeg', 0.72);
+            } catch (e) {
+              console.warn('Avatar compression skipped:', e);
+            }
+          }
+
+          // Step 3: Update profile with 8s timeout guard — never blocks the download
+          if (processingModal) document.getElementById('processing-status-text').textContent = 'SYNCING PROFILE...';
+
+          const { error: updateError } = await Promise.race([
+            supabase.from('profiles').update({
               username: nameVal,
               avatar_url: profilePic,
               socials: {
@@ -1382,41 +1403,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 gender: genderVal,
                 signature: sigVal
               }
-            })
-            .eq('id', currentSession.user.id);
+            }).eq('id', currentSession.user.id),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
+          ]);
 
-          if (updateError) throw updateError;
-
-          // Re-fetch profile to keep local state synced
-          const { data: refreshedProfile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', currentSession.user.id)
-            .single();
-          
-          currentUserProfile = refreshedProfile;
-          updateUI();
-          
-          // Trigger download and share asynchronously after a tiny timeout
-          // so it does not block the UI thread or dialog closing sequence
-          setTimeout(() => {
-            performDownloadAndShare()
-              .then(() => {
-                alert("Passport updated and downloaded successfully!");
-              })
-              .catch(err => {
-                console.error("Download/Share failed:", err);
-                alert("Profile saved. Passport download completed.");
-              });
-          }, 100);
-        } catch (err) {
-          alert("Error updating passport: " + err.message);
-        } finally {
-          const elapsed = Date.now() - startTime;
-          const remainingDelay = Math.max(0, 3000 - elapsed);
-          if (remainingDelay > 0) {
-            await new Promise(resolve => setTimeout(resolve, remainingDelay));
+          if (updateError) {
+            console.warn('Profile sync skipped (download already done):', updateError);
+          } else {
+            const { data: refreshedProfile } = await supabase
+              .from('profiles').select('*').eq('id', currentSession.user.id).single();
+            if (refreshedProfile) { currentUserProfile = refreshedProfile; updateUI(); }
           }
+
+        } catch (err) {
+          // Download already happened — don't block user with error
+          console.error('Profile sync error (download complete):', err);
+        } finally {
+          // Always close modal — never get stuck
+          const elapsed = Date.now() - startTime;
+          const remainingDelay = Math.max(0, 1500 - elapsed);
+          if (remainingDelay > 0) await new Promise(r => setTimeout(r, remainingDelay));
           if (processingModal) processingModal.close();
           downloadPassportBtn.disabled = false;
           downloadPassportBtn.textContent = originalText;
