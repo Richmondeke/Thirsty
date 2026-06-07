@@ -2457,7 +2457,7 @@ header .logout-btn {
   border-radius: 8px;
 }
 
-#passport-canvas {
+.canvas-wrapper canvas {
   width: 100%;
   height: 100%;
   display: block;
@@ -2811,10 +2811,6 @@ header .logout-btn {
 }
 
 /* --- Hiding Sections for Logged In Members --- */
-body.logged-in-user #venue {
-  display: none !important;
-}
-
 body.logged-in-user #rsvp {
   display: none !important;
 }
@@ -2943,4 +2939,191 @@ body.no-scroll {
     font-size: 1.3rem !important;
   }
 }
+
+/* --- Logged-In User Home Section Override --- */
+body.logged-in-user #home {
+  background: #0a0606 !important;
+  height: auto !important;
+  min-height: 100vh;
+  padding: 120px 1.5rem 60px 1.5rem !important;
+}
+body.logged-in-user #home .hero-bg-video,
+body.logged-in-user #home .hero-video-overlay,
+body.logged-in-user #home .hero-corner-vignette,
+body.logged-in-user #home .hero-scroll-overlay,
+body.logged-in-user #home .hero-overlay,
+body.logged-in-user #home .scroll-indicator,
+body.logged-in-user #home .hero-logo-badge {
+  display: none !important;
+}
+
+/* --- Passport Viewer Section --- */
+.passport-viewer-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 100px 1.5rem;
+  background: #0a0606;
+}
+
+.vignette-top-bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #0a0606 0%, transparent 12%, transparent 88%, #0a0606 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* --- My Events Section styling --- */
+.events-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.event-card {
+  position: relative;
+  background: rgba(255, 62, 62, 0.015);
+  border: 1px dashed rgba(255, 62, 62, 0.25);
+  border-radius: 8px;
+  padding: 2.5rem;
+  box-shadow: 0 0 35px rgba(255, 62, 62, 0.03);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: var(--transition-smooth);
+}
+
+.event-card:hover {
+  border-color: rgba(255, 62, 62, 0.5);
+  box-shadow: 0 0 50px rgba(255, 62, 62, 0.08);
+}
+
+.event-card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 62, 62, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.event-status-badge {
+  background: rgba(255, 62, 62, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(255, 62, 62, 0.2);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.event-access {
+  font-family: 'Kyrilla', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--accent-color);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.event-title {
+  font-family: 'Kyrilla', sans-serif;
+  font-weight: 950;
+  font-size: 3rem;
+  color: var(--text-color);
+  margin-bottom: 2.5rem;
+  text-align: left;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.event-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.event-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  border-left: 2px solid rgba(255, 62, 62, 0.2);
+  padding-left: 1rem;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.detail-value {
+  font-size: 1.1rem;
+  font-family: 'Kyrilla', sans-serif;
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.event-card-action-btn {
+  width: 100%;
+  padding: 1.2rem;
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--text-color);
+  font-family: 'Kyrilla', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: var(--transition-smooth);
+}
+
+.event-card-action-btn:hover {
+  background: var(--accent-color);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .event-title {
+    font-size: 2rem;
+  }
+  .event-details-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .passport-viewer-section {
+    padding: 60px 1rem;
+    height: auto !important;
+  }
+}
+
 

@@ -629,6 +629,7 @@
             const isAdmin = session.user.email && (
               session.user.email.startsWith('admin@') || 
               session.user.email.endsWith('@thirstyclub999.com') ||
+              session.user.email === 'richmond@guava.earth' ||
               (currentUserProfile && currentUserProfile.role === 'admin') ||
               (currentUserProfile && currentUserProfile.socials?.role === 'admin')
             );

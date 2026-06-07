@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const heroLoggedOut = document.getElementById('hero-logged-out-content');
     const heroLoggedIn = document.getElementById('hero-logged-in');
+    const passportViewerSection = document.getElementById('passport-viewer');
 
     if (session && profile) {
       // User is Logged In
@@ -119,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (heroLoggedOut) heroLoggedOut.style.display = 'none';
       if (heroLoggedIn) heroLoggedIn.style.display = 'block';
+      if (passportViewerSection) passportViewerSection.style.display = 'block';
 
       // Generate QR Code
       const qrContainer = document.getElementById('hero-qr-code');
@@ -140,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isAdmin = session.user.email && (
         session.user.email.startsWith('admin@') || 
         session.user.email.endsWith('@thirstyclub999.com') ||
+        session.user.email === 'richmond@guava.earth' ||
         profile.role === 'admin' ||
         profile.socials?.role === 'admin'
       );
@@ -221,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (heroLoggedOut) heroLoggedOut.style.display = 'flex';
       if (heroLoggedIn) heroLoggedIn.style.display = 'none';
+      if (passportViewerSection) passportViewerSection.style.display = 'none';
 
       const ticketsSection = document.getElementById('tickets');
       if (ticketsSection) ticketsSection.style.display = 'none';
@@ -1431,45 +1435,69 @@ document.addEventListener('DOMContentLoaded', () => {
         const profilePic = uploadedImage.src; // base64 string
 
         // Call Supabase SignUp. We omit avatar_url in auth metadata to keep payload tiny (<1KB) and lightning-fast!
-        const { data, error } = await supabase.auth.signUp({
-          email: emailVal,
-          password: passwordVal,
-          options: {
-            data: {
-              username: nameVal,
-              place_of_thirst: pobVal,
-              gender: genderVal,
-              signature: sigVal
-            }
-          }
-        });
+        let signUpData = null;
+        let signUpError = null;
 
-        if (error) throw error;
+        try {
+          const { data, error } = await supabase.auth.signUp({
+            email: emailVal,
+            password: passwordVal,
+            options: {
+              data: {
+                username: nameVal,
+                place_of_thirst: pobVal,
+                gender: genderVal,
+                signature: sigVal
+              }
+            }
+          });
+          signUpData = data;
+          signUpError = error;
+        } catch (signUpErr) {
+          signUpError = signUpErr;
+        }
+
+        if (signUpError) {
+          const errMsg = signUpError.message ? signUpError.message.toLowerCase() : "";
+          if (errMsg.includes("user already registered") || errMsg.includes("already exists") || errMsg.includes("email_exists")) {
+            if (processingModal) {
+              document.getElementById('processing-status-text').textContent = 'USER ALREADY RSVP\'D. LOGGING IN...';
+            }
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email: emailVal,
+              password: passwordVal
+            });
+            if (signInError) throw signInError;
+            signUpData = signInData;
+          } else {
+            throw signUpError;
+          }
+        }
 
         // Download passport immediately
         performDownload();
 
-        // Check if user session was active (email confirmation disabled)
-        if (data.session) {
+        // Check if user session was active
+        if (signUpData && signUpData.session) {
           if (processingModal) {
-            document.getElementById('processing-status-text').textContent = 'CREATING CLUB PROFILE...';
+            document.getElementById('processing-status-text').textContent = 'SYNCING PROFILE...';
           }
-          // Update profile in DB immediately with the details (trigger already created base record)
+          // Update profile in DB immediately with the details
           const { error: updateError } = await supabase
             .from('profiles')
             .update({
               username: nameVal,
               avatar_url: profilePic,
               socials: {
-                instagram: "",
-                twitter: "",
-                discord: "",
+                instagram: currentUserProfile?.socials?.instagram || "",
+                twitter: currentUserProfile?.socials?.twitter || "",
+                discord: currentUserProfile?.socials?.discord || "",
                 place_of_thirst: pobVal,
                 gender: genderVal,
                 signature: sigVal
               }
             })
-            .eq('id', data.session.user.id);
+            .eq('id', signUpData.session.user.id);
 
           if (updateError) {
             console.error("Profile update error:", updateError);
@@ -1479,11 +1507,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const { data: refreshedProfile } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', data.session.user.id)
+            .eq('id', signUpData.session.user.id)
             .single();
 
           currentUserProfile = refreshedProfile;
-          currentSession = data.session;
+          currentSession = signUpData.session;
           updateUI();
 
           // Show success modal

@@ -75,6 +75,199 @@
 
       <!-- Logged In Hero View (hidden by default) -->
       <div class="hero-logged-in-container" id="hero-logged-in" style="display: none;">
+        <!-- 2. Logged-In Dashboard State -->
+        <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
+          <div class="dashboard-header">
+            <div class="dash-logo-title">
+              <span class="dash-logo">THIRSTYCLUB999</span>
+              <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
+            </div>
+            <button class="logout-btn" id="dash-logout-btn">Logout</button>
+          </div>
+
+          <!-- Tabs Navigation -->
+          <div class="dash-tabs">
+            <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
+            <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
+            <button class="tab-btn" data-tab="profile-tab">Profile</button>
+            <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
+          </div>
+
+          <!-- Tab 1: Tickets -->
+          <div class="tab-content active" id="tickets-tab">
+            <div class="vip-ticket">
+              <div class="ticket-stub-left">
+                <div class="ticket-logo">T999</div>
+                <div class="ticket-meta">
+                  <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
+                  <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
+                  <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
+                  <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
+                </div>
+              </div>
+              <div class="ticket-stub-right">
+                <!-- Mock QR Code SVG -->
+                <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="100" height="100" fill="transparent"/>
+                  <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
+                  <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
+                  <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
+                </svg>
+                <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Leaderboard -->
+          <div class="tab-content" id="leaderboard-tab">
+            <div class="leaderboard-container">
+              <h4 class="tab-title">CLUB LEADERBOARD</h4>
+              <ul class="leaderboard-list">
+                <li class="leaderboard-item top-rank">
+                  <span class="rank">#1</span>
+                  <span class="name">Cruel Santino</span>
+                  <span class="points">9,990 PTS</span>
+                </li>
+                <li class="leaderboard-item top-rank">
+                  <span class="rank">#2</span>
+                  <span class="name">Odumodublvck</span>
+                  <span class="points">8,500 PTS</span>
+                </li>
+                <li class="leaderboard-item" id="user-leaderboard-row">
+                  <span class="rank" id="user-rank">#3</span>
+                  <span class="name" id="user-leaderboard-name">You</span>
+                  <span class="points">1,200 PTS</span>
+                </li>
+                <li class="leaderboard-item">
+                  <span class="rank">#4</span>
+                  <span class="name">Lady Donli</span>
+                  <span class="points">950 PTS</span>
+                </li>
+                <li class="leaderboard-item">
+                  <span class="rank">#5</span>
+                  <span class="name">Jeriq</span>
+                  <span class="points">800 PTS</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Tab 3: Profile -->
+          <div class="tab-content" id="profile-tab">
+            <div class="profile-container">
+              <h4 class="tab-title">EDIT PROFILE</h4>
+              <form id="profile-form">
+                <!-- Avatar Upload -->
+                <div class="avatar-upload-group">
+                  <div class="avatar-preview-wrapper">
+                    <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
+                  </div>
+                  <div class="avatar-input-wrapper">
+                    <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
+                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                    <span class="input-tip">Max size 2MB</span>
+                  </div>
+                </div>
+
+                <!-- Username Edit -->
+                <div class="input-group">
+                  <label for="profile-username">Username</label>
+                  <input type="text" id="profile-username" placeholder="Username" required>
+                </div>
+
+                <!-- Social IDs -->
+                <div class="input-group">
+                  <label for="profile-instagram">Instagram ID</label>
+                  <input type="text" id="profile-instagram" placeholder="@instagram">
+                </div>
+                <div class="input-group">
+                  <label for="profile-twitter">Twitter ID</label>
+                  <input type="text" id="profile-twitter" placeholder="@twitter">
+                </div>
+                <div class="input-group">
+                  <label for="profile-discord">Discord Username</label>
+                  <input type="text" id="profile-discord" placeholder="username#1234">
+                </div>
+
+                <button type="submit" class="submit-ticket-btn">Save Profile</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
+          <div class="tab-content" id="admin-tab">
+            <div class="admin-container">
+              <h4 class="tab-title">ADMIN DASHBOARD</h4>
+              
+              <!-- Summary Stats -->
+              <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                  <span class="stat-value" id="admin-stat-total">0</span>
+                  <span class="stat-label">Total Signups</span>
+                </div>
+                <div class="admin-stat-card">
+                  <span class="stat-value" id="admin-stat-male" style="color: #4a90e2;">0</span>
+                  <span class="stat-label">Male (M)</span>
+                </div>
+                <div class="admin-stat-card">
+                  <span class="stat-value" id="admin-stat-female" style="color: #ff6b81;">0</span>
+                  <span class="stat-label">Female (F)</span>
+                </div>
+                <div class="admin-stat-card">
+                  <span class="stat-value" id="admin-stat-other" style="color: #a8a8a8;">0</span>
+                  <span class="stat-label">Other/Unspecified</span>
+                </div>
+              </div>
+
+              <!-- User List Table -->
+              <div class="admin-users-table-wrapper">
+                <table class="admin-users-table">
+                  <thead>
+                    <tr>
+                      <th>ThirstyID</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Gender</th>
+                      <th>Place of Thirst</th>
+                      <th>Registered At</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-list">
+                    <!-- Dynamic rows go here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Logo Badge in Bottom Right -->
+      <div class="hero-logo-badge">
+        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
+      </div>
+
+      <div class="scroll-indicator">
+        <div class="mouse">
+          <div class="wheel"></div>
+        </div>
+        <span>Scroll Down</span>
+      </div>
+    </section>
+
+    <!-- Logged In Passport & QR Viewer Section -->
+    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
+      <!-- Looping Concert Background Video -->
+      <video class="hero-bg-video" autoplay loop muted playsinline style="opacity: 0.85; object-fit: cover;">
+        <source src="images/Tiger2.mp4" type="video/mp4">
+      </video>
+      <div class="hero-video-overlay"></div>
+      
+      <!-- Vignette at both top and bottom -->
+      <div class="vignette-top-bottom"></div>
+
+      <!-- Passport Grid View -->
+      <div class="hero-logged-in-container" style="display: block;">
         <div class="hero-logged-in-grid">
           <div class="hero-passport-column">
             <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
@@ -97,22 +290,10 @@
               <p class="qr-tip">Admin will scan this to verify your ticket</p>
             </div>
             <div class="hero-logged-in-cta">
-              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">ENTER CLUBHOUSE</a>
+              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">VIEW RSVP EVENTS</a>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Floating Logo Badge in Bottom Right -->
-      <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
-      </div>
-
-      <div class="scroll-indicator">
-        <div class="mouse">
-          <div class="wheel"></div>
-        </div>
-        <span>Scroll Down</span>
       </div>
     </section>
 
@@ -612,169 +793,34 @@
 
     <!-- Dynamic Ticket/RSVP & Dashboard Section -->
     <section class="tickets-section" id="tickets" style="display: none;">
-      <!-- 2. Logged-In Dashboard State (Hidden by default) -->
-      <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
-        <div class="dashboard-header">
-          <div class="dash-logo-title">
-            <span class="dash-logo">THIRSTYCLUB999</span>
-            <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
+      <div class="events-container">
+        <h3 class="section-title text-center" style="margin-bottom: 2rem;">MY EVENTS</h3>
+        <div class="event-card">
+          <div class="event-card-glow"></div>
+          <div class="event-card-header">
+            <span class="event-status-badge">CONFIRMED RSVP</span>
+            <span class="event-access">VIP ACCESS</span>
           </div>
-          <button class="logout-btn" id="dash-logout-btn">Logout</button>
-        </div>
-
-        <!-- Tabs Navigation -->
-        <div class="dash-tabs">
-          <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
-          <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
-          <button class="tab-btn" data-tab="profile-tab">Profile</button>
-          <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
-        </div>
-
-        <!-- Tab 1: Tickets -->
-        <div class="tab-content active" id="tickets-tab">
-          <div class="vip-ticket">
-            <div class="ticket-stub-left">
-              <div class="ticket-logo">T999</div>
-              <div class="ticket-meta">
-                <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
-              </div>
+          <h2 class="event-title">THIRSTYCLUB999</h2>
+          <div class="event-details-grid">
+            <div class="event-detail-item">
+              <span class="detail-label">DATE</span>
+              <span class="detail-value">JUNE 14TH 2026</span>
             </div>
-            <div class="ticket-stub-right">
-              <!-- Mock QR Code SVG -->
-              <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="transparent"/>
-                <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-              </svg>
-              <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
+            <div class="event-detail-item">
+              <span class="detail-label">TIME</span>
+              <span class="detail-value">6:00 PM</span>
+            </div>
+            <div class="event-detail-item">
+              <span class="detail-label">LOCATION</span>
+              <span class="detail-value">LEKKI, LAGOS (TBD)</span>
+            </div>
+            <div class="event-detail-item">
+              <span class="detail-label">PASS TYPE</span>
+              <span class="detail-value">VIP ACCESS PASS</span>
             </div>
           </div>
-        </div>
-
-        <!-- Tab 2: Leaderboard -->
-        <div class="tab-content" id="leaderboard-tab">
-          <div class="leaderboard-container">
-            <h4 class="tab-title">CLUB LEADERBOARD</h4>
-            <ul class="leaderboard-list">
-              <li class="leaderboard-item top-rank">
-                <span class="rank">#1</span>
-                <span class="name">Cruel Santino</span>
-                <span class="points">9,990 PTS</span>
-              </li>
-              <li class="leaderboard-item top-rank">
-                <span class="rank">#2</span>
-                <span class="name">Odumodublvck</span>
-                <span class="points">8,500 PTS</span>
-              </li>
-              <li class="leaderboard-item" id="user-leaderboard-row">
-                <span class="rank" id="user-rank">#3</span>
-                <span class="name" id="user-leaderboard-name">You</span>
-                <span class="points">1,200 PTS</span>
-              </li>
-              <li class="leaderboard-item">
-                <span class="rank">#4</span>
-                <span class="name">Lady Donli</span>
-                <span class="points">950 PTS</span>
-              </li>
-              <li class="leaderboard-item">
-                <span class="rank">#5</span>
-                <span class="name">Jeriq</span>
-                <span class="points">800 PTS</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Tab 3: Profile -->
-        <div class="tab-content" id="profile-tab">
-          <div class="profile-container">
-            <h4 class="tab-title">EDIT PROFILE</h4>
-            <form id="profile-form">
-              <!-- Avatar Upload -->
-              <div class="avatar-upload-group">
-                <div class="avatar-preview-wrapper">
-                  <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
-                </div>
-                <div class="avatar-input-wrapper">
-                  <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
-                  <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                  <span class="input-tip">Max size 2MB</span>
-                </div>
-              </div>
-
-              <!-- Username Edit -->
-              <div class="input-group">
-                <label for="profile-username">Username</label>
-                <input type="text" id="profile-username" placeholder="Username" required>
-              </div>
-
-              <!-- Social IDs -->
-              <div class="input-group">
-                <label for="profile-instagram">Instagram ID</label>
-                <input type="text" id="profile-instagram" placeholder="@instagram">
-              </div>
-              <div class="input-group">
-                <label for="profile-twitter">Twitter ID</label>
-                <input type="text" id="profile-twitter" placeholder="@twitter">
-              </div>
-              <div class="input-group">
-                <label for="profile-discord">Discord Username</label>
-                <input type="text" id="profile-discord" placeholder="username#1234">
-              </div>
-
-              <button type="submit" class="submit-ticket-btn">Save Profile</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
-        <div class="tab-content" id="admin-tab">
-          <div class="admin-container">
-            <h4 class="tab-title">ADMIN DASHBOARD</h4>
-            
-            <!-- Summary Stats -->
-            <div class="admin-stats-grid">
-              <div class="admin-stat-card">
-                <span class="stat-value" id="admin-stat-total">0</span>
-                <span class="stat-label">Total Signups</span>
-              </div>
-              <div class="admin-stat-card">
-                <span class="stat-value" id="admin-stat-male" style="color: #4a90e2;">0</span>
-                <span class="stat-label">Male (M)</span>
-              </div>
-              <div class="admin-stat-card">
-                <span class="stat-value" id="admin-stat-female" style="color: #ff6b81;">0</span>
-                <span class="stat-label">Female (F)</span>
-              </div>
-              <div class="admin-stat-card">
-                <span class="stat-value" id="admin-stat-other" style="color: #a8a8a8;">0</span>
-                <span class="stat-label">Other/Unspecified</span>
-              </div>
-            </div>
-
-            <!-- User List Table -->
-            <div class="admin-users-table-wrapper">
-              <table class="admin-users-table">
-                <thead>
-                  <tr>
-                    <th>ThirstyID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Place of Thirst</th>
-                    <th>Registered At</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-users-list">
-                  <!-- Dynamic rows go here -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <button class="event-card-action-btn" onclick="document.getElementById('passport-viewer').scrollIntoView({ behavior: 'smooth' });">VIEW ENTRY PASS</button>
         </div>
       </div>
     </section>
