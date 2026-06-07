@@ -1587,33 +1587,57 @@ document.addEventListener('DOMContentLoaded', () => {
           if (processingModal) {
             document.getElementById('processing-status-text').textContent = 'SYNCING PROFILE...';
           }
-          // Update profile in DB immediately with the details
-          const { error: updateError } = await supabase
-            .from('profiles')
-            .update({
-              username: nameVal,
-              avatar_url: profilePic,
-              socials: {
-                instagram: currentUserProfile?.socials?.instagram || "",
-                twitter: currentUserProfile?.socials?.twitter || "",
-                discord: currentUserProfile?.socials?.discord || "",
-                place_of_thirst: pobVal,
-                gender: genderVal,
-                signature: sigVal
-              }
-            })
-            .eq('id', signUpData.session.user.id);
+          // Wait briefly to ensure DB trigger and read replicas are fully synced
+          await new Promise(resolve => setTimeout(resolve, 1500));
 
-          if (updateError) {
-            console.error("Profile update error:", updateError);
+          // Fetch the profile first to get existing data (like thirstyclub_id)
+          let refreshedProfile = null;
+          for (let i = 0; i < 3; i++) {
+            const { data } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', signUpData.session.user.id)
+              .single();
+            if (data) {
+              refreshedProfile = data;
+              break;
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
           }
 
-          // Fetch the full updated profile and sync state
-          const { data: refreshedProfile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', signUpData.session.user.id)
-            .single();
+          if (refreshedProfile) {
+            // Update profile in DB immediately with the details
+            const { error: updateError } = await supabase
+              .from('profiles')
+              .update({
+                username: nameVal,
+                avatar_url: profilePic,
+                socials: {
+                  instagram: "",
+                  twitter: "",
+                  discord: "",
+                  place_of_thirst: pobVal,
+                  gender: genderVal,
+                  signature: sigVal
+                }
+              })
+              .eq('id', signUpData.session.user.id);
+
+            if (updateError) {
+              console.error("Profile update error:", updateError);
+            }
+
+            // Re-fetch to get the final updated profile
+            const { data: finalProfile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', signUpData.session.user.id)
+              .single();
+
+            if (finalProfile) refreshedProfile = finalProfile;
+          } else {
+            console.error("Failed to fetch profile after signup race condition.");
+          }
 
           currentUserProfile = refreshedProfile;
           currentSession = signUpData.session;
