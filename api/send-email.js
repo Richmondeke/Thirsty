@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, username, thirstyclub_id, place_of_thirst, passport_image, custom_subject, custom_message } = req.body;
+  const { email, username, thirstyclub_id, place_of_thirst, passport_image, custom_subject, custom_message, status } = req.body;
 
   if (!email || !username || !thirstyclub_id) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -23,8 +23,10 @@ export default async function handler(req, res) {
 
   try {
     // 1. Determine subject and message template
-    let emailSubject = custom_subject || 'YOUR ENTRY PASS GRANTED - ThirstyClub999';
-    let welcomeMessage = custom_message || 'Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club.';
+    let emailSubject = custom_subject || (status === 'PENDING' ? 'YOUR ENTRY PASS (PENDING) - ThirstyClub999' : 'YOUR ENTRY PASS GRANTED - ThirstyClub999');
+    let welcomeMessage = custom_message || (status === 'PENDING' 
+      ? 'Your RSVP for ThirstyClub999 is registered! Please confirm your email address to activate your ticket.' 
+      : 'Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club.');
 
     // If not custom (i.e. this is the automatic signup email), try fetching the customized template saved in admin profiles
     if (!custom_subject && !custom_message) {
@@ -103,6 +105,10 @@ export default async function handler(req, res) {
             <div style="font-family: Arial, sans-serif; background-color: #050505; color: #ffffff; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto; border: 1px solid #ff3e3e;">
               <h2 style="color: #ff3e3e; text-align: center; font-size: 24px; letter-spacing: 2px;">THIRSTYCLUB999</h2>
               
+              <div style="margin: 20px 0; padding: 12px; background-color: ${status === 'PENDING' ? 'rgba(255, 152, 0, 0.1)' : 'rgba(76, 175, 80, 0.1)'}; border: 1px solid ${status === 'PENDING' ? '#ff9800' : '#4caf50'}; border-radius: 4px; text-align: center; color: ${status === 'PENDING' ? '#ff9800' : '#4caf50'}; font-weight: bold; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
+                TICKET STATUS: ${status === 'PENDING' ? 'PENDING EMAIL VERIFICATION' : 'CONFIRMED'}
+              </div>
+
               <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;">Hi <strong>${username}</strong>,</p>
               
               <div style="font-size: 16px; line-height: 1.6; color: #e0e0e0; margin: 20px 0; white-space: pre-line;">
@@ -116,6 +122,12 @@ export default async function handler(req, res) {
               
               <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;"><strong>Place of Thirst:</strong> ${place_of_thirst || 'MANCHESTER'}</p>
               
+              ${status === 'PENDING' ? `
+              <div style="font-size: 14px; line-height: 1.6; color: #ff9800; padding: 12px; background-color: rgba(255, 152, 0, 0.05); border-left: 3px solid #ff9800; margin: 20px 0; border-radius: 4px;">
+                <strong>IMPORTANT:</strong> Please check your inbox for a separate confirmation email from ThirstyClub999 and click the link to verify your email. Once verified, your ticket will automatically be activated.
+              </div>
+              ` : ''}
+
               <p style="font-size: 14px; line-height: 1.6; color: #888888; margin-top: 30px;">Your entry passport card has been attached to this email. You can also view your live passport and entry pass QR code at any time by logging in to the clubhouse on our website.</p>
               
               <hr style="border: 0; border-top: 1px solid #333333; margin: 30px 0;" />

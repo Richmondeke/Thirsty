@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      const accessLvl = profile?.socials?.access_level || 'REGULAR';
+      const accessLvl = currentUserTicket?.status || profile?.socials?.access_level || 'REGULAR';
       
       const ticketAccessLevel = document.getElementById('ticket-access-level');
       if (ticketAccessLevel) ticketAccessLevel.textContent = accessLvl + ' ACCESS';
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Fetch ticket
-        const { data: tickets, error: ticketError } = await supabase
+        let { data: tickets, error: ticketError } = await supabase
           .from('tickets')
           .select('*')
           .eq('user_id', session.user.id);
@@ -447,6 +447,24 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error("Error fetching tickets:", ticketError);
         } else if (tickets && tickets.length > 0) {
           currentUserTicket = tickets[0];
+          
+          // If the ticket is pending, and we now have a valid logged in session (meaning email confirmed),
+          // update the ticket status to VIP in the database.
+          if (currentUserTicket.status === 'PENDING') {
+            console.log("Found pending ticket, updating status to VIP...");
+            const { data: updatedTickets, error: updateTicketError } = await supabase
+              .from('tickets')
+              .update({ status: 'VIP' })
+              .eq('id', currentUserTicket.id)
+              .select();
+            
+            if (updateTicketError) {
+              console.error("Failed to update ticket status to VIP:", updateTicketError);
+            } else if (updatedTickets && updatedTickets.length > 0) {
+              currentUserTicket = updatedTickets[0];
+              console.log("Ticket status updated to VIP successfully!");
+            }
+          }
         }
 
         // Scroll to passport-viewer on initial page load if already logged in
@@ -1920,7 +1938,66 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           // Session is not active yet (requires email confirmation)
           isPending = true;
-          memberIdVal = 'PENDING VERIFICATION';
+          if (processingModal) {
+            document.getElementById('processing-status-text').textContent = 'GENERATING PASS...';
+          }
+          // Wait briefly to ensure DB trigger has completed inserting the profile record
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          let guestProfile = null;
+          if (signUpData && signUpData.user) {
+            for (let i = 0; i < 3; i++) {
+              const { data } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', signUpData.user.id)
+                .single();
+              if (data) {
+                guestProfile = data;
+                break;
+              }
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+          }
+
+          memberIdVal = guestProfile?.thirstyclub_id || 'PENDING VERIFICATION';
+
+          // Trigger transactional email (non-blocking, marked as pending)
+          try {
+            fetch('/api/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: emailVal,
+                username: nameVal,
+                thirstyclub_id: memberIdVal,
+                place_of_thirst: pobVal,
+                passport_image: signupPassportDataUrl, // captured from canvas before async signup
+                status: 'PENDING'
+              })
+            }).catch(e => console.warn('Email trigger error (non-blocking):', e));
+          } catch (e) {
+            console.warn('Email trigger call failed:', e);
+          }
+
+          // Add to Mailchimp Marketing audience/contacts (non-blocking, marked as pending)
+          try {
+            fetch('/api/mailchimp-subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: emailVal,
+                username: nameVal,
+                thirstyclub_id: memberIdVal,
+                gender: genderVal || '',
+                place_of_thirst: pobVal || '',
+                status: 'pending'
+              })
+            }).catch(e => console.warn('Mailchimp subscribe error (non-blocking):', e));
+          } catch (e) {
+            console.warn('Mailchimp subscribe call failed:', e);
+          }
+
           shouldShowSuccess = true;
         }
       } catch (err) {
