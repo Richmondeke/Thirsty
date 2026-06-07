@@ -1651,6 +1651,10 @@ document.addEventListener('DOMContentLoaded', () => {
       let isPending = false;
       let wasAlreadyRegistered = false;
 
+      // Capture the full passport canvas NOW (before any async — prevents race conditions)
+      const signupCanvas = document.getElementById('passport-canvas');
+      const signupPassportDataUrl = signupCanvas ? signupCanvas.toDataURL('image/png') : null;
+
       try {
         const profilePic = uploadedImage ? uploadedImage.src : ""; // base64 string
 
@@ -1779,7 +1783,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: nameVal,
                 thirstyclub_id: memberIdVal,
                 place_of_thirst: pobVal,
-                passport_image: dataUrl
+                passport_image: signupPassportDataUrl  // captured from canvas before async signup
               })
             }).catch(e => console.warn('Email trigger error (non-blocking):', e));
           } catch (e) {
