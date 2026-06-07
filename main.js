@@ -324,6 +324,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const triggerWelcomeEmail = async (profile) => {
+    try {
+      const canvas = document.getElementById('passport-canvas');
+      const dataUrl = canvas ? canvas.toDataURL('image/png') : null;
+      
+      console.log("Sending automatic ticket email for profile:", profile.email);
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: profile.email,
+          username: profile.username,
+          thirstyclub_id: profile.thirstyclub_id || 'T999-XXXX',
+          place_of_thirst: profile.socials?.place_of_thirst || 'MANCHESTER',
+          passport_image: dataUrl
+        })
+      });
+
+      if (res.ok) {
+        console.log("Auto ticket email sent successfully!");
+        const updatedSocials = {
+          ...(profile.socials || {}),
+          welcome_email_sent: true
+        };
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ socials: updatedSocials })
+          .eq('id', profile.id);
+        if (updateError) {
+          console.error("Error updating profile socials:", updateError);
+        } else {
+          profile.socials = updatedSocials;
+          currentUserProfile = profile;
+        }
+      } else {
+        console.error("Auto ticket email send failed:", await res.text());
+      }
+    } catch (e) {
+      console.warn("Auto ticket email fetch error:", e);
+    }
+  };
+
   const syncSessionAndProfile = async (session) => {
     currentSession = session;
     if (session) {
@@ -369,6 +411,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (profile) {
           currentUserProfile = profile;
+          
+          // Auto-trigger welcome email if not already sent (non-blocking)
+          if (profile.email && !profile.socials?.welcome_email_sent) {
+            console.log("Welcome email not sent yet. Triggering auto email flow...");
+            setTimeout(async () => {
+              try {
+                if (profile.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
+                  const img = new Image();
+                  img.crossOrigin = "anonymous";
+                  img.onload = async () => {
+                    uploadedImage = img;
+                    drawPassport();
+                    await triggerWelcomeEmail(profile);
+                  };
+                  img.src = profile.avatar_url;
+                } else {
+                  drawPassport();
+                  await triggerWelcomeEmail(profile);
+                }
+              } catch (err) {
+                console.error("Error in auto welcome email trigger:", err);
+              }
+            }, 1500);
+          }
         }
 
         // Fetch ticket
@@ -422,6 +488,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 500);
     }
+
+    if (event === 'SIGNED_IN' && session) {
+      // Clean up URL query parameters from Supabase redirect (e.g. code, token)
+      if (window.location.search || window.location.hash) {
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+      
+      // Force scroll to dashboard
+      setTimeout(() => {
+        const passportViewer = document.getElementById('passport-viewer');
+        if (passportViewer) {
+          passportViewer.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
+
     await syncSessionAndProfile(session);
   });
 
@@ -764,7 +847,12 @@ document.addEventListener('DOMContentLoaded', () => {
           .update({
             username: newUsername,
             avatar_url: profilePic,
-            socials: { instagram, twitter, discord }
+            socials: {
+              ...(currentUserProfile?.socials || {}),
+              instagram,
+              twitter,
+              discord
+            }
           })
           .eq('id', currentSession.user.id);
 
@@ -1551,6 +1639,7 @@ document.addEventListener('DOMContentLoaded', () => {
               username: nameVal,
               avatar_url: profilePic,
               socials: {
+                ...(currentUserProfile?.socials || {}),
                 instagram: currentUserProfile?.socials?.instagram || "",
                 twitter: currentUserProfile?.socials?.twitter || "",
                 discord: currentUserProfile?.socials?.discord || "",
@@ -1656,9 +1745,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const signupPassportDataUrl = signupCanvas ? signupCanvas.toDataURL('image/png') : null;
 
       try {
+        // Compress avatar to a small size for signup metadata to avoid exceeding token/DB sizes
+        let signUpAvatarUrl = "";
+        if (uploadedImage) {
+          try {
+            const thumbCanvas = document.createElement('canvas');
+            const maxSize = 180;
+            const ratio = Math.min(maxSize / uploadedImage.width, maxSize / uploadedImage.height);
+            thumbCanvas.width = Math.round(uploadedImage.width * ratio);
+            thumbCanvas.height = Math.round(uploadedImage.height * ratio);
+            thumbCanvas.getContext('2d').drawImage(uploadedImage, 0, 0, thumbCanvas.width, thumbCanvas.height);
+            signUpAvatarUrl = thumbCanvas.toDataURL('image/jpeg', 0.7);
+          } catch (e) {
+            console.warn('Avatar compression for metadata skipped:', e);
+            signUpAvatarUrl = uploadedImage.src;
+          }
+        }
+
         const profilePic = uploadedImage ? uploadedImage.src : ""; // base64 string
 
-        // Call Supabase SignUp. We omit avatar_url in auth metadata to keep payload tiny (<1KB) and lightning-fast!
+        // Call Supabase SignUp with complete profile metadata (trigger handle_new_user will parse this)
         let signUpData = null;
         let signUpError = null;
 
@@ -1671,7 +1777,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: nameVal,
                 place_of_thirst: pobVal,
                 gender: genderVal,
-                signature: sigVal
+                signature: sigVal,
+                avatar_url: signUpAvatarUrl
               }
             }
           });
@@ -1739,6 +1846,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: nameVal,
                 avatar_url: profilePic,
                 socials: {
+                  ...(currentUserProfile?.socials || {}),
                   instagram: currentUserProfile?.socials?.instagram || "",
                   twitter: currentUserProfile?.socials?.twitter || "",
                   discord: currentUserProfile?.socials?.discord || "",
