@@ -3172,3 +3172,38 @@ body.logged-in-user #home .hero-logo-badge {
 }
 
 
+
+/* Events Card Link Wrapper */
+.events-card-wrapper:hover .vip-ticket {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(255, 107, 129, 0.4);
+}
+.events-card-wrapper:hover .venue-card {
+  border-color: rgba(255, 107, 129, 0.6);
+  background: rgba(255, 107, 129, 0.05);
+}
+
+/* Admin Access Select */
+.admin-access-select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-access-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(255,107,129,0.2);
+}
+
+.admin-access-select option {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

@@ -112,69 +112,58 @@
           <!-- Tabs Navigation -->
           <div class="dash-tabs">
             <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
-            <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
             <button class="tab-btn" data-tab="profile-tab">Profile</button>
             <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
           </div>
 
           <!-- Tab 1: Tickets -->
           <div class="tab-content active" id="tickets-tab">
-            <div class="vip-ticket">
-              <div class="ticket-stub-left">
-                <div class="ticket-logo">T999</div>
-                <div class="ticket-meta">
-                  <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                  <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                  <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                  <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
+            <a href="event.html" class="events-card-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.3s ease;">
+              <div class="vip-ticket" style="margin-bottom: 0;">
+                <div class="ticket-stub-left">
+                  <div class="ticket-logo">T999</div>
+                  <div class="ticket-meta">
+                    <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
+                    <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
+                    <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
+                    <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
+                    <div class="meta-row"><span class="meta-label">ACCESS:</span> <span id="ticket-access-level" style="color: var(--accent-color); font-weight: bold;">REGULAR ACCESS</span></div>
+                  </div>
+                </div>
+                <div class="ticket-stub-right">
+                  <!-- Mock QR Code SVG -->
+                  <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="100" fill="transparent"/>
+                    <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
+                    <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
+                    <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
+                  </svg>
+                  <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
                 </div>
               </div>
-              <div class="ticket-stub-right">
-                <!-- Mock QR Code SVG -->
-                <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="100" height="100" fill="transparent"/>
-                  <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                  <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                  <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-                </svg>
-                <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
+
+              <!-- Venue Section Moved into Events Card -->
+              <div class="venue-container" style="padding: 0; min-height: auto;">
+                <div class="venue-card" style="width: 100%; border: 1px solid rgba(255,107,129,0.2);">
+                  <div class="venue-header">
+                    <h3>VENUE</h3>
+                    <h2 class="venue-title" style="font-size: 2rem;">TBD</h2>
+                    <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
+                  </div>
+                  <div class="sound-policy">
+                    <div class="label">SOUND SYSTEM POLICY:</div>
+                    <div class="sound-names">
+                      <span>CRAYVELLI</span>
+                      <span class="amp">&amp;</span>
+                      <span>DJ PALMER</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
-          <!-- Tab 2: Leaderboard -->
-          <div class="tab-content" id="leaderboard-tab">
-            <div class="leaderboard-container">
-              <h4 class="tab-title">CLUB LEADERBOARD</h4>
-              <ul class="leaderboard-list">
-                <li class="leaderboard-item top-rank">
-                  <span class="rank">#1</span>
-                  <span class="name">Cruel Santino</span>
-                  <span class="points">9,990 PTS</span>
-                </li>
-                <li class="leaderboard-item top-rank">
-                  <span class="rank">#2</span>
-                  <span class="name">Odumodublvck</span>
-                  <span class="points">8,500 PTS</span>
-                </li>
-                <li class="leaderboard-item" id="user-leaderboard-row">
-                  <span class="rank" id="user-rank">#3</span>
-                  <span class="name" id="user-leaderboard-name">You</span>
-                  <span class="points">1,200 PTS</span>
-                </li>
-                <li class="leaderboard-item">
-                  <span class="rank">#4</span>
-                  <span class="name">Lady Donli</span>
-                  <span class="points">950 PTS</span>
-                </li>
-                <li class="leaderboard-item">
-                  <span class="rank">#5</span>
-                  <span class="name">Jeriq</span>
-                  <span class="points">800 PTS</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+
 
           <!-- Tab 3: Profile -->
           <div class="tab-content" id="profile-tab">
@@ -252,7 +241,7 @@
                       <th>Username</th>
                       <th>Email</th>
                       <th>Gender</th>
-                      <th>Place of Thirst</th>
+                      <th>Access</th>
                       <th>Registered At</th>
                       <th>Passport</th>
                     </tr>
@@ -749,53 +738,7 @@
     </section>
 
     <!-- Venue Section with Map Layout -->
-    <section class="venue-section" id="venue">
-      <div class="venue-container reveal-on-scroll">
-        <!-- Address & Sound Details -->
-        <div class="venue-card">
-          <div class="venue-header">
-            <h3>VENUE</h3>
-            <h2 class="venue-title">TBD</h2>
-            <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
-          </div>
-          <div class="sound-policy">
-            <div class="label">SOUND SYSTEM POLICY:</div>
-            <div class="sound-names">
-              <span>CRAYVELLI</span>
-              <span class="amp">&amp;</span>
-              <span>DJ PALMER</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- Custom Dark Vector Map Mockup -->
-        <div class="map-card">
-          <div class="radar-grid">
-            <div class="radar-sweep"></div>
-            <!-- Coordinate grids -->
-            <div class="grid-line horizontal"></div>
-            <div class="grid-line vertical"></div>
-            <div class="radar-circle circle-1"></div>
-            <div class="radar-circle circle-2"></div>
-            <div class="radar-circle circle-3"></div>
-            <!-- Location Pin -->
-            <div class="map-marker">
-              <div class="marker-pulse"></div>
-              <div class="marker-dot"></div>
-              <div class="marker-label">TBD (LEKKI, LAGOS)</div>
-            </div>
-            <!-- Map Details Overlay -->
-            <div class="map-hud">
-              <div class="hud-item"><span class="hud-label">LAT:</span> 6.4311&deg; N</div>
-              <div class="hud-item"><span class="hud-label">LNG:</span> 3.4758&deg; E</div>
-            </div>
-          </div>
-          <a href="#" class="map-link-btn" onclick="event.preventDefault(); alert('Location will be announced soon to guestlist holders.');">
-            LOCATION ANNOUNCED SOON
-          </a>
-        </div>
-      </div>
-    </section>
 
     <!-- Dynamic Ticket/RSVP & Dashboard Section -->
     <section class="tickets-section" id="tickets" style="display: none;">
@@ -805,7 +748,7 @@
           <div class="event-card-glow"></div>
           <div class="event-card-header">
             <span class="event-status-badge">CONFIRMED RSVP</span>
-            <span class="event-access">VIP ACCESS</span>
+            <span class="event-access" id="homepage-event-access">REGULAR ACCESS</span>
           </div>
           <h2 class="event-title">THIRSTYCLUB999</h2>
           <div class="event-details-grid">
@@ -823,7 +766,7 @@
             </div>
             <div class="event-detail-item">
               <span class="detail-label">PASS TYPE</span>
-              <span class="detail-value">VIP ACCESS PASS</span>
+              <span class="detail-value" id="homepage-access-pass">REGULAR ACCESS PASS</span>
             </div>
           </div>
           <button class="event-card-action-btn" onclick="document.getElementById('passport-viewer').scrollIntoView({ behavior: 'smooth' });">VIEW ENTRY PASS</button>

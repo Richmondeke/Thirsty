@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticketUserId = document.getElementById('ticket-user-id');
   const ticketUserName = document.getElementById('ticket-user-name');
   const ticketBarcodeId = document.getElementById('ticket-barcode-id');
-  const userLeaderboardName = document.getElementById('user-leaderboard-name');
   const profileUsername = document.getElementById('profile-username');
   const profileInstagram = document.getElementById('profile-instagram');
   const profileTwitter = document.getElementById('profile-twitter');
@@ -155,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email.endsWith('@thirstyclub999.com') ||
         session.user.email === 'richmond@guava.earth' ||
         session.user.email === 'richmonde@guava.earth' ||
+        session.user.email === 'guavanigeria@gmail.com' ||
         profile.role === 'admin' ||
         profile.socials?.role === 'admin'
       );
@@ -168,12 +168,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      const accessLvl = profile.socials?.access_level || 'REGULAR';
+      
+      const ticketAccessLevel = document.getElementById('ticket-access-level');
+      if (ticketAccessLevel) ticketAccessLevel.textContent = accessLvl + ' ACCESS';
+
+      const homepageEventAccess = document.getElementById('homepage-event-access');
+      if (homepageEventAccess) homepageEventAccess.textContent = accessLvl + ' ACCESS';
+      
+      const homepageAccessPass = document.getElementById('homepage-access-pass');
+      if (homepageAccessPass) homepageAccessPass.textContent = accessLvl + ' ACCESS PASS';
+
       // Update Dashboard contents
       if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
       if (ticketUserId) ticketUserId.textContent = profile.thirstyclub_id || 'T999-XXXX';
       if (ticketUserName) ticketUserName.textContent = profile.username;
       if (ticketBarcodeId) ticketBarcodeId.textContent = profile.thirstyclub_id || 'T999-XXXX';
-      if (userLeaderboardName) userLeaderboardName.textContent = profile.username;
 
       // Update Profile Inputs
       if (profileUsername) profileUsername.value = profile.username;
@@ -1613,9 +1623,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: nameVal,
                 avatar_url: profilePic,
                 socials: {
-                  instagram: "",
-                  twitter: "",
-                  discord: "",
+                  instagram: currentUserProfile?.socials?.instagram || "",
+                  twitter: currentUserProfile?.socials?.twitter || "",
+                  discord: currentUserProfile?.socials?.discord || "",
                   place_of_thirst: pobVal,
                   gender: genderVal,
                   signature: sigVal
@@ -1829,13 +1839,19 @@ document.addEventListener('DOMContentLoaded', () => {
             minute: '2-digit'
           });
 
+          const accessLvl = user.socials?.access_level || 'REGULAR';
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td><span class="glow-id">${escapeHtml(user.thirstyclub_id || 'N/A')}</span></td>
             <td>${escapeHtml(user.username || '')}</td>
             <td>${escapeHtml(user.email || '')}</td>
             <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
-            <td>${escapeHtml(user.socials?.place_of_thirst || 'N/A')}</td>
+            <td>
+              <select class="admin-access-select" data-userid="${escapeHtml(user.id)}">
+                <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
+                <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
+              </select>
+            </td>
             <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
             <td>
               <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
@@ -2114,7 +2130,46 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Wire up admin passport view events
-  document.addEventListener('click', (e) => {
+  document.addEventListener('change', async (e) => {
+    if (e.target && e.target.classList.contains('admin-access-select')) {
+      const selectEl = e.target;
+      const userId = selectEl.getAttribute('data-userid');
+      const newAccess = selectEl.value;
+
+      try {
+        const userProfile = adminFetchedUsers.find(u => u.id === userId);
+        if (!userProfile) throw new Error("User not found in local state");
+
+        const updatedSocials = {
+          ...userProfile.socials,
+          access_level: newAccess
+        };
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ socials: updatedSocials })
+          .eq('id', userId);
+
+        if (error) throw error;
+        
+        userProfile.socials = updatedSocials;
+        
+        // Optional: you can show a small toast or visual confirmation here
+        const originalBg = selectEl.style.backgroundColor;
+        selectEl.style.backgroundColor = 'rgba(76, 175, 80, 0.2)'; // Green tint
+        setTimeout(() => { selectEl.style.backgroundColor = originalBg; }, 1000);
+
+      } catch (err) {
+        console.error("Error updating access level:", err);
+        alert("Failed to update access level: " + err.message);
+        // Revert selection
+        const prevAccess = adminFetchedUsers.find(u => u.id === userId)?.socials?.access_level || 'REGULAR';
+        selectEl.value = prevAccess;
+      }
+    }
+  });
+
+  document.addEventListener('click', async (e) => {
     if (e.target && e.target.classList.contains('admin-view-passport-btn')) {
       e.preventDefault();
       const email = e.target.getAttribute('data-email');
