@@ -442,17 +442,16 @@ document.addEventListener('DOMContentLoaded', () => {
     successModalCloseBtn.addEventListener('click', (e) => {
       e.preventDefault();
       closeSuccessModal();
-      // Navigate to passport-viewer section: shows profile, passport & QR code
+
+      // Ensure UI is updated then navigate to clubhouse
+      updateUI();
       setTimeout(() => {
         const passportViewer = document.getElementById('passport-viewer');
-        if (passportViewer && passportViewer.style.display !== 'none') {
+        if (passportViewer) {
+          passportViewer.style.display = 'flex'; // force visible
           passportViewer.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          // Fallback: scroll to top (home section with dashboard card)
-          const homeSection = document.getElementById('home');
-          if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 300);
+      }, 400);
     });
   }
 
@@ -520,16 +519,28 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.close();
         loginForm.reset();
         
-        // Scroll to passport-viewer section (passport + QR code)
+        // Explicitly sync profile and navigate to clubhouse
+        const { data: { session: freshSession } } = await supabase.auth.getSession();
+        if (freshSession) {
+          const { data: freshProfile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', freshSession.user.id)
+            .single();
+          
+          currentSession = freshSession;
+          currentUserProfile = freshProfile || currentUserProfile;
+          updateUI();
+        }
+
+        // Navigate to passport-viewer (clubhouse)
         setTimeout(() => {
           const passportViewer = document.getElementById('passport-viewer');
           if (passportViewer) {
+            passportViewer.style.display = 'flex'; // ensure visible
             passportViewer.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            const homeSection = document.getElementById('home');
-            if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
           }
-        }, 400);
+        }, 500);
       } catch (err) {
         alert("Login Error: " + err.message);
       } finally {
