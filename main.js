@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Load avatar image into the canvas representation
       if (profile.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => {
           uploadedImage = img;
           drawPassport();
@@ -1361,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         try {
-          const profilePic = uploadedImage.src; // base64 representation
+          const profilePic = uploadedImage ? uploadedImage.src : (currentUserProfile?.avatar_url || "");
           const { error: updateError } = await supabase
             .from('profiles')
             .update({
@@ -1390,9 +1391,18 @@ document.addEventListener('DOMContentLoaded', () => {
           currentUserProfile = refreshedProfile;
           updateUI();
           
-          // Download and share the passport
-          await performDownloadAndShare();
-          alert("Passport updated and downloaded successfully!");
+          // Trigger download and share asynchronously after a tiny timeout
+          // so it does not block the UI thread or dialog closing sequence
+          setTimeout(() => {
+            performDownloadAndShare()
+              .then(() => {
+                alert("Passport updated and downloaded successfully!");
+              })
+              .catch(err => {
+                console.error("Download/Share failed:", err);
+                alert("Profile saved. Passport download completed.");
+              });
+          }, 100);
         } catch (err) {
           alert("Error updating passport: " + err.message);
         } finally {
@@ -1432,7 +1442,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const profilePic = uploadedImage.src; // base64 string
+        const profilePic = uploadedImage ? uploadedImage.src : ""; // base64 string
 
         // Call Supabase SignUp. We omit avatar_url in auth metadata to keep payload tiny (<1KB) and lightning-fast!
         let signUpData = null;
