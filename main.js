@@ -499,6 +499,17 @@ document.addEventListener('DOMContentLoaded', () => {
               alert("Error updating password: " + error.message);
             } else {
               alert("Password updated successfully! You are now logged in.");
+              // Sync session and profile to ensure UI updates
+              const { data: { session: freshSession } } = await supabase.auth.getSession();
+              if (freshSession) {
+                await syncSessionAndProfile(freshSession);
+              }
+              // Force scroll to dashboard
+              const passportViewer = document.getElementById('passport-viewer');
+              if (passportViewer) {
+                passportViewer.style.display = 'flex'; // Ensure visible
+                passportViewer.scrollIntoView({ behavior: 'smooth' });
+              }
             }
           } catch (err) {
             alert("Error updating password: " + err.message);
@@ -506,6 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 500);
     }
+
+    // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
+    await syncSessionAndProfile(session);
 
     if (event === 'SIGNED_IN' && session) {
       // Clean up URL query parameters from Supabase redirect (e.g. code, token)
@@ -520,10 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (passportViewer) {
           passportViewer.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 500);
+      }, 300);
     }
-
-    await syncSessionAndProfile(session);
   });
 
   // ==========================================
@@ -754,7 +766,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }, 500);
       } catch (err) {
-        alert("Login Error: " + err.message);
+        const errMsg = err.message ? err.message.toLowerCase() : "";
+        if (errMsg.includes("email not confirmed") || errMsg.includes("confirm your email") || errMsg.includes("email confirmation")) {
+          alert("Your email is not verified yet. Please check your inbox for the verification link to confirm your account.");
+        } else {
+          alert("Login Error: " + err.message);
+        }
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
