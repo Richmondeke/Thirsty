@@ -2013,10 +2013,6 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPassportBtn.textContent = "DOWNLOAD PASSPORT (RSVP)";
 
         if (shouldShowSuccess) {
-          if (isPending) {
-            alert("RSVP Pending!\n\nPlease check your email inbox to confirm your account and activate your ThirstyID.");
-          }
-
           const heading = document.getElementById('success-modal-heading');
           const title = document.getElementById('success-modal-title');
           const desc = document.getElementById('success-modal-desc');
