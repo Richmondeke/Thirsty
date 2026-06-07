@@ -406,16 +406,17 @@ document.addEventListener('DOMContentLoaded', () => {
     successModalCloseBtn.addEventListener('click', (e) => {
       e.preventDefault();
       closeSuccessModal();
-      // Navigate to home to show the logged-in dashboard
+      // Navigate to passport-viewer section: shows profile, passport & QR code
       setTimeout(() => {
-        const homeSection = document.getElementById('home');
-        if (homeSection) {
-          homeSection.scrollIntoView({ behavior: 'smooth' });
+        const passportViewer = document.getElementById('passport-viewer');
+        if (passportViewer && passportViewer.style.display !== 'none') {
+          passportViewer.scrollIntoView({ behavior: 'smooth' });
         } else {
-          const ticketsSection = document.getElementById('tickets');
-          if (ticketsSection) ticketsSection.scrollIntoView({ behavior: 'smooth' });
+          // Fallback: scroll to top (home section with dashboard card)
+          const homeSection = document.getElementById('home');
+          if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 200);
+      }, 300);
     });
   }
 
@@ -483,11 +484,16 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.close();
         loginForm.reset();
         
-        // Scroll directly to passport section on login
+        // Scroll to passport-viewer section (passport + QR code)
         setTimeout(() => {
-          const homeSection = document.getElementById('home');
-          if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+          const passportViewer = document.getElementById('passport-viewer');
+          if (passportViewer) {
+            passportViewer.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            const homeSection = document.getElementById('home');
+            if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 400);
       } catch (err) {
         alert("Login Error: " + err.message);
       } finally {
