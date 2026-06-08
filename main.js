@@ -834,7 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         const errMsg = err.message ? err.message.toLowerCase() : "";
         if (errMsg.includes("email not confirmed") || errMsg.includes("confirm your email") || errMsg.includes("email confirmation")) {
-          alert("Your email is not verified yet. Please check your inbox for the verification link to confirm your account.");
+          alert("Your email is registered but has not been verified yet. Please check your inbox for the verification link, or click 'Forgot Password' on the login screen to request a new link.");
         } else {
           alert("Login Error: " + err.message);
         }
@@ -2095,7 +2095,12 @@ document.addEventListener('DOMContentLoaded', () => {
           shouldShowSuccess = true;
         }
       } catch (err) {
-        alert("RSVP Error: " + err.message);
+        const errMsg = err.message ? err.message.toLowerCase() : "";
+        if (errMsg.includes("email not confirmed") || errMsg.includes("confirm your email") || errMsg.includes("email confirmation")) {
+          alert("This email is registered but has not been verified yet. Please check your inbox for the verification link, or click 'Forgot Password' on the login screen to request a new link.");
+        } else {
+          alert("RSVP Error: " + err.message);
+        }
       } finally {
         const elapsed = Date.now() - startTime;
         const remainingDelay = Math.max(0, 3000 - elapsed);
