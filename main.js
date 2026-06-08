@@ -125,13 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
       // User is Logged In
       document.body.classList.add('logged-in-user');
       
-      if (logo) logo.href = '#passport-viewer';
-      if (homeSection) homeSection.style.display = 'none';
-      if (lineupSection) lineupSection.style.display = 'none';
-      if (gallerySection) gallerySection.style.display = 'none';
-      if (rsvpSection) rsvpSection.style.display = 'none';
-      if (ticketsSection) ticketsSection.style.display = 'none';
-      if (passportViewerSection) passportViewerSection.style.display = 'flex';
+      if (logo) {
+        if (document.getElementById('passport-viewer')) {
+          logo.href = '#passport-viewer';
+        } else {
+          logo.href = 'index.html#passport-viewer';
+        }
+      }
+      
+      if (passportViewerSection) {
+        if (homeSection) homeSection.style.display = 'none';
+        if (lineupSection) lineupSection.style.display = 'none';
+        if (gallerySection) gallerySection.style.display = 'none';
+        if (rsvpSection) rsvpSection.style.display = 'none';
+        if (ticketsSection) ticketsSection.style.display = 'none';
+        passportViewerSection.style.display = 'flex';
+      }
 
       // Generate QR Code
       const qrContainer = document.getElementById('hero-qr-code');
@@ -250,12 +259,21 @@ document.addEventListener('DOMContentLoaded', () => {
       // User is Logged Out
       document.body.classList.remove('logged-in-user');
 
-      if (logo) logo.href = '#home';
-      if (homeSection) homeSection.style.display = 'flex';
-      if (lineupSection) lineupSection.style.display = '';
-      if (gallerySection) gallerySection.style.display = '';
-      if (rsvpSection) rsvpSection.style.display = '';
-      if (passportViewerSection) passportViewerSection.style.display = 'none';
+      if (logo) {
+        if (document.getElementById('passport-viewer')) {
+          logo.href = '#home';
+        } else {
+          logo.href = 'index.html';
+        }
+      }
+      
+      if (passportViewerSection) {
+        if (homeSection) homeSection.style.display = 'flex';
+        if (lineupSection) lineupSection.style.display = '';
+        if (gallerySection) gallerySection.style.display = '';
+        if (rsvpSection) rsvpSection.style.display = '';
+        passportViewerSection.style.display = 'none';
+      }
 
       const ticketsSection = document.getElementById('tickets');
       if (ticketsSection) ticketsSection.style.display = 'none';
@@ -619,7 +637,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentSession && currentUserProfile) {
       // If logged in, navigate straight to passport-viewer section
       const passportViewer = document.getElementById('passport-viewer');
-      if (passportViewer) passportViewer.scrollIntoView({ behavior: 'smooth' });
+      if (passportViewer) {
+        passportViewer.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = 'index.html#passport-viewer';
+      }
     } else if (modal) {
       if (loginForm) loginForm.reset();
       modal.showModal();
