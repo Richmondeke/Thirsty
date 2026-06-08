@@ -137,17 +137,11 @@ May the thirst be with you!`);
               </div>
               
               <div style="background-color: #121212; padding: 20px; border-radius: 4px; margin: 25px 0; border: 1px dashed rgba(255, 62, 62, 0.4); text-align: center;">
-                <p style="margin: 0; font-size: 14px; color: #888888; text-transform: uppercase; letter-spacing: 1px;">Your Access ID</p>
+                <p style="margin: 0; font-size: 14px; color: #888888; text-transform: uppercase; letter-spacing: 1px;">📬 Your Access ID</p>
                 <h3 style="margin: 5px 0 0 0; font-size: 32px; color: #ffffff; letter-spacing: 3px; font-family: monospace;">${thirstyclub_id}</h3>
               </div>
               
               <p style="font-size: 16px; line-height: 1.6; color: #e0e0e0;"><strong>Place of Thirst:</strong> ${place_of_thirst || 'MANCHESTER'}</p>
-              
-              ${status === 'PENDING' ? `
-              <div style="font-size: 14px; line-height: 1.6; color: #ff9800; padding: 12px; background-color: rgba(255, 152, 0, 0.05); border-left: 3px solid #ff9800; margin: 20px 0; border-radius: 4px;">
-                <strong>ACTION REQUIRED:</strong> Please verify your email to activate your passport and entry pass.
-              </div>
-              ` : ''}
 
               <p style="font-size: 14px; line-height: 1.6; color: #888888; margin-top: 30px;">Your entry passport card has been attached to this email. You can also view your live passport and entry pass QR code at any time by logging in to the clubhouse on our website.</p>
               
