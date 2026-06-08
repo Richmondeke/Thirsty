@@ -25,8 +25,28 @@ export default async function handler(req, res) {
     // 1. Determine subject and message template
     let emailSubject = custom_subject || (status === 'PENDING' ? 'YOUR ENTRY PASS (PENDING) - ThirstyClub999' : 'YOUR ENTRY PASS GRANTED - ThirstyClub999');
     let welcomeMessage = custom_message || (status === 'PENDING' 
-      ? 'Your RSVP for ThirstyClub999 is registered! Please confirm your email address to activate your ticket.' 
-      : 'Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club.');
+      ? `Welcome to THIRSTYCLUB999! Please confirm your email to activate your passport
+
+Date: June 14, 2026
+Time: 4:00 PM – 12:00 AM
+
+Venue details will be shared later this week.
+
+IMPORTANT: Please check your inbox for a separate confirmation email from THIRSTYCLUB999 and click the link to verify your email, and ensure to update your profile
+
+Entry is available exclusively to holders of a Thirsty Passport or Thirsty Piece.
+
+May the thirst be with you!` 
+      : `Welcome to THIRSTYCLUB999! Your passport is now active.
+
+Date: June 14, 2026
+Time: 4:00 PM – 12:00 AM
+
+Venue details will be shared later this week.
+
+Entry is available exclusively to holders of a Thirsty Passport or Thirsty Piece.
+
+May the thirst be with you!`);
 
     // If not custom (i.e. this is the automatic signup email), try fetching the customized template saved in admin profiles
     if (!custom_subject && !custom_message) {
@@ -125,7 +145,7 @@ export default async function handler(req, res) {
               
               ${status === 'PENDING' ? `
               <div style="font-size: 14px; line-height: 1.6; color: #ff9800; padding: 12px; background-color: rgba(255, 152, 0, 0.05); border-left: 3px solid #ff9800; margin: 20px 0; border-radius: 4px;">
-                <strong>IMPORTANT:</strong> Please check your inbox for a separate confirmation email from ThirstyClub999 and click the link to verify your email. Once verified, your ticket will automatically be activated.
+                <strong>ACTION REQUIRED:</strong> Please verify your email to activate your passport and entry pass.
               </div>
               ` : ''}
 
