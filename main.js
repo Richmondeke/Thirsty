@@ -634,17 +634,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
 
   const openAuthModal = () => {
-    if (currentSession && currentUserProfile) {
+    const passportViewer = document.getElementById('passport-viewer');
+    const isDashboardVisible = passportViewer && (passportViewer.style.display !== 'none' && window.getComputedStyle(passportViewer).display !== 'none');
+
+    if (currentSession && currentUserProfile && (!passportViewer || isDashboardVisible)) {
       // If logged in, navigate straight to passport-viewer section
-      const passportViewer = document.getElementById('passport-viewer');
       if (passportViewer) {
         passportViewer.scrollIntoView({ behavior: 'smooth' });
       } else {
         window.location.href = 'index.html#passport-viewer';
       }
-    } else if (modal) {
-      if (loginForm) loginForm.reset();
-      modal.showModal();
+    } else {
+      // Clear stale memory state if the dashboard exists but is hidden
+      if (passportViewer && !isDashboardVisible) {
+        currentSession = null;
+        currentUserProfile = null;
+        currentUserTicket = null;
+        updateUI();
+      }
+      if (modal) {
+        if (loginForm) loginForm.reset();
+        modal.showModal();
+      }
     }
   };
 
@@ -787,13 +798,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
     if (loginSubmitBtn) {
       loginSubmitBtn.addEventListener('touchstart', (e) => {
-        if (typeof loginForm.reportValidity !== 'function' || loginForm.reportValidity()) {
-          e.preventDefault();
-          if (typeof loginForm.requestSubmit === 'function') {
-            loginForm.requestSubmit();
-          } else {
-            loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        try {
+          if (typeof loginForm.reportValidity !== 'function' || loginForm.reportValidity()) {
+            e.preventDefault();
+            try {
+              if (typeof loginForm.requestSubmit === 'function') {
+                loginForm.requestSubmit();
+              } else {
+                loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+              }
+            } catch (innerErr) {
+              console.error("Exception during touchstart requestSubmit:", innerErr);
+              loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
           }
+        } catch (err) {
+          console.error("Error in login touchstart handler:", err);
+          // If we caught an error before preventDefault, the event will fall back to default click behavior.
         }
       }, { passive: false });
     }
@@ -2274,12 +2295,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loadAdminDashboard = async () => {
     try {
-      const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      let users = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
 
-      if (error) throw error;
+      const totalEl = document.getElementById('admin-stat-total');
+      if (totalEl) totalEl.textContent = 'Loading...';
+
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (error) throw error;
+
+        users = users.concat(data);
+        if (data.length < pageSize) {
+          hasMore = false;
+        } else {
+          page++;
+        }
+      }
 
       adminFetchedUsers = users; // Store user profiles globally in the scope for reference
 
@@ -2331,7 +2370,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Update stats UI
-      const totalEl = document.getElementById('admin-stat-total');
       const maleEl = document.getElementById('admin-stat-male');
       const femaleEl = document.getElementById('admin-stat-female');
       const otherEl = document.getElementById('admin-stat-other');
