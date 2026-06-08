@@ -1908,7 +1908,7 @@ document.addEventListener('DOMContentLoaded', () => {
             email: emailVal,
             password: passwordVal,
             options: {
-              redirectTo: window.location.origin,
+              redirectTo: window.location.origin + '/',
               data: {
                 username: nameVal,
                 place_of_thirst: pobVal,
