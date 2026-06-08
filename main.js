@@ -225,9 +225,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (passportInputName) passportInputName.value = profile?.username || '';
-      if (passportInputPob) passportInputPob.value = profile?.socials?.place_of_thirst || 'LAGOS';
-      if (passportInputGender) passportInputGender.value = profile?.socials?.gender || 'F';
-      if (passportInputSig) passportInputSig.value = profile?.socials?.signature || 'Thirstyzoid';
+      if (passportInputPob) passportInputPob.value = profile?.socials?.place_of_thirst || '';
+      if (passportInputGender) passportInputGender.value = profile?.socials?.gender || '';
+      if (passportInputSig) passportInputSig.value = profile?.socials?.signature || '';
 
       // Load avatar image into the canvas representation
       if (profile?.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
@@ -307,10 +307,10 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadPassportBtn.textContent = 'DOWNLOAD PASSPORT (RSVP)';
       }
 
-      if (passportInputName) passportInputName.value = 'THIRSTYZOID';
-      if (passportInputPob) passportInputPob.value = 'LAGOS';
-      if (passportInputGender) passportInputGender.value = 'F';
-      if (passportInputSig) passportInputSig.value = 'Thirstyzoid';
+      if (passportInputName) passportInputName.value = '';
+      if (passportInputPob) passportInputPob.value = '';
+      if (passportInputGender) passportInputGender.value = '';
+      if (passportInputSig) passportInputSig.value = '';
 
       const passportInputEmail = document.getElementById('passport-input-email');
       const passportInputPassword = document.getElementById('passport-input-password');

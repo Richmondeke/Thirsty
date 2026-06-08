@@ -779,7 +779,11 @@
             <div class="input-row split-2">
               <div class="input-group">
                 <label for="passport-input-gender">Gender</label>
-                <input type="text" id="passport-input-gender" placeholder="e.g. M or F" required maxlength="5">
+                <select id="passport-input-gender" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
+                </select>
               </div>
               <div class="input-group">
                 <label for="passport-input-sig">Signature Text</label>
