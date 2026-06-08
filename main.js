@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email === 'straffitti@hotmail.com' ||
         session.user.email === 'bookthirsty234@gmail.com' ||
         session.user.email === 'godliverse@gmail.com' ||
+        session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
         profile?.role === 'admin' ||
         profile?.socials?.role === 'admin'
       );
@@ -764,9 +765,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSubmitBtn = loginForm.querySelector('button[type="submit"]');
     if (loginSubmitBtn) {
       loginSubmitBtn.addEventListener('touchstart', (e) => {
-        if (loginForm.reportValidity()) {
+        if (typeof loginForm.reportValidity !== 'function' || loginForm.reportValidity()) {
           e.preventDefault();
-          loginForm.requestSubmit();
+          if (typeof loginForm.requestSubmit === 'function') {
+            loginForm.requestSubmit();
+          } else {
+            loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }
         }
       }, { passive: false });
     }

@@ -18,7 +18,8 @@ const ADMIN_EMAILS = [
   'thirstynalia@gmail.com',
   'straffitti@hotmail.com',
   'bookthirsty234@gmail.com',
-  'godliverse@gmail.com'
+  'godliverse@gmail.com',
+  'ogunwuyi.olumide@yahoo.com'
 ];
 
 export default async function handler(req, res) {

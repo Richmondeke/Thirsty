@@ -60,7 +60,8 @@ May the thirst be with you!`);
           'thirstynalia@gmail.com',
           'straffitti@hotmail.com',
           'bookthirsty234@gmail.com',
-          'godliverse@gmail.com'
+          'godliverse@gmail.com',
+          'ogunwuyi.olumide@yahoo.com'
         ])
         .not('socials', 'is', null);
 
