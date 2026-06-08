@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentUserProfile = null;
   let currentUserTicket = null;
   let initialScrollDone = false;
+  let recoveryPromptShown = false;
 
   // DOM elements to toggle based on auth
   const rsvpPromoCard = document.getElementById('rsvp-promo-card');
@@ -490,6 +491,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen to auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
+      if (recoveryPromptShown) return;
+      recoveryPromptShown = true;
       setTimeout(async () => {
         const newPassword = prompt("Please enter your new password:");
         if (newPassword) {
@@ -537,6 +540,69 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }
   });
+
+  // Handle Password Recovery on page load (handles PKCE code exchange or implicit token redirects)
+  const checkRecoveryFlow = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+    const isRecovery = urlParams.get('type') === 'recovery' || hashParams.get('type') === 'recovery' || window.location.hash.includes('type=recovery');
+
+    if (isRecovery) {
+      console.log("Password recovery query detected in URL. Waiting for session to establish...");
+      
+      // Wait up to 6 seconds for Supabase to exchange code and establish session
+      let session = null;
+      for (let i = 0; i < 24; i++) {
+        const { data } = await supabase.auth.getSession();
+        if (data && data.session) {
+          session = data.session;
+          break;
+        }
+        await new Promise(r => setTimeout(r, 250));
+      }
+
+      if (session) {
+        if (recoveryPromptShown) return;
+        recoveryPromptShown = true;
+        console.log("Session established for password recovery. Prompting password reset...");
+        
+        setTimeout(async () => {
+          const newPassword = prompt("Please enter your new password:");
+          if (newPassword) {
+            try {
+              const { error } = await supabase.auth.updateUser({ password: newPassword });
+              if (error) {
+                alert("Error updating password: " + error.message);
+              } else {
+                alert("Password updated successfully! You are now logged in.");
+                
+                // Clean up URL query parameters
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+                
+                // Sync session and profile to ensure UI updates
+                await syncSessionAndProfile(session);
+                
+                // Force scroll to dashboard
+                const passportViewer = document.getElementById('passport-viewer');
+                if (passportViewer) {
+                  passportViewer.style.display = 'flex'; // Ensure visible
+                  passportViewer.scrollIntoView({ behavior: 'smooth' });
+                }
+              }
+            } catch (err) {
+              alert("Error updating password: " + err.message);
+            }
+          }
+        }, 500);
+      } else {
+        console.warn("Could not establish session for password recovery. Token may be expired.");
+      }
+    }
+  };
+
+  // Run the recovery flow check on initialization
+  checkRecoveryFlow();
 
   // ==========================================
   // 4. RSVP Dialog & Auth Modal Management
@@ -677,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Trigger reset password email via Supabase
       try {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin,
+          redirectTo: window.location.origin + '/?type=recovery',
         });
 
         if (error) {
