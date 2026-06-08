@@ -3919,8 +3919,23 @@ body.logged-in-user #hero-bg-video {
     padding: 4rem 1rem;
   }
   .gallery-scroller {
-    padding: 2rem 1rem;
-    gap: 1rem;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+    padding: 2rem 1rem !important;
+  }
+  .gallery-item {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 2 / 3 !important;
+    transform: none !important;
+  }
+  .gallery-item:hover {
+    width: 100% !important;
+    transform: none !important;
+    box-shadow: none !important;
   }
 }
 
@@ -4154,13 +4169,24 @@ body.logged-in-user #hero-bg-video {
   .gallery-section {
     padding: 3rem 0.5rem;
   }
-  .gallery-container {
-    --gallery-card-width: 150px;
-    --gallery-card-height: 225px;
-  }
   .gallery-scroller {
-    padding: 1.5rem 0.5rem;
-    gap: 0.8rem;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.8rem !important;
+    padding: 1.5rem 0.5rem !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .gallery-item {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 2 / 3 !important;
+    transform: none !important;
+  }
+  .gallery-item:hover {
+    width: 100% !important;
+    transform: none !important;
+    box-shadow: none !important;
   }
 
   /* Lightbox */

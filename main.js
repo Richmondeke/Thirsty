@@ -1033,6 +1033,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let ticking = false;
   const updateGallery3DEffect = () => {
     if (!galleryScroller || galleryItems.length === 0) return;
+
+    if (window.innerWidth <= 768) {
+      galleryItems.forEach(item => {
+        item.style.transform = '';
+      });
+      return;
+    }
     
     if (!ticking) {
       window.requestAnimationFrame(() => {
