@@ -2430,11 +2430,17 @@ header .logout-btn {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  will-change: transform, width;
   transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1),
               transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
               border-color 0.3s ease,
               box-shadow 0.3s ease;
   transform: rotateY(0deg) translateZ(0);
+}
+
+/* Disable transitions during active scrolling/dragging to achieve 60fps/120fps mobile performance */
+.gallery-scroller.scrolling .gallery-item {
+  transition: none !important;
 }
 
 .gallery-item:first-child {

@@ -1030,37 +1030,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const galleryScroller = document.getElementById('gallery-scroller');
   const galleryItems = document.querySelectorAll('.gallery-item');
 
+  let ticking = false;
   const updateGallery3DEffect = () => {
     if (!galleryScroller || galleryItems.length === 0) return;
+    
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollerCenter = galleryScroller.scrollLeft + galleryScroller.offsetWidth / 2;
+        const scrollerWidth = galleryScroller.offsetWidth;
 
-    const scrollerCenter = galleryScroller.scrollLeft + galleryScroller.offsetWidth / 2;
-    const scrollerWidth = galleryScroller.offsetWidth;
+        galleryItems.forEach(item => {
+          const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+          const distance = itemCenter - scrollerCenter;
+          const normalizedOffset = distance / scrollerWidth;
 
-    galleryItems.forEach(item => {
-      const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-      const distance = itemCenter - scrollerCenter;
-      const normalizedOffset = distance / scrollerWidth;
+          // 3D Y-axis rotation (tilt facing the center)
+          const maxAngle = 35;
+          let angle = -normalizedOffset * 55;
+          angle = Math.max(-maxAngle, Math.min(maxAngle, angle));
 
-      // 3D Y-axis rotation (tilt facing the center)
-      const maxAngle = 35;
-      let angle = -normalizedOffset * 55;
-      angle = Math.max(-maxAngle, Math.min(maxAngle, angle));
+          // Z-depth pushing outer cards into the background
+          const maxZ = -150;
+          let z = -Math.abs(normalizedOffset) * 200;
+          z = Math.max(maxZ, z);
 
-      // Z-depth pushing outer cards into the background
-      const maxZ = -150;
-      let z = -Math.abs(normalizedOffset) * 200;
-      z = Math.max(maxZ, z);
+          // Scale down outer cards slightly
+          const scale = Math.max(0.85, 1 - Math.abs(normalizedOffset) * 0.15);
 
-      // Scale down outer cards slightly
-      const scale = Math.max(0.85, 1 - Math.abs(normalizedOffset) * 0.15);
-
-      item.style.transform = `rotateY(${angle}deg) translateZ(${z}px) scale(${scale})`;
-    });
+          item.style.transform = `rotateY(${angle}deg) translateZ(${z}px) scale(${scale})`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
   };
 
   if (galleryScroller) {
-    galleryScroller.addEventListener('scroll', updateGallery3DEffect);
-    window.addEventListener('resize', updateGallery3DEffect);
+    let scrollTimeout;
+    galleryScroller.addEventListener('scroll', () => {
+      galleryScroller.classList.add('scrolling');
+      updateGallery3DEffect();
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        galleryScroller.classList.remove('scrolling');
+      }, 150);
+    }, { passive: true });
+
+    window.addEventListener('resize', updateGallery3DEffect, { passive: true });
     setTimeout(updateGallery3DEffect, 100);
     setTimeout(updateGallery3DEffect, 500);
 

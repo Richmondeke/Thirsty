@@ -741,7 +741,7 @@
         <div class="passport-controls-card">
           <div class="control-header">
             <h3>RSVP & PASSPORT CREATOR</h3>
-            <p>Upload a photo and fill in your details to customize your Thirsty Passport. Export as high-quality PNG or JPG.</p>
+            <p>Upload a photo (use a clear image of your face) and fill in your details to customize your Thirsty Passport. Export as high-quality PNG or JPG.</p>
           </div>
 
           <div class="upload-dropzone" id="passport-dropzone">
@@ -750,6 +750,7 @@
               <span class="upload-icon">📷</span>
               <p class="dropzone-text">Drag & drop portrait picture or <span class="browse-link">browse</span></p>
               <span class="file-info" id="passport-file-info">JPG or PNG (Max 5MB)</span>
+              <p style="font-size: 11px; color: #ff9800; margin: 8px 0 0 0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: bold;">⚠️ PLEASE UPLOAD A CLEAR IMAGE OF YOUR FACE</p>
             </div>
           </div>
 
@@ -767,22 +768,22 @@
             <div class="input-row split-2">
               <div class="input-group">
                 <label for="passport-input-name">Full Name</label>
-                <input type="text" id="passport-input-name" value="THIRSTYZOID" maxlength="30">
+                <input type="text" id="passport-input-name" placeholder="e.g. OLUMIDE OGUNWUYI" required maxlength="30">
               </div>
               <div class="input-group">
                 <label for="passport-input-pob">Place of Thirst</label>
-                <input type="text" id="passport-input-pob" value="LAGOS" maxlength="20">
+                <input type="text" id="passport-input-pob" placeholder="e.g. LAGOS" required maxlength="20">
               </div>
             </div>
 
             <div class="input-row split-2">
               <div class="input-group">
                 <label for="passport-input-gender">Gender</label>
-                <input type="text" id="passport-input-gender" value="F" maxlength="5">
+                <input type="text" id="passport-input-gender" placeholder="e.g. M or F" required maxlength="5">
               </div>
               <div class="input-group">
                 <label for="passport-input-sig">Signature Text</label>
-                <input type="text" id="passport-input-sig" value="Thirstyzoid" maxlength="20">
+                <input type="text" id="passport-input-sig" placeholder="e.g. Olumide" required maxlength="20">
               </div>
             </div>
 
