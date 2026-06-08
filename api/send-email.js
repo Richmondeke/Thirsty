@@ -39,7 +39,8 @@ export default async function handler(req, res) {
           'richmonde@guava.earth',
           'thirstynalia@gmail.com',
           'straffitti@hotmail.com',
-          'bookthirsty234@gmail.com'
+          'bookthirsty234@gmail.com',
+          'godliverse@gmail.com'
         ])
         .not('socials', 'is', null);
 

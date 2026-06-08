@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email === 'thirstynalia@gmail.com' ||
         session.user.email === 'straffitti@hotmail.com' ||
         session.user.email === 'bookthirsty234@gmail.com' ||
+        session.user.email === 'godliverse@gmail.com' ||
         profile?.role === 'admin' ||
         profile?.socials?.role === 'admin'
       );
