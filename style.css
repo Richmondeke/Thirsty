@@ -4286,3 +4286,214 @@ img, video, canvas {
     font-size: 16px; /* Prevents iOS zoom on focus */
   }
 }
+
+/* ==========================================================================
+   Dedicated Login Page Styles
+   ========================================================================= */
+.login-page-body {
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+}
+
+.login-page-body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 62, 62, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+}
+
+/* Auth Card Glassmorphic Panels */
+.auth-card {
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: var(--transition-smooth);
+}
+
+.auth-state {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-back-link a:hover {
+  color: var(--text-color) !important;
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.auth-back-link button:hover {
+  color: var(--text-color) !important;
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ==========================================================================
+   Admin Dashboard & Guestlist Table Enhancements
+   ========================================================================= */
+   
+/* Stat Cards Layout & Tailored Glows */
+.admin-stat-card {
+  position: relative;
+  background: rgba(10, 10, 10, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.admin-stat-card.stat-card-total:hover {
+  border-color: rgba(255, 62, 62, 0.3) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 0 20px rgba(255, 62, 62, 0.15) !important;
+  transform: translateY(-2px);
+}
+.admin-stat-card.stat-card-male:hover {
+  border-color: rgba(74, 144, 226, 0.3) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 0 20px rgba(74, 144, 226, 0.15) !important;
+  transform: translateY(-2px);
+}
+.admin-stat-card.stat-card-female:hover {
+  border-color: rgba(255, 107, 129, 0.3) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 0 20px rgba(255, 107, 129, 0.15) !important;
+  transform: translateY(-2px);
+}
+.admin-stat-card.stat-card-other:hover {
+  border-color: rgba(168, 168, 168, 0.3) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 0 20px rgba(168, 168, 168, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+/* Stat card value color overrides */
+.admin-stat-card.stat-card-total .stat-value {
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
+}
+.admin-stat-card.stat-card-male .stat-value {
+  color: #4a90e2;
+  text-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+}
+.admin-stat-card.stat-card-female .stat-value {
+  color: #ff6b81;
+  text-shadow: 0 0 10px rgba(255, 107, 129, 0.3);
+}
+.admin-stat-card.stat-card-other .stat-value {
+  color: #a8a8a8;
+  text-shadow: 0 0 10px rgba(168, 168, 168, 0.3);
+}
+
+/* Guestlist Table Rows Left Indicator Hover Effect */
+.admin-users-table tbody tr td {
+  border-left: 3px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.admin-users-table tbody tr:hover td {
+  background: rgba(255, 62, 62, 0.04) !important;
+}
+
+.admin-users-table tbody tr:hover td:first-child {
+  border-left: 3px solid var(--accent-color);
+}
+
+/* Sticky Header Bold Border and Accent Indicator */
+.admin-users-table th {
+  background: rgba(8, 8, 8, 0.95);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+/* Access dropdown VIP / Regular styling */
+.admin-access-select {
+  background: #111111;
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 0.45rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+/* VIP Select State (Golden-Amber Border & Ring Glow) */
+.admin-access-select.access-vip {
+  border-color: #ffb300 !important;
+  color: #ffb300 !important;
+  box-shadow: 0 0 10px rgba(255, 179, 0, 0.15);
+  background: rgba(255, 179, 0, 0.03);
+}
+.admin-access-select.access-vip:focus {
+  box-shadow: 0 0 15px rgba(255, 179, 0, 0.4), 0 0 0 2px rgba(255, 179, 0, 0.2);
+  border-color: #ffb300 !important;
+}
+
+/* Regular Select State (Cyan-Blue Border & Ring Glow) */
+.admin-access-select.access-regular {
+  border-color: #00d2ff !important;
+  color: #00d2ff !important;
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
+  background: rgba(0, 210, 255, 0.03);
+}
+.admin-access-select.access-regular:focus {
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4), 0 0 0 2px rgba(0, 210, 255, 0.2);
+  border-color: #00d2ff !important;
+}
+
+/* Monospaced ThirstyID Badge blocks */
+.glow-id-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: var(--transition-smooth);
+}
+.glow-id-badge:hover {
+  background: rgba(255, 62, 62, 0.08);
+  border-color: rgba(255, 62, 62, 0.3);
+  color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(255, 62, 62, 0.15);
+}

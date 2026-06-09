@@ -511,34 +511,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen to auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
-      if (recoveryPromptShown) return;
-      recoveryPromptShown = true;
-      setTimeout(async () => {
-        const newPassword = prompt("Please enter your new password:");
-        if (newPassword) {
-          try {
-            const { error } = await supabase.auth.updateUser({ password: newPassword });
-            if (error) {
-              alert("Error updating password: " + error.message);
-            } else {
-              alert("Password updated successfully! You are now logged in.");
-              // Sync session and profile to ensure UI updates
-              const { data: { session: freshSession } } = await supabase.auth.getSession();
-              if (freshSession) {
-                await syncSessionAndProfile(freshSession);
-              }
-              // Force scroll to dashboard
-              const passportViewer = document.getElementById('passport-viewer');
-              if (passportViewer) {
-                passportViewer.style.display = 'flex'; // Ensure visible
-                passportViewer.scrollIntoView({ behavior: 'smooth' });
-              }
-            }
-          } catch (err) {
-            alert("Error updating password: " + err.message);
-          }
-        }
-      }, 500);
+      const isLoginPage = window.location.pathname.includes('login.html');
+      if (isLoginPage) {
+        console.log("PASSWORD_RECOVERY event received on login page. Custom form will handle it.");
+        return;
+      }
+      console.log("PASSWORD_RECOVERY event detected on non-login page. Redirecting to login.html...");
+      window.location.replace('login.html' + window.location.search + window.location.hash);
+      return;
     }
 
     // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
@@ -568,55 +548,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const isRecovery = urlParams.get('type') === 'recovery' || hashParams.get('type') === 'recovery' || window.location.hash.includes('type=recovery');
 
     if (isRecovery) {
-      console.log("Password recovery query detected in URL. Waiting for session to establish...");
-      
-      // Wait up to 6 seconds for Supabase to exchange code and establish session
-      let session = null;
-      for (let i = 0; i < 24; i++) {
-        const { data } = await supabase.auth.getSession();
-        if (data && data.session) {
-          session = data.session;
-          break;
-        }
-        await new Promise(r => setTimeout(r, 250));
-      }
-
-      if (session) {
-        if (recoveryPromptShown) return;
-        recoveryPromptShown = true;
-        console.log("Session established for password recovery. Prompting password reset...");
-        
-        setTimeout(async () => {
-          const newPassword = prompt("Please enter your new password:");
-          if (newPassword) {
-            try {
-              const { error } = await supabase.auth.updateUser({ password: newPassword });
-              if (error) {
-                alert("Error updating password: " + error.message);
-              } else {
-                alert("Password updated successfully! You are now logged in.");
-                
-                // Clean up URL query parameters
-                const cleanUrl = window.location.origin + window.location.pathname;
-                window.history.replaceState({}, document.title, cleanUrl);
-                
-                // Sync session and profile to ensure UI updates
-                await syncSessionAndProfile(session);
-                
-                // Force scroll to dashboard
-                const passportViewer = document.getElementById('passport-viewer');
-                if (passportViewer) {
-                  passportViewer.style.display = 'flex'; // Ensure visible
-                  passportViewer.scrollIntoView({ behavior: 'smooth' });
-                }
-              }
-            } catch (err) {
-              alert("Error updating password: " + err.message);
-            }
-          }
-        }, 500);
-      } else {
-        console.warn("Could not establish session for password recovery. Token may be expired.");
+      const isLoginPage = window.location.pathname.includes('login.html');
+      if (!isLoginPage) {
+        console.log("Password recovery query detected in URL. Redirecting to login.html...");
+        window.location.replace('login.html' + window.location.search + window.location.hash);
       }
     }
   };
@@ -624,9 +559,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Run the recovery flow check on initialization
   checkRecoveryFlow();
 
-  // ==========================================
-  // 4. RSVP Dialog & Auth Modal Management
-  // ==========================================
   const modal = document.getElementById('ticket-modal');
   const openAuthBtn = document.getElementById('open-auth-btn');
   const navMembersBtn = document.getElementById('nav-members-btn');
@@ -652,10 +584,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUserTicket = null;
         updateUI();
       }
-      if (modal) {
-        if (loginForm) loginForm.reset();
-        modal.showModal();
-      }
+      // Redirect to login page
+      window.location.href = 'login.html';
     }
   };
 
@@ -872,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
           throw error;
         }
 
-        modal.close();
+        if (modal) modal.close();
         loginForm.reset();
         
         // Explicitly sync profile and navigate to clubhouse
@@ -2413,12 +2343,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const accessLvl = user.socials?.access_level || 'REGULAR';
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td><span class="glow-id">${escapeHtml(user.thirstyclub_id || 'N/A')}</span></td>
+            <td><code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code></td>
             <td>${escapeHtml(user.username || '')}</td>
             <td>${escapeHtml(user.email || '')}</td>
             <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
             <td>
-              <select class="admin-access-select" data-userid="${escapeHtml(user.id)}">
+              <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
                 <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
                 <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
               </select>
@@ -2742,6 +2672,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         userProfile.socials = updatedSocials;
         
+        // Dynamically toggle classes
+        if (newAccess === 'VIP') {
+          selectEl.classList.remove('access-regular');
+          selectEl.classList.add('access-vip');
+        } else {
+          selectEl.classList.remove('access-vip');
+          selectEl.classList.add('access-regular');
+        }
+        
         // Optional: you can show a small toast or visual confirmation here
         const originalBg = selectEl.style.backgroundColor;
         selectEl.style.backgroundColor = 'rgba(76, 175, 80, 0.2)'; // Green tint
@@ -2753,6 +2692,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Revert selection
         const prevAccess = adminFetchedUsers.find(u => u.id === userId)?.socials?.access_level || 'REGULAR';
         selectEl.value = prevAccess;
+        if (prevAccess === 'VIP') {
+          selectEl.classList.remove('access-regular');
+          selectEl.classList.add('access-vip');
+        } else {
+          selectEl.classList.remove('access-vip');
+          selectEl.classList.add('access-regular');
+        }
       }
     }
   });
@@ -3047,5 +2993,199 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ==========================================
+  // Login Page Custom State Handling
+  // ==========================================
+  const loginPageBody = document.querySelector('.login-page-body');
+  if (loginPageBody) {
+    const loginState = document.getElementById('login-state');
+    const forgotState = document.getElementById('forgot-state');
+    const resetState = document.getElementById('reset-state');
+    const messageState = document.getElementById('message-state');
+
+    const showState = (state) => {
+      [loginState, forgotState, resetState, messageState].forEach(el => {
+        if (el) el.style.display = 'none';
+      });
+      if (state) state.style.display = 'block';
+    };
+
+    // State navigation
+    const forgotTrigger = document.getElementById('forgot-password-trigger');
+    if (forgotTrigger) {
+      forgotTrigger.addEventListener('click', () => {
+        showState(forgotState);
+      });
+    }
+
+    const backToLoginBtn = document.getElementById('back-to-login-btn');
+    if (backToLoginBtn) {
+      backToLoginBtn.addEventListener('click', () => {
+        showState(loginState);
+      });
+    }
+
+    // Forgot password form submission
+    const forgotForm = document.getElementById('forgot-form');
+    if (forgotForm) {
+      forgotForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = forgotForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Sending...";
+        }
+
+        const forgotId = document.getElementById('forgot-id').value.trim();
+        let email = forgotId.toLowerCase();
+
+        try {
+          // Resolve ThirstyID to Email if necessary
+          if (forgotId.toUpperCase().startsWith("T999-")) {
+            const { data: profile, error: profileErr } = await supabase
+              .from('profiles')
+              .select('email')
+              .eq('thirstyclub_id', forgotId.toUpperCase())
+              .single();
+
+            if (profileErr || !profile || !profile.email) {
+              throw new Error("Could not find an account with that ThirstyID.");
+            }
+            email = profile.email;
+          } else if (!forgotId.includes('@')) {
+            // Assume Username
+            const { data: profile, error: profileErr } = await supabase
+              .from('profiles')
+              .select('email')
+              .ilike('username', forgotId)
+              .single();
+
+            if (profileErr || !profile || !profile.email) {
+              throw new Error("Could not find an account with that Username.");
+            }
+            email = profile.email;
+          }
+
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/login.html?type=recovery',
+          });
+
+          if (error) throw error;
+
+          // Show Success State
+          const msgTitle = document.getElementById('message-title');
+          const msgDesc = document.getElementById('message-desc');
+          const msgBtn = document.getElementById('message-action-btn');
+
+          if (msgTitle) msgTitle.textContent = "LINK SENT";
+          if (msgDesc) msgDesc.textContent = `A password recovery link has been sent to ${email}. Please check your inbox.`;
+          if (msgBtn) {
+            msgBtn.onclick = () => showState(loginState);
+          }
+          showState(messageState);
+        } catch (err) {
+          alert("Reset Request Error: " + err.message);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send Reset Link";
+          }
+        }
+      });
+    }
+
+    // Reset/update password form submission
+    const resetForm = document.getElementById('reset-form');
+    if (resetForm) {
+      resetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = resetForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Updating...";
+        }
+
+        const newPassword = document.getElementById('reset-password').value;
+        const confirmPassword = document.getElementById('reset-password-confirm').value;
+
+        if (newPassword !== confirmPassword) {
+          alert("Passwords do not match!");
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Update Password";
+          }
+          return;
+        }
+
+        try {
+          const { error } = await supabase.auth.updateUser({ password: newPassword });
+          if (error) throw error;
+
+          // Clear recovery query params
+          const cleanUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+
+          // Get fresh session to sync
+          const { data: { session: freshSession } } = await supabase.auth.getSession();
+          if (freshSession) {
+            await syncSessionAndProfile(freshSession);
+          }
+
+          // Show Success State
+          const msgTitle = document.getElementById('message-title');
+          const msgDesc = document.getElementById('message-desc');
+          const msgBtn = document.getElementById('message-action-btn');
+
+          if (msgTitle) msgTitle.textContent = "PASSWORD UPDATED";
+          if (msgDesc) msgDesc.textContent = "Your password has been successfully updated. You are now logged in.";
+          if (msgBtn) {
+            msgBtn.onclick = () => {
+              window.location.href = 'index.html#passport-viewer';
+            };
+          }
+          showState(messageState);
+        } catch (err) {
+          alert("Error updating password: " + err.message);
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Update Password";
+          }
+        }
+      });
+    }
+
+    // Handle check for Recovery state on page load
+    const checkLoginPageRecovery = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+      const isRecovery = urlParams.get('type') === 'recovery' || hashParams.get('type') === 'recovery' || window.location.hash.includes('type=recovery');
+
+      if (isRecovery) {
+        // Wait up to 6 seconds for session to establish
+        let session = null;
+        for (let i = 0; i < 24; i++) {
+          const { data } = await supabase.auth.getSession();
+          if (data && data.session) {
+            session = data.session;
+            break;
+          }
+          await new Promise(r => setTimeout(r, 250));
+        }
+
+        if (session) {
+          showState(resetState);
+        } else {
+          alert("Could not establish a password reset session. Your token may have expired.");
+          showState(loginState);
+        }
+      } else {
+        showState(loginState);
+      }
+    };
+
+    checkLoginPageRecovery();
+  }
+
 });
-/* force redeploy Sun Jun  7 04:10:00 WAT 2026 */
+/* force redeploy Sun Jun 10 00:21:00 WAT 2026 */

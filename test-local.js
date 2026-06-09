@@ -30,8 +30,8 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(3000, async () => {
-  console.log('Local server running on http://localhost:3000');
+server.listen(3050, async () => {
+  console.log('Local server running on http://localhost:3050');
   
   try {
     const browser = await chromium.launch();
@@ -42,7 +42,7 @@ server.listen(3000, async () => {
 
     // --- TEST INDEX.HTML ---
     console.log('\n--- Testing index.html ---');
-    await page.goto('http://localhost:3000', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://localhost:3050', { waitUntil: 'domcontentloaded' });
     
     // Check initial styles
     const styles = await page.evaluate(() => {
@@ -59,32 +59,19 @@ server.listen(3000, async () => {
       throw new Error(`Expected #passport-viewer to be display: none, got ${styles.computedDisplay}`);
     }
 
-    // Verify modal button click
+    // Verify redirection to login.html on click
     console.log('Testing "Members Only" button click...');
-    const modalOpenBefore = await page.evaluate(() => {
-      const modal = document.getElementById('ticket-modal');
-      return modal ? modal.hasAttribute('open') : 'missing';
-    });
-    console.log('Modal open state before click:', modalOpenBefore);
-    if (modalOpenBefore === true) {
-      throw new Error('Expected login modal to be closed initially.');
-    }
-
     await page.click('#nav-members-btn');
     await page.waitForTimeout(500);
-
-    const modalOpenAfter = await page.evaluate(() => {
-      const modal = document.getElementById('ticket-modal');
-      return modal ? modal.hasAttribute('open') : 'missing';
-    });
-    console.log('Modal open state after click:', modalOpenAfter);
-    if (modalOpenAfter !== true) {
-      throw new Error('Expected login modal to be open after clicking "Members Only".');
+    const currentUrl = page.url();
+    console.log('Current URL after click:', currentUrl);
+    if (!currentUrl.includes('login.html')) {
+      throw new Error(`Expected redirection to login.html, got ${currentUrl}`);
     }
 
     // --- TEST EVENT.HTML ---
     console.log('\n--- Testing event.html ---');
-    await page.goto('http://localhost:3000/event.html', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://localhost:3050/event.html', { waitUntil: 'domcontentloaded' });
 
     // 1. Assert no duplicate videos
     const videoCount = await page.evaluate(() => {
