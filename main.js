@@ -410,14 +410,14 @@ document.addEventListener('DOMContentLoaded', () => {
               email: session.user.email,
               username: fallbackUsername,
               thirstyclub_id: fallbackId,
-              role: 'user',
               socials: {
                 instagram: "",
                 twitter: "",
                 discord: "",
                 place_of_thirst: "LAGOS",
                 gender: "F",
-                signature: "Thirstyzoid"
+                signature: "Thirstyzoid",
+                role: "user"
               }
             }, { onConflict: 'id' })
             .select()
@@ -847,6 +847,19 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
           }
           email = profile.email;
+        } else if (!loginId.includes('@')) {
+          // Assume it is a username
+          // Resolve Username to Email (case-insensitive search)
+          const { data: profile, error: profileErr } = await supabase
+            .from('profiles')
+            .select('email')
+            .ilike('username', loginId)
+            .single();
+
+          if (profileErr || !profile || !profile.email) {
+            throw new Error("Invalid Username. Make sure it is spelled correctly.");
+          }
+          email = profile.email;
         }
 
         // Authenticate via Supabase Auth
@@ -1257,6 +1270,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let isHovered = false;
     
     heroVideo.muted = true;
+
+    // Intersection Observer to autoplay on load / scroll into view, and pause when scrolled out of view
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          heroVideo.play().catch(err => {
+            console.log("Video autoplay/scroll-in play error:", err);
+          });
+        } else {
+          heroVideo.pause();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    videoObserver.observe(heroVideo);
     
     heroVideo.addEventListener('timeupdate', () => {
       if (heroVideo.duration && !isNaN(heroVideo.duration)) {
@@ -1287,11 +1315,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isHovered = false;
       heroContent.classList.remove('cta-hovered');
       heroSection.classList.remove('video-active');
-      pauseTimeout = setTimeout(() => {
-        heroVideo.pause();
-        heroVideo.currentTime = 0;
-        heroSection.style.setProperty('--video-progress', 0);
-      }, 500);
+      // Do not pause or reset the video here as it should keep autoplaying in the background while in view
     });
   }
 
