@@ -1268,8 +1268,40 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroCtaBtn && heroContent && heroVideo && heroSection) {
     let pauseTimeout = null;
     let isHovered = false;
+    let fadeInterval = null;
     
+    // Set initial audio properties
     heroVideo.muted = true;
+    heroVideo.volume = 0;
+
+    const fadeVolume = (targetVolume, duration) => {
+      if (fadeInterval) clearInterval(fadeInterval);
+      
+      // If we are fading in, ensure video is unmuted
+      if (targetVolume > 0) {
+        heroVideo.muted = false;
+      }
+      
+      const startVolume = heroVideo.volume;
+      const startTime = performance.now();
+      
+      fadeInterval = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Linear interpolation of volume level
+        heroVideo.volume = startVolume + (targetVolume - startVolume) * progress;
+        
+        if (progress >= 1) {
+          clearInterval(fadeInterval);
+          fadeInterval = null;
+          // If we faded out completely, mute the video
+          if (targetVolume === 0) {
+            heroVideo.muted = true;
+          }
+        }
+      }, 30); // smooth updates every 30ms
+    };
 
     // Intersection Observer to autoplay on load / scroll into view, and pause when scrolled out of view
     const videoObserver = new IntersectionObserver((entries) => {
@@ -1306,6 +1338,11 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseTimeout = null;
       }
       heroContent.classList.add('cta-hovered');
+      heroSection.classList.add('video-active');
+      
+      // Fade in to decent volume level (0.5) over 400ms
+      fadeVolume(0.5, 400);
+
       heroVideo.play().catch(err => {
         console.log("Video play error:", err);
       });
@@ -1315,7 +1352,9 @@ document.addEventListener('DOMContentLoaded', () => {
       isHovered = false;
       heroContent.classList.remove('cta-hovered');
       heroSection.classList.remove('video-active');
-      // Do not pause or reset the video here as it should keep autoplaying in the background while in view
+      
+      // Fade out to 0 volume over 600ms
+      fadeVolume(0, 600);
     });
   }
 
