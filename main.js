@@ -1360,13 +1360,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const drawStamp = (ctx, x, y) => {
+  const drawStamp = (ctx, stampObj) => {
+    if (!stampObj) return;
+    const { x, y, rotation, event_name, event_date, color } = stampObj;
+
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate(-15 * Math.PI / 180);
+    ctx.rotate(rotation);
     
-    ctx.strokeStyle = 'rgba(255, 62, 62, 0.85)';
-    ctx.fillStyle = 'rgba(255, 62, 62, 0.85)';
+    ctx.strokeStyle = color || 'rgba(255, 62, 62, 0.85)';
+    ctx.fillStyle = color || 'rgba(255, 62, 62, 0.85)';
     ctx.lineWidth = 4;
     
     ctx.beginPath();
@@ -1382,12 +1385,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
-    ctx.fillText("THIRSTYCLUB", 0, -15);
+    ctx.fillText(event_name || "THIRSTYCLUB", 0, -15);
     ctx.font = '900 14px sans-serif';
-    ctx.fillText("999", 0, 2);
+    ctx.fillText(event_date || "CHECKED IN", 0, 2);
     ctx.font = '700 8px sans-serif';
-    ctx.fillText("CHECKED IN", 0, 18);
-    ctx.fillText("ACCESS GRANTED", 0, 28);
+    ctx.fillText("ACCESS GRANTED", 0, 20);
     
     ctx.restore();
   };
@@ -1531,11 +1533,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText("PASSPORT", 0, 18);
     ctx.restore();
 
-    // Check if user is checked in, and draw stamp on top portion
-    const isCheckedIn = (currentUserProfile && (currentUserProfile.socials?.checked_in === true || currentUserProfile.checked_in === true));
-    if (isCheckedIn) {
-      drawStamp(ctx, 300, 202);
-    }
+    // Stamps
+    const stamps = currentUserProfile?.socials?.stamps || [];
+    stamps.forEach(stampObj => {
+      drawStamp(ctx, stampObj);
+    });
 
     // 6. Draw Bottom Page Content
     // Left header
@@ -2383,6 +2385,13 @@ document.addEventListener('DOMContentLoaded', () => {
             minute: '2-digit'
           });
 
+          const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+          const stamps = user.socials?.stamps || [];
+          const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+          
+          const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
+          const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
+
           const accessLvl = user.socials?.access_level || 'REGULAR';
           const tr = document.createElement('tr');
           tr.innerHTML = `
@@ -2398,6 +2407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </td>
             <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
             <td>
+              <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}" style="margin-right: 4px;">${checkInBtnText}</button>
               <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
             </td>
           `;
@@ -2575,11 +2585,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText("PASSPORT", 0, 18);
     ctx.restore();
 
-    // Stamp
-    const isCheckedIn = (profile.socials?.checked_in === true || profile.checked_in === true);
-    if (isCheckedIn) {
-      drawStamp(ctx, 300, 202);
-    }
+    // Stamps
+    const stamps = profile.socials?.stamps || [];
+    stamps.forEach(stampObj => {
+      drawStamp(ctx, stampObj);
+    });
 
     // 6. Draw Bottom Page Content
     ctx.fillStyle = '#000000';
@@ -2747,6 +2757,95 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', async (e) => {
+    // Handle Check In
+    if (e.target && e.target.classList.contains('admin-checkin-btn')) {
+      e.preventDefault();
+      const btn = e.target;
+      const userId = btn.getAttribute('data-userid');
+      const user = adminFetchedUsers.find(u => u.id === userId);
+      if (!user) return;
+      
+      btn.textContent = '...';
+      btn.disabled = true;
+
+      const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+      const EVENT_NAME = "THIRSTYNALIA";
+      const EVENT_DATE = "JUN 14 2026";
+
+      const stamps = user.socials?.stamps || [];
+      const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+
+      if (!isCheckedIn) {
+        // Generate random stamp parameters for top part of passport
+        const randomX = Math.floor(Math.random() * 200) + 180; // 180 to 380
+        const randomY = Math.floor(Math.random() * 80) + 120;  // 120 to 200
+        const randomRotation = (Math.random() - 0.5) * 0.5;    // Slight rotation
+
+        const newStamp = {
+          event_id: CURRENT_EVENT_ID,
+          event_name: EVENT_NAME,
+          event_date: EVENT_DATE,
+          x: randomX,
+          y: randomY,
+          rotation: randomRotation,
+          color: 'rgba(255, 62, 62, 0.85)'
+        };
+
+        const updatedSocials = {
+          ...user.socials,
+          stamps: [...stamps, newStamp]
+        };
+
+        try {
+          const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', userId);
+          if (error) throw error;
+          user.socials = updatedSocials;
+          btn.classList.remove('admin-checkin-btn');
+          btn.classList.add('admin-checkout-btn', 'checkin-active');
+          btn.textContent = 'Check Out';
+        } catch (err) {
+          console.error("Check-in error:", err);
+          alert("Failed to check in: " + err.message);
+          btn.textContent = 'Check In';
+        }
+      }
+      btn.disabled = false;
+    }
+
+    // Handle Check Out
+    if (e.target && e.target.classList.contains('admin-checkout-btn')) {
+      e.preventDefault();
+      const btn = e.target;
+      const userId = btn.getAttribute('data-userid');
+      const user = adminFetchedUsers.find(u => u.id === userId);
+      if (!user) return;
+
+      btn.textContent = '...';
+      btn.disabled = true;
+
+      const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+      const stamps = user.socials?.stamps || [];
+      
+      const updatedSocials = {
+        ...user.socials,
+        stamps: stamps.filter(s => s.event_id !== CURRENT_EVENT_ID)
+      };
+
+      try {
+        const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', userId);
+        if (error) throw error;
+        user.socials = updatedSocials;
+        btn.classList.remove('admin-checkout-btn', 'checkin-active');
+        btn.classList.add('admin-checkin-btn');
+        btn.textContent = 'Check In';
+      } catch (err) {
+        console.error("Check-out error:", err);
+        alert("Failed to check out: " + err.message);
+        btn.textContent = 'Check Out';
+      }
+      btn.disabled = false;
+    }
+
     if (e.target && e.target.classList.contains('admin-view-passport-btn')) {
       e.preventDefault();
       const email = e.target.getAttribute('data-email');

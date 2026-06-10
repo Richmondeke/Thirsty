@@ -4497,3 +4497,14 @@ img, video, canvas {
   color: var(--accent-color);
   box-shadow: 0 2px 8px rgba(255, 62, 62, 0.15);
 }
+
+/* Check In Active State */
+.checkin-active {
+  background: rgba(76, 175, 80, 0.15) !important;
+  color: #4CAF50 !important;
+  border-color: rgba(76, 175, 80, 0.4) !important;
+}
+.checkin-active:hover {
+  background: rgba(76, 175, 80, 0.25) !important;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3) !important;
+}
