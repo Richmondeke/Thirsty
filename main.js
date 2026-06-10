@@ -1200,6 +1200,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let isHovered = false;
     let fadeInterval = null;
     
+    // Detect mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+    if (!isMobile) {
+      heroVideo.removeAttribute('loop');
+      heroVideo.loop = false;
+    } else {
+      heroVideo.setAttribute('loop', '');
+      heroVideo.loop = true;
+    }
+    
     // Set initial audio properties
     heroVideo.muted = true;
     heroVideo.volume = 0;
@@ -1237,6 +1248,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
+          if (!isMobile && heroVideo.currentTime >= heroVideo.duration - 0.1) {
+            heroVideo.currentTime = 0;
+          }
           heroVideo.play().catch(err => {
             console.log("Video autoplay/scroll-in play error:", err);
           });
@@ -1248,6 +1262,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     videoObserver.observe(heroVideo);
     
+    // Video ended event listener (Web only)
+    heroVideo.addEventListener('ended', () => {
+      if (!isMobile) {
+        if (!isHovered) {
+          // Play once on load ends or mouseleave play ends -> return to start and pause
+          heroVideo.currentTime = 0;
+          heroVideo.pause();
+        } else {
+          // Plays again to the end and stops (pauses at end)
+          heroVideo.pause();
+        }
+      }
+    });
+
     heroVideo.addEventListener('timeupdate', () => {
       if (heroVideo.duration && !isNaN(heroVideo.duration)) {
         const progress = heroVideo.currentTime / heroVideo.duration;
@@ -1273,6 +1301,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Fade in to decent volume level (0.5) over 400ms
       fadeVolume(0.5, 400);
 
+      if (!isMobile) {
+        // Plays again from start to end and stops
+        heroVideo.currentTime = 0;
+      }
       heroVideo.play().catch(err => {
         console.log("Video play error:", err);
       });
@@ -1285,6 +1317,14 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Fade out to 0 volume over 600ms
       fadeVolume(0, 600);
+
+      if (!isMobile) {
+        // When user removes mouse, plays again from start to end and stops
+        heroVideo.currentTime = 0;
+        heroVideo.play().catch(err => {
+          console.log("Video mouseleave play error:", err);
+        });
+      }
     });
   }
 
