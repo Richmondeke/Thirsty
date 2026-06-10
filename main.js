@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentUserTicket = null;
   let initialScrollDone = false;
   let recoveryPromptShown = false;
+  let isEmailTriggering = false;
 
   // DOM elements to toggle based on auth
   const rsvpPromoCard = document.getElementById('rsvp-promo-card');
@@ -434,7 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
           currentUserProfile = profile;
           
           // Auto-trigger welcome email if not already sent (non-blocking)
-          if (profile.email && !profile.socials?.welcome_email_sent) {
+          if (profile.email && !profile.socials?.welcome_email_sent && !isEmailTriggering) {
+            isEmailTriggering = true;
             console.log("Welcome email not sent yet. Triggering auto email flow...");
             setTimeout(async () => {
               try {
@@ -445,14 +447,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     uploadedImage = img;
                     drawPassport();
                     await triggerWelcomeEmail(profile);
+                    isEmailTriggering = false;
+                  };
+                  img.onerror = () => {
+                    isEmailTriggering = false;
                   };
                   img.src = profile.avatar_url;
                 } else {
                   drawPassport();
                   await triggerWelcomeEmail(profile);
+                  isEmailTriggering = false;
                 }
               } catch (err) {
                 console.error("Error in auto welcome email trigger:", err);
+                isEmailTriggering = false;
               }
             }, 1500);
           }
@@ -523,6 +531,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
     await syncSessionAndProfile(session);
+
+    const isLoginPage = window.location.pathname.includes('login.html');
+    if (session && isLoginPage) {
+      console.log("Active session detected on login page. Redirecting to clubhouse...");
+      window.location.replace('index.html#passport-viewer');
+      return;
+    }
 
     if (event === 'SIGNED_IN' && session) {
       // Clean up URL query parameters from Supabase redirect (e.g. code, token)
@@ -804,25 +819,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (modal) modal.close();
         loginForm.reset();
-        
-        // Explicitly sync profile and navigate to clubhouse
-        const { data: { session: freshSession } } = await supabase.auth.getSession();
-        if (freshSession) {
-          await syncSessionAndProfile(freshSession);
-        }
-
-        // Navigate to passport-viewer (clubhouse)
-        setTimeout(() => {
-          if (!document.getElementById('passport-viewer')) {
-            window.location.href = 'index.html#passport-viewer';
-            return;
-          }
-          const passportViewer = document.getElementById('passport-viewer');
-          if (passportViewer) {
-            passportViewer.style.display = 'flex'; // ensure visible
-            passportViewer.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 500);
       } catch (err) {
         const errMsg = err.message ? err.message.toLowerCase() : "";
         if (errMsg.includes("email not confirmed") || errMsg.includes("confirm your email") || errMsg.includes("email confirmation")) {
