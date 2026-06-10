@@ -8,6 +8,12 @@ const server = http.createServer((req, res) => {
   let filePath = '.' + req.url.split('?')[0];
   if (filePath === './') filePath = './index.html';
   
+  if (!path.extname(filePath)) {
+    if (fs.existsSync(filePath + '.html')) {
+      filePath += '.html';
+    }
+  }
+  
   const extname = path.extname(filePath);
   let contentType = 'text/html';
   switch (extname) {
@@ -59,14 +65,14 @@ server.listen(3050, async () => {
       throw new Error(`Expected #passport-viewer to be display: none, got ${styles.computedDisplay}`);
     }
 
-    // Verify redirection to login.html on click
+    // Verify redirection to /login on click
     console.log('Testing "Members Only" button click...');
     await page.click('#nav-members-btn');
     await page.waitForTimeout(500);
     const currentUrl = page.url();
     console.log('Current URL after click:', currentUrl);
-    if (!currentUrl.includes('login.html')) {
-      throw new Error(`Expected redirection to login.html, got ${currentUrl}`);
+    if (!currentUrl.includes('/login')) {
+      throw new Error(`Expected redirection to /login, got ${currentUrl}`);
     }
 
     // --- TEST EVENT.HTML ---

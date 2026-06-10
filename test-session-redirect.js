@@ -25,6 +25,12 @@ const server = http.createServer((req, res) => {
   let filePath = '.' + req.url.split('?')[0];
   if (filePath === './') filePath = './index.html';
   
+  if (!path.extname(filePath)) {
+    if (fs.existsSync(filePath + '.html')) {
+      filePath += '.html';
+    }
+  }
+  
   const extname = path.extname(filePath);
   let contentType = 'text/html';
   switch (extname) {
@@ -144,9 +150,9 @@ server.listen(3052, async () => {
       }
     });
 
-    // 1. Navigate directly to login.html
-    console.log('Navigating to login.html...');
-    await page.goto('http://localhost:3052/login.html');
+    // 1. Navigate directly to /login
+    console.log('Navigating to /login...');
+    await page.goto('http://localhost:3052/login');
 
     // 2. Fill out credentials in the form
     console.log('Filling out credentials form...');

@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('passport-viewer')) {
           logo.href = '#passport-viewer';
         } else {
-          logo.href = 'index.html#passport-viewer';
+          logo.href = '/index.html#passport-viewer';
         }
       }
       
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('passport-viewer')) {
           logo.href = '#home';
         } else {
-          logo.href = 'index.html';
+          logo.href = '/index.html';
         }
       }
       
@@ -519,23 +519,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Listen to auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
-      const isLoginPage = window.location.pathname.includes('login.html');
+      const isLoginPage = window.location.pathname.includes('login');
       if (isLoginPage) {
         console.log("PASSWORD_RECOVERY event received on login page. Custom form will handle it.");
         return;
       }
-      console.log("PASSWORD_RECOVERY event detected on non-login page. Redirecting to login.html...");
-      window.location.replace('login.html' + window.location.search + window.location.hash);
+      console.log("PASSWORD_RECOVERY event detected on non-login page. Redirecting to /login...");
+      window.location.replace('/login' + window.location.search + window.location.hash);
       return;
     }
 
     // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
     await syncSessionAndProfile(session);
 
-    const isLoginPage = window.location.pathname.includes('login.html');
+    const isLoginPage = window.location.pathname.includes('login');
     if (session && isLoginPage) {
       console.log("Active session detected on login page. Redirecting to clubhouse...");
-      window.location.replace('index.html#passport-viewer');
+      window.location.replace('/index.html#passport-viewer');
       return;
     }
 
@@ -563,10 +563,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const isRecovery = urlParams.get('type') === 'recovery' || hashParams.get('type') === 'recovery' || window.location.hash.includes('type=recovery');
 
     if (isRecovery) {
-      const isLoginPage = window.location.pathname.includes('login.html');
+      const isLoginPage = window.location.pathname.includes('login');
       if (!isLoginPage) {
-        console.log("Password recovery query detected in URL. Redirecting to login.html...");
-        window.location.replace('login.html' + window.location.search + window.location.hash);
+        console.log("Password recovery query detected in URL. Redirecting to /login...");
+        window.location.replace('/login' + window.location.search + window.location.hash);
       }
     }
   };
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (passportViewer) {
         passportViewer.scrollIntoView({ behavior: 'smooth' });
       } else {
-        window.location.href = 'index.html#passport-viewer';
+        window.location.href = '/index.html#passport-viewer';
       }
     } else {
       // Clear stale memory state if the dashboard exists but is hidden
@@ -600,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI();
       }
       // Redirect to login page
-      window.location.href = 'login.html';
+      window.location.href = '/login';
     }
   };
 
@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeSuccessModal();
 
       if (!document.getElementById('passport-viewer')) {
-        window.location.href = 'index.html#passport-viewer';
+        window.location.href = '/index.html#passport-viewer';
         return;
       }
 
@@ -3103,7 +3103,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/login.html?type=recovery',
+            redirectTo: window.location.origin + '/login?type=recovery',
           });
 
           if (error) throw error;
@@ -3176,7 +3176,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (msgDesc) msgDesc.textContent = "Your password has been successfully updated. You are now logged in.";
           if (msgBtn) {
             msgBtn.onclick = () => {
-              window.location.href = 'index.html#passport-viewer';
+              window.location.href = '/index.html#passport-viewer';
             };
           }
           showState(messageState);
