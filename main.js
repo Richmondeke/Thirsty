@@ -533,15 +533,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
-    await syncSessionAndProfile(session);
-
     const isLoginPage = window.location.pathname.includes('login');
     if (session && isLoginPage) {
-      console.log("Active session detected on login page. Redirecting to clubhouse...");
+      console.log("Active session detected on login page. Redirecting to clubhouse immediately...");
       window.location.replace('/index.html#passport-viewer');
       return;
     }
+
+    // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
+    await syncSessionAndProfile(session);
 
     if (event === 'SIGNED_IN' && session) {
       // Clean up URL query parameters from Supabase redirect (e.g. code, token)
