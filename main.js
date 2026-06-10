@@ -74,7 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      lock: async (name, acquireTimeout, fn) => fn()
+    }
+  });
 
   // Global Session State
   let currentSession = null;

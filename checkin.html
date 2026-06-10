@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ThirstyClub999 | Guest Verification</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260610.0855">
+  <link rel="stylesheet" href="style.css?v=20260610.0856">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     .checkin-body {
@@ -268,7 +268,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
       const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          lock: async (name, acquireTimeout, fn) => fn()
+        }
+      });
 
       // Get target guest id
       const params = new URLSearchParams(window.location.search);
