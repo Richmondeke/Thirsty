@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Listen to auth changes
-  supabase.auth.onAuthStateChange(async (event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
       const isLoginPage = window.location.pathname.includes('login');
       if (isLoginPage) {
@@ -540,24 +540,27 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
-    await syncSessionAndProfile(session);
+    // Defer async database calls to prevent blocking the lock mechanism
+    setTimeout(async () => {
+      // Await syncSessionAndProfile first, so that the UI is updated and #passport-viewer is rendered visible
+      await syncSessionAndProfile(session);
 
-    if (event === 'SIGNED_IN' && session) {
-      // Clean up URL query parameters from Supabase redirect (e.g. code, token)
-      if (window.location.search || window.location.hash) {
-        const cleanUrl = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, document.title, cleanUrl);
-      }
-      
-      // Force scroll to dashboard
-      setTimeout(() => {
-        const passportViewer = document.getElementById('passport-viewer');
-        if (passportViewer) {
-          passportViewer.scrollIntoView({ behavior: 'smooth' });
+      if (event === 'SIGNED_IN' && session) {
+        // Clean up URL query parameters from Supabase redirect (e.g. code, token)
+        if (window.location.search || window.location.hash) {
+          const cleanUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
         }
-      }, 300);
-    }
+        
+        // Force scroll to dashboard
+        setTimeout(() => {
+          const passportViewer = document.getElementById('passport-viewer');
+          if (passportViewer) {
+            passportViewer.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    }, 0);
   });
 
   // Handle Password Recovery on page load (handles PKCE code exchange or implicit token redirects)
