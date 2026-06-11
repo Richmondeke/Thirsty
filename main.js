@@ -129,7 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (session) {
       // User is Logged In
       document.body.classList.add('logged-in-user');
-      
+
+      // Verification banner handling
+      const verificationBanner = document.getElementById('email-verification-banner');
+      if (verificationBanner) {
+        const isVerified = !!session.user.email_confirmed_at;
+        if (!isVerified) {
+          verificationBanner.style.display = 'flex';
+          checkVerificationCooldown();
+        } else {
+          verificationBanner.style.display = 'none';
+        }
+      }
+
       if (logo) {
         if (document.getElementById('passport-viewer')) {
           logo.href = '#passport-viewer';
@@ -180,11 +192,19 @@ document.addEventListener('DOMContentLoaded', () => {
       );
       
       const adminTabBtn = document.getElementById('admin-tab-btn');
+      const gamesTabBtn = document.getElementById('games-tab-btn');
       if (adminTabBtn) {
         if (isAdmin) {
           adminTabBtn.style.display = 'inline-block';
         } else {
           adminTabBtn.style.display = 'none';
+        }
+      }
+      if (gamesTabBtn) {
+        if (isAdmin) {
+          gamesTabBtn.style.display = 'inline-block';
+        } else {
+          gamesTabBtn.style.display = 'none';
         }
       }
 
@@ -264,6 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // User is Logged Out
       document.body.classList.remove('logged-in-user');
 
+      const verificationBanner = document.getElementById('email-verification-banner');
+      if (verificationBanner) verificationBanner.style.display = 'none';
+
       if (logo) {
         if (document.getElementById('passport-viewer')) {
           logo.href = '#home';
@@ -296,14 +319,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const tabButtons = document.querySelectorAll('.tab-btn');
       const tabContents = document.querySelectorAll('.tab-content');
       tabButtons.forEach(b => {
-        if (b.getAttribute('data-tab') === 'tickets-tab') {
+        if (b.getAttribute('data-tab') === 'dashboard-tab') {
           b.classList.add('active');
         } else {
           b.classList.remove('active');
         }
       });
       tabContents.forEach(c => {
-        if (c.id === 'tickets-tab') {
+        if (c.id === 'dashboard-tab') {
           c.classList.add('active');
         } else {
           c.classList.remove('active');
@@ -859,11 +882,295 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Email Verification Cooldown & Trigger Logic
+  let resendTimerInterval = null;
+
+  function checkVerificationCooldown() {
+    const resendBtn = document.getElementById('resend-verification-btn');
+    if (!resendBtn) return;
+
+    const lockUntil = localStorage.getItem('resend_lock_until');
+    if (lockUntil) {
+      const remainingTime = Math.ceil((parseInt(lockUntil, 10) - Date.now()) / 1000);
+      if (remainingTime > 0) {
+        startResendCountdown(remainingTime);
+      } else {
+        localStorage.removeItem('resend_lock_until');
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Verification Email';
+      }
+    } else {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend Verification Email';
+    }
+  }
+
+  function startResendCountdown(seconds) {
+    const resendBtn = document.getElementById('resend-verification-btn');
+    if (!resendBtn) return;
+
+    resendBtn.disabled = true;
+    resendBtn.textContent = `Resend in ${seconds}s...`;
+
+    if (resendTimerInterval) clearInterval(resendTimerInterval);
+
+    let currentSec = seconds;
+    resendTimerInterval = setInterval(() => {
+      currentSec--;
+      if (currentSec <= 0) {
+        clearInterval(resendTimerInterval);
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Verification Email';
+        localStorage.removeItem('resend_lock_until');
+      } else {
+        resendBtn.textContent = `Resend in ${currentSec}s...`;
+      }
+    }, 1000);
+  }
+
+  // Bind resend verification button
+  const resendBtn = document.getElementById('resend-verification-btn');
+  if (resendBtn) {
+    resendBtn.addEventListener('click', async () => {
+      if (!currentSession || !currentSession.user) return;
+
+      resendBtn.disabled = true;
+      resendBtn.textContent = 'Sending...';
+
+      try {
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: currentSession.user.email,
+          options: {
+            emailRedirectTo: window.location.origin
+          }
+        });
+
+        if (error) throw error;
+
+        alert('Verification email resent successfully! Please check your inbox and spam folder.');
+
+        // Lock button for 60 seconds
+        const lockDuration = 60000; // 60s
+        const lockExpiry = Date.now() + lockDuration;
+        localStorage.setItem('resend_lock_until', lockExpiry.toString());
+        startResendCountdown(60);
+
+      } catch (err) {
+        console.error('Error resending verification:', err);
+        alert('Failed to resend verification email: ' + err.message);
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Verification Email';
+      }
+    });
+  }
+
   // ==========================================
-  // 6. User Dashboard Tab Switching
+  // 6. User Dashboard Tab Switching & Quiz Logic
   // ==========================================
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
+
+  // Quiz State Variables
+  const quizQuestions = [
+    {
+      question: "When was the first Thirstynalia Party?",
+      options: ["December 2020", "December 2021", "December 2022", "December 2023"],
+      correctIndex: 2
+    },
+    {
+      question: "Where is Thirstyclub999: Thirstynalia 2026 taking place?",
+      options: ["Abuja, Nigeria", "Lagos, Nigeria", "London, UK", "Accra, Ghana"],
+      correctIndex: 1
+    },
+    {
+      question: "Which of the following is part of the Sound System Policy for Thirstynalia 2026?",
+      options: ["DJ Palmer & Crayvelli", "DJ Obi & Spinall", "DJ Tunez & Neptune", "DJ Big N & Kaywise"],
+      correctIndex: 0
+    },
+    {
+      question: "What is the official prefix/format of the Thirsty Club Access Pass ID?",
+      options: ["TC999-XXXX", "T999-XXXX", "THIRSTY-XXXX", "CLUB999-XXXX"],
+      correctIndex: 1
+    },
+    {
+      question: "Who is one of the headliners featured in the ThirstyClub999 lineup?",
+      options: ["Wizkid", "Zlatan Ibile", "Davido", "Burna Boy"],
+      correctIndex: 1
+    }
+  ];
+
+  let currentQuestionIndex = 0;
+  let quizScore = 0;
+  let quizTimerInterval = null;
+  let quizSecondsElapsed = 0;
+  let quizActive = false;
+
+  const loadLeaderboard = async () => {
+    const listEl = document.getElementById('games-leaderboard-list');
+    if (!listEl) return;
+    
+    try {
+      listEl.innerHTML = '<li style="text-align: center; color: var(--text-dim); padding: 1.5rem;">Updating rankings...</li>';
+      
+      const { data, error } = await supabase
+        .from('quiz_scores')
+        .select('*')
+        .order('score', { ascending: false })
+        .order('time_taken', { ascending: true })
+        .limit(10);
+        
+      if (error) throw error;
+      
+      if (!data || data.length === 0) {
+        listEl.innerHTML = '<li style="text-align: center; color: var(--text-dim); padding: 2rem;">No scores recorded yet. Be the first to play!</li>';
+        return;
+      }
+      
+      listEl.innerHTML = '';
+      
+      data.forEach((row, idx) => {
+        const isTop = idx < 2;
+        const li = document.createElement('li');
+        li.className = `leaderboard-item ${isTop ? 'top-rank' : ''}`;
+        
+        if (currentSession && row.user_id === currentSession.user.id) {
+          li.id = 'user-leaderboard-row';
+        }
+        
+        li.innerHTML = `
+          <span class="rank">#${idx + 1}</span>
+          <span class="name">${escapeHtml(row.username)}</span>
+          <span class="points">${row.score}/${row.total_questions} (${row.time_taken}s)</span>
+        `;
+        listEl.appendChild(li);
+      });
+      
+    } catch (err) {
+      console.error("Error loading leaderboard:", err);
+      listEl.innerHTML = `<li style="text-align: center; color: var(--accent-color); padding: 1.5rem;">Failed to load leaderboard: ${escapeHtml(err.message)}</li>`;
+    }
+  };
+
+  const startQuiz = () => {
+    currentQuestionIndex = 0;
+    quizScore = 0;
+    quizSecondsElapsed = 0;
+    quizActive = true;
+    
+    document.getElementById('quiz-intro').style.display = 'none';
+    document.getElementById('quiz-results-state').style.display = 'none';
+    document.getElementById('quiz-play-state').style.display = 'block';
+    
+    loadQuizQuestion();
+    
+    if (quizTimerInterval) clearInterval(quizTimerInterval);
+    document.getElementById('quiz-timer-display').textContent = `Time: 0s`;
+    quizTimerInterval = setInterval(() => {
+      quizSecondsElapsed++;
+      document.getElementById('quiz-timer-display').textContent = `Time: ${quizSecondsElapsed}s`;
+    }, 1000);
+  };
+
+  const loadQuizQuestion = () => {
+    const q = quizQuestions[currentQuestionIndex];
+    document.getElementById('quiz-question-counter').textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+    document.getElementById('quiz-question-text').textContent = q.question;
+    
+    const progressPercent = ((currentQuestionIndex) / quizQuestions.length) * 100;
+    document.getElementById('quiz-progress-bar').style.width = `${progressPercent || 1}%`;
+    
+    const container = document.getElementById('quiz-options-container');
+    container.innerHTML = '';
+    
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => handleOptionClick(idx));
+      container.appendChild(btn);
+    });
+  };
+
+  const handleOptionClick = async (selectedIndex) => {
+    const q = quizQuestions[currentQuestionIndex];
+    const container = document.getElementById('quiz-options-container');
+    const optionBtns = container.querySelectorAll('.quiz-option-btn');
+    
+    optionBtns.forEach(btn => btn.disabled = true);
+    
+    const correctIndex = q.correctIndex;
+    
+    if (selectedIndex === correctIndex) {
+      quizScore++;
+      optionBtns[selectedIndex].classList.add('correct');
+    } else {
+      optionBtns[selectedIndex].classList.add('incorrect');
+      optionBtns[correctIndex].classList.add('correct');
+    }
+    
+    setTimeout(() => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizQuestions.length) {
+        loadQuizQuestion();
+      } else {
+        finishQuiz();
+      }
+    }, 1200);
+  };
+
+  const finishQuiz = async () => {
+    quizActive = false;
+    if (quizTimerInterval) clearInterval(quizTimerInterval);
+    
+    document.getElementById('quiz-play-state').style.display = 'none';
+    document.getElementById('quiz-results-state').style.display = 'block';
+    
+    document.getElementById('results-score-text').textContent = `Score: ${quizScore}/${quizQuestions.length}`;
+    document.getElementById('results-time-text').textContent = `Completed in ${quizSecondsElapsed} seconds.`;
+    
+    const feedbackMsg = document.getElementById('results-feedback-msg');
+    
+    try {
+      feedbackMsg.textContent = "Submitting score to Leaderboard...";
+      
+      const session = currentSession;
+      if (!session) throw new Error("No active session");
+      
+      const userId = session.user.id;
+      const username = currentUserProfile?.username || session.user.email.split('@')[0];
+      
+      const { error } = await supabase
+        .from('quiz_scores')
+        .insert({
+          user_id: userId,
+          username: username,
+          score: quizScore,
+          total_questions: quizQuestions.length,
+          time_taken: quizSecondsElapsed
+        });
+        
+      if (error) throw error;
+      
+      feedbackMsg.textContent = "Score submitted successfully! Loading updated leaderboard...";
+      await loadLeaderboard();
+      
+    } catch (err) {
+      console.error("Error submitting score:", err);
+      feedbackMsg.textContent = `Score recorded locally: ${quizScore}/${quizQuestions.length}. (Error syncing to server: ${err.message})`;
+    }
+  };
+
+  // Wire quiz controls
+  const startQuizBtn = document.getElementById('start-quiz-btn');
+  if (startQuizBtn) {
+    startQuizBtn.addEventListener('click', startQuiz);
+  }
+  
+  const restartQuizBtn = document.getElementById('restart-quiz-btn');
+  if (restartQuizBtn) {
+    restartQuizBtn.addEventListener('click', startQuiz);
+  }
 
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -875,8 +1182,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       document.getElementById(targetTab).classList.add('active');
 
+      const dashboardCard = document.querySelector('.dashboard-card');
       if (targetTab === 'admin-tab') {
+        if (dashboardCard) dashboardCard.classList.add('admin-view-active');
         loadAdminDashboard();
+      } else {
+        if (dashboardCard) dashboardCard.classList.remove('admin-view-active');
+      }
+
+      if (targetTab === 'games-tab') {
+        loadLeaderboard();
+        document.getElementById('quiz-intro').style.display = 'block';
+        document.getElementById('quiz-play-state').style.display = 'none';
+        document.getElementById('quiz-results-state').style.display = 'none';
+        quizActive = false;
+        if (quizTimerInterval) clearInterval(quizTimerInterval);
       }
     });
   });
@@ -1349,7 +1669,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const logoImage = new Image();
-  logoImage.src = 'images/ThirstyLOGO 2026.png';
+  logoImage.src = 'images/ThirstyLOGO_2026.png';
   logoImage.onload = () => {
     drawPassport();
   };
@@ -2360,71 +2680,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
       adminFetchedUsers = users; // Store user profiles globally in the scope for reference
 
-      let maleCount = 0;
-      let femaleCount = 0;
-      let otherCount = 0;
+      // Set up Realtime Subscription if not already set
+      if (!window.adminRealtimeSubscription) {
+        window.adminRealtimeSubscription = supabase
+          .channel('public:profiles')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, payload => {
+            const tbody = document.getElementById('admin-users-list');
+            if (!tbody) return; // Not on admin dashboard
 
-      const tbody = document.getElementById('admin-users-list');
-      if (tbody) {
-        tbody.innerHTML = '';
-        users.forEach(user => {
-          const gender = (user.socials?.gender || '').trim().toUpperCase();
-          if (gender === 'M' || gender === 'MALE') {
-            maleCount++;
-          } else if (gender === 'F' || gender === 'FEMALE') {
-            femaleCount++;
-          } else {
-            otherCount++;
-          }
-
-          const date = new Date(user.created_at).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
-
-          const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
-          const stamps = user.socials?.stamps || [];
-          const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
-          
-          const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
-          const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
-
-          const accessLvl = user.socials?.access_level || 'REGULAR';
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code></td>
-            <td>${escapeHtml(user.username || '')}</td>
-            <td>${escapeHtml(user.email || '')}</td>
-            <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
-            <td>
-              <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
-                <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
-                <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
-              </select>
-            </td>
-            <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
-            <td>
-              <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}" style="margin-right: 4px;">${checkInBtnText}</button>
-              <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
+            if (payload.eventType === 'INSERT') {
+              adminFetchedUsers.unshift(payload.new);
+            } else if (payload.eventType === 'UPDATE') {
+              const idx = adminFetchedUsers.findIndex(u => u.id === payload.new.id);
+              if (idx !== -1) {
+                adminFetchedUsers[idx] = payload.new;
+              } else {
+                adminFetchedUsers.push(payload.new);
+              }
+            } else if (payload.eventType === 'DELETE') {
+              adminFetchedUsers = adminFetchedUsers.filter(u => u.id !== payload.old.id);
+            }
+            // Re-render the admin dashboard table without refetching
+            renderAdminTable(adminFetchedUsers);
+          })
+          .subscribe();
       }
 
-      // Update stats UI
-      const maleEl = document.getElementById('admin-stat-male');
-      const femaleEl = document.getElementById('admin-stat-female');
-      const otherEl = document.getElementById('admin-stat-other');
-
-      if (totalEl) totalEl.textContent = users.length;
-      if (maleEl) maleEl.textContent = maleCount;
-      if (femaleEl) femaleEl.textContent = femaleCount;
-      if (otherEl) otherEl.textContent = otherCount;
-
+      renderAdminTable(users);
+      
       // Populate welcome email settings from DB
       try {
         const { data: adminProfile } = await supabase
@@ -2448,6 +2731,87 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("Error loading admin dashboard: " + err.message);
     }
   };
+
+  const renderAdminTable = (users) => {
+    let maleCount = 0;
+    let femaleCount = 0;
+    let otherCount = 0;
+
+    const tbody = document.getElementById('admin-users-list');
+    const totalEl = document.getElementById('admin-stat-total');
+    const searchInput = document.getElementById('admin-table-search');
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    if (tbody) {
+      tbody.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+
+      users.forEach(user => {
+          const gender = (user.socials?.gender || '').trim().toUpperCase();
+          if (gender === 'M' || gender === 'MALE') {
+            maleCount++;
+          } else if (gender === 'F' || gender === 'FEMALE') {
+            femaleCount++;
+          } else {
+            otherCount++;
+          }
+
+          const date = new Date(user.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+      const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+      const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
+      const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+      
+      const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
+      const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
+
+      const accessLvl = user.socials?.access_level || 'REGULAR';
+      const tr = document.createElement('tr');
+
+      const searchableText = `${user.thirstyclub_id || ''} ${user.username || ''} ${user.email || ''}`.toLowerCase();
+      if (query && !searchableText.includes(query)) {
+        tr.style.display = 'none';
+      }
+
+      tr.innerHTML = `
+        <td><code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code></td>
+        <td>${escapeHtml(user.username || '')}</td>
+        <td>${escapeHtml(user.email || '')}</td>
+        <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
+        <td>
+          <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
+            <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
+            <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
+          </select>
+        </td>
+        <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
+        <td>
+          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}" style="margin-right: 4px;">${checkInBtnText}</button>
+          <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
+        </td>
+      `;
+      fragment.appendChild(tr);
+    });
+    
+    tbody.appendChild(fragment);
+  }
+
+  // Update stats UI
+  const maleEl = document.getElementById('admin-stat-male');
+  const femaleEl = document.getElementById('admin-stat-female');
+  const otherEl = document.getElementById('admin-stat-other');
+
+  if (totalEl) totalEl.textContent = users.length;
+  if (maleEl) maleEl.textContent = maleCount;
+  if (femaleEl) femaleEl.textContent = femaleCount;
+  if (otherEl) otherEl.textContent = otherCount;
+};
 
   // Helper to draw admin passport
   const drawAdminPassportOnCanvas = (canvasId, profile, userImage) => {
@@ -2772,7 +3136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const EVENT_NAME = "THIRSTYNALIA";
       const EVENT_DATE = "JUN 14 2026";
 
-      const stamps = user.socials?.stamps || [];
+      const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
       const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
 
       if (!isCheckedIn) {
@@ -2824,7 +3188,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = true;
 
       const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
-      const stamps = user.socials?.stamps || [];
+      const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
       
       const updatedSocials = {
         ...user.socials,

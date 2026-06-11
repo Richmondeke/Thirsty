@@ -75,7 +75,7 @@
 
       <!-- Floating Logo Badge in Bottom Right -->
       <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO 2026.png" alt="Thirsty Logo 2026">
+        <img src="images/ThirstyLOGO_2026.png" alt="Thirsty Logo 2026">
       </div>
 
       <div class="scroll-indicator">
@@ -108,56 +108,158 @@
 
           <!-- Tabs Navigation -->
           <div class="dash-tabs">
-            <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
+            <button class="tab-btn active" data-tab="dashboard-tab">Dashboard</button>
+            <button class="tab-btn" data-tab="events-tab">Events</button>
+            <button class="tab-btn" id="games-tab-btn" data-tab="games-tab" style="display: none;">Games</button>
             <button class="tab-btn" data-tab="profile-tab">Profile</button>
             <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
           </div>
 
-          <!-- Tab 1: Tickets -->
-          <div class="tab-content active" id="tickets-tab">
-            <a href="event.html" class="events-card-wrapper" style="display: flex; flex-direction: column; gap: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.3s ease;">
-              <div class="vip-ticket" style="margin-bottom: 0;">
-                <div class="ticket-stub-left">
-                  <div class="ticket-logo">T999</div>
-                  <div class="ticket-meta">
-                    <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                    <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                    <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                    <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
-                    <div class="meta-row"><span class="meta-label">ACCESS:</span> <span id="ticket-access-level" style="color: var(--accent-color); font-weight: bold;">REGULAR ACCESS</span></div>
-                  </div>
+          <!-- Tab 1: Dashboard -->
+          <div class="tab-content active" id="dashboard-tab">
+            <!-- Verification Banner -->
+            <div id="email-verification-banner" class="verification-banner" style="display: none;">
+              <div class="verification-content">
+                <span class="warning-icon">⚠️</span>
+                <div>
+                  <p class="verification-text">Your email is not verified.</p>
+                  <p class="verification-sub">Please verify your email to secure your ticket and access all features. Check your spam if you don't see it.</p>
                 </div>
-                <div class="ticket-stub-right">
-                  <!-- Mock QR Code SVG -->
-                  <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100" height="100" fill="transparent"/>
-                    <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                    <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                    <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-                  </svg>
-                  <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
+              </div>
+              <button id="resend-verification-btn" class="resend-btn" type="button">Resend Verification Email</button>
+            </div>
+
+            <div class="dashboard-ticket-info">
+              <span class="dashboard-ticket-label">YOUR THIRSTY PASS ID</span>
+              <h2 class="glow-id" id="ticket-user-id">T999-XXXX</h2>
+            </div>
+
+            <div class="dashboard-grid">
+              <!-- Left Column: Passport -->
+              <div class="dashboard-passport-col">
+                <div class="canvas-wrapper vertical-passport-wrapper" style="margin-bottom: 1.5rem;">
+                  <div class="passport-glow-border"></div>
+                  <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
+                </div>
+                <div class="hero-passport-actions">
+                  <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
                 </div>
               </div>
 
-              <!-- Venue Section Moved into Events Card -->
-              <div class="venue-container" style="padding: 0; min-height: auto;">
-                <div class="venue-card" style="width: 100%; border: 1px solid rgba(255,107,129,0.2);">
-                  <div class="venue-header">
-                    <h3>VENUE</h3>
-                    <h2 class="venue-title" style="font-size: 2rem;">TBD</h2>
-                    <p class="venue-address">Lekki, Lagos, Nigeria<br><span style="font-size: 0.9rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.05em;">LOCATION REVEALED TO GUESTLIST HOLDERS</span></p>
+              <!-- Right Column: QR Code -->
+              <div class="dashboard-qr-col">
+                <div class="qr-card">
+                  <div class="qr-header">
+                    <h3>ENTRY PASS QR</h3>
+                    <p>Scan at the gate to check-in</p>
                   </div>
-                  <div class="sound-policy">
-                    <div class="label">SOUND SYSTEM POLICY:</div>
-                    <div class="sound-names">
-                      <span>CRAYVELLI</span>
-                      <span class="amp">&amp;</span>
-                      <span>DJ PALMER</span>
+                  <div class="qr-code-wrapper">
+                    <div id="hero-qr-code" class="qr-code-img"></div>
+                  </div>
+                  <p class="qr-tip">Admin will scan this to verify your ticket</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Events -->
+          <div class="tab-content" id="events-tab">
+            <div class="events-tab-container">
+              <h4 class="tab-title">MY EVENTS</h4>
+              <div class="event-tab-card">
+                <div class="event-tab-details">
+                  <div class="event-status-badge">CONFIRMED RSVP</div>
+                  <h3>THIRSTYCLUB999</h3>
+                  <p>Immersive concert experience and guest party.</p>
+                  
+                  <div class="event-tab-meta-grid">
+                    <div class="meta-item">
+                      <span class="meta-item-label">DATE</span>
+                      <span class="meta-item-val">Sunday, June 14, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-item-label">TIME</span>
+                      <span class="meta-item-val">Doors open at 9:00 PM</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-item-label">VENUE</span>
+                      <span class="meta-item-val">Lekki, Lagos, Nigeria</span>
                     </div>
                   </div>
                 </div>
+                <div class="event-tab-action">
+                  <a href="event.html" class="buy-button">VIEW EVENT PAGE</a>
+                </div>
               </div>
-            </a>
+            </div>
+          </div>
+
+          <!-- Tab 3: Games -->
+          <div class="tab-content" id="games-tab">
+            <div class="games-tab-container">
+              <h4 class="tab-title">CLUB CHALLENGES</h4>
+              
+              <div class="games-split-layout">
+                <!-- Left: Quiz -->
+                <div class="quiz-section-card">
+                  <div id="quiz-intro">
+                    <h3 class="quiz-title">ThirstyClub999 History Quiz</h3>
+                    <p class="quiz-desc">Do you know the history of ThirstyClub999? Complete this 5-question trivia challenge. Your speed and accuracy determine your rank on the Leaderboard.</p>
+                    
+                    <div class="quiz-rules">
+                      <div class="rule-item"><span>⚡</span> 5 Questions about past editions, sound systems, and lore.</div>
+                      <div class="rule-item"><span>⏱️</span> Time taken is recorded to break score ties.</div>
+                      <div class="rule-item"><span>🏆</span> Only Admin accounts can participate and be ranked.</div>
+                    </div>
+                    
+                    <button class="buy-button" id="start-quiz-btn" style="margin-top: 1.5rem;">START CHALLENGE</button>
+                  </div>
+                  
+                  <!-- Quiz Play State -->
+                  <div id="quiz-play-state" style="display: none;">
+                    <div class="quiz-play-header">
+                      <span class="quiz-progress" id="quiz-question-counter">Question 1 of 5</span>
+                      <span class="quiz-timer" id="quiz-timer-display">Time: 0s</span>
+                    </div>
+                    <div class="quiz-progress-track">
+                      <div class="quiz-progress-fill" id="quiz-progress-bar" style="width: 20%;"></div>
+                    </div>
+                    
+                    <h3 class="quiz-question" id="quiz-question-text">When was the first Thirstynalia Party?</h3>
+                    
+                    <div class="quiz-options-list" id="quiz-options-container">
+                      <!-- Dynamic options buttons -->
+                    </div>
+                  </div>
+                  
+                  <!-- Quiz Results State -->
+                  <div id="quiz-results-state" style="display: none; text-align: center;">
+                    <div class="results-badge">🎉 CHALLENGE COMPLETE</div>
+                    <h3 style="font-family: 'Kyrilla', sans-serif; font-size: 2.2rem; margin: 1.5rem 0 0.5rem 0; color: var(--accent-color);" id="results-score-text">Score: 4/5</h3>
+                    <p style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem;" id="results-time-text">Completed in 14 seconds.</p>
+                    
+                    <div class="results-feedback-box" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 6px; margin-bottom: 2rem;">
+                      <p id="results-feedback-msg" style="margin: 0; line-height: 1.5;">Outstanding! Your score has been submitted to the Leaderboard.</p>
+                    </div>
+                    
+                    <button class="buy-button outline-btn" id="restart-quiz-btn">PLAY AGAIN</button>
+                  </div>
+                </div>
+                
+                <!-- Right: Leaderboard -->
+                <div class="leaderboard-section-card">
+                  <h3 class="quiz-title">Club Leaderboard</h3>
+                  <p class="quiz-desc" style="margin-bottom: 1.5rem;">Rankings of the top-performing club members.</p>
+                  
+                  <div class="leaderboard-container">
+                    <ul class="leaderboard-list" id="games-leaderboard-list">
+                      <!-- Dynamic leaderboard rows go here -->
+                      <li style="text-align: center; color: var(--text-dim); padding: 2rem;">Loading leaderboard...</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
 
@@ -218,6 +320,7 @@
                   <button id="admin-sync-mailchimp-btn" class="admin-refresh-btn" style="background: rgba(255, 62, 62, 0.08); border-color: rgba(255, 62, 62, 0.3); color: var(--accent-color);">🐒 Sync Mailchimp</button>
                   <button id="admin-refresh-btn" class="admin-refresh-btn">↻ Refresh</button>
                 </div>
+              </div>
 
               <!-- Summary Stats -->
               <div class="admin-stats-grid">
@@ -338,32 +441,7 @@
             </div>
           </div>
         </div>
-        <div class="hero-logged-in-grid">
-          <div class="hero-passport-column">
-            <div class="canvas-wrapper vertical-passport-wrapper hero-canvas-wrapper">
-              <div class="passport-glow-border"></div>
-              <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
-            </div>
-            <div class="hero-passport-actions">
-              <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
-            </div>
-          </div>
-          <div class="hero-qr-column">
-            <div class="qr-card">
-              <div class="qr-header">
-                <h3>ENTRY PASS QR</h3>
-                <p>Scan at the gate to check-in</p>
-              </div>
-              <div class="qr-code-wrapper">
-                <div id="hero-qr-code" class="qr-code-img"></div>
-              </div>
-              <p class="qr-tip">Admin will scan this to verify your ticket</p>
-            </div>
-            <div class="hero-logged-in-cta">
-              <a href="#tickets" class="cta-button" id="hero-logged-in-cta-btn">VIEW RSVP EVENTS</a>
-            </div>
-          </div>
-        </div>
+        <!-- Integrated passport and QR inside the dashboard tab above -->
       </div>
     </section>
 
