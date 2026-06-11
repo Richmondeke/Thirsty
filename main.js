@@ -1252,29 +1252,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hub) hub.style.display = 'none';
     if (banner) banner.style.display = 'none';
 
-    // Show tabs nav and back button
-    if (dashTabs) dashTabs.style.display = 'flex';
+    // Hide the tabs bar — each card is its own self-contained view
+    // User navigates back to hub via the back button, not between tabs directly
+    if (dashTabs) dashTabs.style.display = 'none';
+
+    // Show back button
     if (backWrapper) backWrapper.style.display = 'block';
 
-    // Set correct tab button active
+    // Activate ONLY the target tab content, hide all others
+    tabButtons.forEach(b => b.classList.remove('active'));
+    tabContents.forEach(c => c.classList.remove('active'));
+
+    const targetTab = document.getElementById(tabId);
+    if (targetTab) targetTab.classList.add('active');
+
+    // Mark the correct tab button as active (for any internal logic that depends on it)
     tabButtons.forEach(b => {
-      if (b.getAttribute('data-tab') === tabId) {
-        b.classList.add('active');
-      } else {
-        b.classList.remove('active');
-      }
+      if (b.getAttribute('data-tab') === tabId) b.classList.add('active');
     });
 
-    // Set correct content active
-    tabContents.forEach(c => {
-      if (c.id === tabId) {
-        c.classList.add('active');
-      } else {
-        c.classList.remove('active');
-      }
-    });
-
-    // Handle special loads (Admin/Games)
+    // Handle special loads
     const dashboardCard = document.querySelector('.dashboard-card');
     if (tabId === 'admin-tab') {
       if (dashboardCard) dashboardCard.classList.add('admin-view-active');

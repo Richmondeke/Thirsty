@@ -1230,9 +1230,65 @@ dialog::backdrop {
   text-shadow: 0 0 8px var(--accent-glow);
 }
 
-/* Header logout overrides */
-header .logout-btn {
-  margin-left: 1.5rem;
+/* Nav Logout Button — compact icon+label, shown only when logged in */
+.nav-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-dim);
+  padding: 0.45rem 0.85rem;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  margin-left: 0.5rem;
+}
+.nav-logout-btn:hover {
+  border-color: rgba(255, 62, 62, 0.5);
+  color: var(--accent-color);
+}
+.nav-logout-btn svg {
+  flex-shrink: 0;
+}
+
+/* Profile page logout section */
+.profile-logout-section {
+  margin-top: 2.5rem;
+}
+.profile-logout-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 2rem;
+}
+.profile-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: rgba(255, 62, 62, 0.04);
+  border: 1px solid rgba(255, 62, 62, 0.15);
+  color: var(--text-dim);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  justify-content: center;
+}
+.profile-logout-btn:hover {
+  background: rgba(255, 62, 62, 0.1);
+  border-color: rgba(255, 62, 62, 0.4);
+  color: var(--accent-color);
 }
 
 /* --- Email Verification Banner --- */
@@ -2269,10 +2325,10 @@ header .logout-btn {
   header nav a[href="#venue"] {
     display: none;
   }
-  header .logout-btn {
-    margin-left: 0.8rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+  header .nav-logout-btn {
+    margin-left: 0.5rem;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.7rem;
   }
   .hero-content h1 {
     font-size: 12vw;
@@ -3434,12 +3490,19 @@ body.no-scroll {
     margin: 0 !important;
   }
 
-  header .logout-btn {
-    font-size: 1.25rem !important;
+  header .nav-logout-btn {
+    font-size: 1rem !important;
     width: 80%;
     max-width: 280px;
-    padding: 0.8rem 1.5rem;
+    padding: 0.9rem 1.5rem;
     margin: 0 !important;
+    justify-content: center;
+    border-color: rgba(255, 62, 62, 0.25);
+    color: var(--text-dim);
+    gap: 0.6rem;
+  }
+  header .nav-logout-btn .nav-logout-label {
+    display: inline;
   }
 }
 
