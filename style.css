@@ -4870,3 +4870,356 @@ img, video, canvas {
   color: var(--accent-color);
   letter-spacing: 0.1em;
 }
+
+/* ==========================================================================
+   Welcome Banner, Directory Hub Cards, and Back-to-Hub Navigation
+   ========================================================================== */
+
+/* 1. Admin Welcome Banner */
+.admin-welcome-banner {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 2.5rem auto;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 62, 62, 0.15);
+  box-shadow: 0 10px 40px rgba(255, 62, 62, 0.08);
+  min-height: 200px;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.banner-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(10, 10, 10, 0.95) 45%, rgba(10, 10, 10, 0.45));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 2.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  box-sizing: border-box;
+}
+
+.banner-text-side {
+  text-align: left;
+  max-width: 65%;
+}
+
+.banner-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--accent-color);
+  border: 1.2px solid var(--accent-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  background: rgba(255, 62, 62, 0.05);
+}
+
+.banner-title {
+  font-family: 'Kyrilla', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 950;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 62, 62, 0.35);
+}
+
+.banner-desc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.banner-action-side {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.banner-cta-btn {
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2rem;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(255, 62, 62, 0.3);
+  white-space: nowrap;
+}
+
+.banner-cta-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+}
+
+.banner-cta-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .admin-welcome-banner {
+    min-height: auto;
+    margin-bottom: 2rem;
+  }
+  .banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .banner-text-side {
+    max-width: 100%;
+  }
+  .banner-title {
+    font-size: 1.4rem;
+  }
+  .banner-action-side {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .banner-cta-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+/* 2. Back to Hub Button */
+.back-to-hub-wrapper {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.back-to-hub-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.65rem 1.4rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+}
+
+.back-to-hub-btn .back-arrow {
+  font-size: 0.9rem;
+  transition: transform 0.25s ease;
+}
+
+.back-to-hub-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(255, 62, 62, 0.05);
+  box-shadow: 0 0 10px rgba(255, 62, 62, 0.1);
+}
+
+.back-to-hub-btn:hover .back-arrow {
+  transform: translateX(-3px);
+}
+
+/* 3. Clubhouse Directory Hub */
+.clubhouse-hub {
+  margin-top: 1rem;
+}
+
+.hub-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 1.8rem;
+  text-transform: uppercase;
+  text-align: left;
+  font-family: 'Kyrilla', sans-serif;
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.hub-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(15, 15, 15, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 2.2rem 2rem;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: left;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: rgba(50, 50, 93, 0.1) 0px 15px 30px, rgba(0, 0, 0, 0.1) 0px 5px 15px;
+}
+
+.hub-card:hover {
+  transform: translateY(-4px);
+}
+
+.hub-card-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hub-card-title {
+  font-family: 'Kyrilla', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.6rem 0;
+  text-transform: uppercase;
+}
+
+.hub-card-desc {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.hub-card-icon {
+  position: absolute;
+  right: -15px;
+  bottom: -15px;
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+  opacity: 0.08;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hub-card-icon svg {
+  width: 85px;
+  height: 85px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* Card Theming: Red Theme (Passports) */
+.hub-card.card-red {
+  border-color: rgba(255, 62, 62, 0.12);
+}
+.hub-card.card-red .hub-card-title,
+.hub-card.card-red .hub-card-icon {
+  color: var(--accent-color);
+}
+.hub-card.card-red:hover {
+  border-color: var(--accent-color);
+  background: rgba(255, 62, 62, 0.04);
+  box-shadow: rgba(255, 62, 62, 0.25) 0px 20px 40px -15px, rgba(0, 0, 0, 0.2) 0px 10px 20px;
+}
+.hub-card.card-red:hover .hub-card-icon {
+  opacity: 0.16;
+  transform: scale(1.1) rotate(-8deg);
+}
+
+/* Card Theming: White Theme (Events) */
+.hub-card.card-white {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.hub-card.card-white .hub-card-title,
+.hub-card.card-white .hub-card-icon {
+  color: #ffffff;
+}
+.hub-card.card-white:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: rgba(255, 255, 255, 0.18) 0px 20px 40px -15px, rgba(0, 0, 0, 0.2) 0px 10px 20px;
+}
+.hub-card.card-white:hover .hub-card-icon {
+  opacity: 0.16;
+  transform: scale(1.1) rotate(-8deg);
+}
+
+/* Card Theming: Blue Theme (Profile) */
+.hub-card.card-blue {
+  border-color: rgba(62, 126, 255, 0.12);
+}
+.hub-card.card-blue .hub-card-title,
+.hub-card.card-blue .hub-card-icon {
+  color: #3e7eff;
+}
+.hub-card.card-blue:hover {
+  border-color: #3e7eff;
+  background: rgba(62, 126, 255, 0.04);
+  box-shadow: rgba(62, 126, 255, 0.22) 0px 20px 40px -15px, rgba(0, 0, 0, 0.2) 0px 10px 20px;
+}
+.hub-card.card-blue:hover .hub-card-icon {
+  opacity: 0.16;
+  transform: scale(1.1) rotate(-8deg);
+}
+
+/* Card Theming: Dark Theme (Admin Only) */
+.hub-card.card-dark {
+  border-color: rgba(255, 62, 62, 0.18);
+  background: rgba(8, 8, 8, 0.85);
+}
+.hub-card.card-dark .hub-card-title,
+.hub-card.card-dark .hub-card-icon {
+  color: var(--accent-color);
+}
+.hub-card.card-dark:hover {
+  border-color: var(--accent-color);
+  background: rgba(18, 8, 8, 0.95);
+  box-shadow: rgba(255, 62, 62, 0.3) 0px 20px 40px -10px, rgba(0, 0, 0, 0.35) 0px 10px 20px;
+}
+.hub-card.card-dark:hover .hub-card-icon {
+  opacity: 0.2;
+  transform: scale(1.1) rotate(-8deg);
+}

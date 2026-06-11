@@ -200,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
           adminTabBtn.style.display = 'none';
         }
       }
+
       if (gamesTabBtn) {
         if (isAdmin) {
           gamesTabBtn.style.display = 'inline-block';
@@ -207,6 +208,45 @@ document.addEventListener('DOMContentLoaded', () => {
           gamesTabBtn.style.display = 'none';
         }
       }
+
+      // Welcome Banner gating
+      const adminWelcomeBanner = document.getElementById('admin-welcome-banner');
+      if (adminWelcomeBanner) {
+        if (isAdmin) {
+          adminWelcomeBanner.style.display = 'flex';
+          const bannerVideo = adminWelcomeBanner.querySelector('video');
+          if (bannerVideo) {
+            bannerVideo.play().catch(e => console.log('Banner video play error:', e));
+          }
+        } else {
+          adminWelcomeBanner.style.display = 'none';
+        }
+      }
+
+      // Hub cards gating & initialization
+      const clubhouseHub = document.getElementById('clubhouse-hub');
+      const hubCardAdmin = document.getElementById('hub-card-admin');
+      const backToHubWrapper = document.getElementById('back-to-hub-wrapper');
+      const dashTabs = document.querySelector('.dash-tabs');
+
+      if (clubhouseHub) {
+        clubhouseHub.style.display = 'block';
+      }
+      if (hubCardAdmin) {
+        if (isAdmin) {
+          hubCardAdmin.style.display = 'flex';
+        } else {
+          hubCardAdmin.style.display = 'none';
+        }
+      }
+      if (backToHubWrapper) backToHubWrapper.style.display = 'none';
+      if (dashTabs) dashTabs.style.display = 'none';
+
+      // Hide all tabs by default on initial entry
+      const tabContentsList = document.querySelectorAll('.tab-content');
+      tabContentsList.forEach(c => c.classList.remove('active'));
+      const tabButtonsList = document.querySelectorAll('.tab-btn');
+      tabButtonsList.forEach(b => b.classList.remove('active'));
 
       const accessLvl = currentUserTicket?.status || profile?.socials?.access_level || 'REGULAR';
       
@@ -1200,6 +1240,134 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Function to navigate to a tab from the Hub
+  const navigateToTabFromHub = (tabId) => {
+    const hub = document.getElementById('clubhouse-hub');
+    const banner = document.getElementById('admin-welcome-banner');
+    const backWrapper = document.getElementById('back-to-hub-wrapper');
+    const dashTabs = document.querySelector('.dash-tabs');
+
+    // Hide hub and banner
+    if (hub) hub.style.display = 'none';
+    if (banner) banner.style.display = 'none';
+
+    // Show tabs nav and back button
+    if (dashTabs) dashTabs.style.display = 'flex';
+    if (backWrapper) backWrapper.style.display = 'block';
+
+    // Set correct tab button active
+    tabButtons.forEach(b => {
+      if (b.getAttribute('data-tab') === tabId) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+
+    // Set correct content active
+    tabContents.forEach(c => {
+      if (c.id === tabId) {
+        c.classList.add('active');
+      } else {
+        c.classList.remove('active');
+      }
+    });
+
+    // Handle special loads (Admin/Games)
+    const dashboardCard = document.querySelector('.dashboard-card');
+    if (tabId === 'admin-tab') {
+      if (dashboardCard) dashboardCard.classList.add('admin-view-active');
+      loadAdminDashboard();
+    } else {
+      if (dashboardCard) dashboardCard.classList.remove('admin-view-active');
+    }
+
+    if (tabId === 'games-tab') {
+      loadLeaderboard();
+      document.getElementById('quiz-intro').style.display = 'block';
+      document.getElementById('quiz-play-state').style.display = 'none';
+      document.getElementById('quiz-results-state').style.display = 'none';
+      quizActive = false;
+      if (quizTimerInterval) clearInterval(quizTimerInterval);
+    }
+  };
+
+  // Wire Hub Card clicks
+  const cardPassports = document.getElementById('hub-card-passports');
+  if (cardPassports) {
+    cardPassports.addEventListener('click', () => navigateToTabFromHub('dashboard-tab'));
+  }
+  const cardEvents = document.getElementById('hub-card-events');
+  if (cardEvents) {
+    cardEvents.addEventListener('click', () => navigateToTabFromHub('events-tab'));
+  }
+  const cardProfile = document.getElementById('hub-card-profile');
+  if (cardProfile) {
+    cardProfile.addEventListener('click', () => navigateToTabFromHub('profile-tab'));
+  }
+  const cardAdmin = document.getElementById('hub-card-admin');
+  if (cardAdmin) {
+    cardAdmin.addEventListener('click', () => navigateToTabFromHub('admin-tab'));
+  }
+
+  // Wire Welcome Banner CTA click
+  const bannerPlayGamesBtn = document.getElementById('banner-play-games-btn');
+  if (bannerPlayGamesBtn) {
+    bannerPlayGamesBtn.addEventListener('click', () => navigateToTabFromHub('games-tab'));
+  }
+
+  // Wire Back to Hub click
+  const backToHubBtn = document.getElementById('back-to-hub-btn');
+  if (backToHubBtn) {
+    backToHubBtn.addEventListener('click', () => {
+      const hub = document.getElementById('clubhouse-hub');
+      const banner = document.getElementById('admin-welcome-banner');
+      const backWrapper = document.getElementById('back-to-hub-wrapper');
+      const dashTabs = document.querySelector('.dash-tabs');
+
+      // Show hub
+      if (hub) hub.style.display = 'block';
+
+      // Show banner if admin
+      if (banner && currentSession) {
+        const email = currentSession.user.email;
+        const isAdmin = email && (
+          email.startsWith('admin@') || 
+          email.endsWith('@thirstyclub999.com') ||
+          email === 'richmond@guava.earth' ||
+          email === 'richmonde@guava.earth' ||
+          email === 'guavanigeria@gmail.com' ||
+          email === 'thirstynalia@gmail.com' ||
+          email === 'straffitti@hotmail.com' ||
+          email === 'bookthirsty234@gmail.com' ||
+          email === 'godliverse@gmail.com' ||
+          email === 'ogunwuyi.olumide@yahoo.com' ||
+          currentUserProfile?.role === 'admin' ||
+          currentUserProfile?.socials?.role === 'admin'
+        );
+        if (isAdmin) {
+          banner.style.display = 'flex';
+          const bannerVideo = banner.querySelector('video');
+          if (bannerVideo) {
+            bannerVideo.play().catch(e => console.log('Banner video play error:', e));
+          }
+        }
+      }
+
+      // Hide tabs nav and back button
+      if (dashTabs) dashTabs.style.display = 'none';
+      if (backWrapper) backWrapper.style.display = 'none';
+
+      // Deactivate all contents
+      tabContents.forEach(c => c.classList.remove('active'));
+      tabButtons.forEach(b => b.classList.remove('active'));
+
+      // Remove admin view styling if any
+      const dashboardCard = document.querySelector('.dashboard-card');
+      if (dashboardCard) dashboardCard.classList.remove('admin-view-active');
+    });
+  }
 
   // ==========================================
   // 7. Profile Edits & Avatar Storage
