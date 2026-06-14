@@ -1718,11 +1718,11 @@ dialog::backdrop {
    ========================================= */
 
 .admin-container {
-  --admin-bg: #f6f9fc;
-  --admin-card-bg: #ffffff;
-  --admin-text: #1a1f36;
-  --admin-text-dim: #697386;
-  --admin-border: #e3e8ee;
+  --admin-bg: var(--bg-black);
+  --admin-card-bg: #111111;
+  --admin-text: #ffffff;
+  --admin-text-dim: #a1a1aa;
+  --admin-border: #333333;
   --admin-shadow: rgba(50, 50, 93, 0.1) 0px 2px 5px -1px, rgba(0, 0, 0, 0.05) 0px 1px 3px -1px;
   --admin-shadow-hover: rgba(50, 50, 93, 0.15) 0px 15px 35px, rgba(0, 0, 0, 0.1) 0px 5px 15px;
 
@@ -1820,7 +1820,7 @@ dialog::backdrop {
   font-family: 'Kyrilla', sans-serif;
   font-size: 2.5rem;
   font-weight: 900;
-  color: var(--admin-text);
+  color: var(--accent-color) !important;
   margin-bottom: 0.4rem;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -1981,7 +1981,7 @@ dialog::backdrop {
 }
 
 .admin-users-table tbody tr:hover td {
-  background: #fdf2f2;
+  background: #1a1a1a;
 }
 
 .admin-users-table td:first-child {
@@ -2009,21 +2009,21 @@ dialog::backdrop {
 }
 
 .badge-m {
-  background: #e1effe;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #333333;
 }
 
 .badge-f {
-  background: #fce8f3;
-  color: #9d174d;
-  border: 1px solid #fbcfe8;
+  background: var(--accent-color);
+  color: #ffffff;
+  border: 1px solid var(--accent-color);
 }
 
 .badge-other, .badge-n\/a, .badge-na {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background: #111111;
+  color: #a1a1aa;
+  border: 1px solid #333333;
 }
 
 /* Admin Placeholder Tags */
@@ -2226,7 +2226,7 @@ dialog::backdrop {
 }
 
 .admin-grid-card {
-  background: #ffffff;
+  background: var(--admin-card-bg);
   border: 1px solid var(--admin-border);
   border-radius: 8px;
   padding: 1.25rem;

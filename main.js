@@ -3016,14 +3016,14 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="admin-grid-detail-row">
             <span style="color: var(--admin-text-dim);">Access Level</span>
-            <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
+            <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}">
               <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
               <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
             </select>
           </div>
         </div>
         <div class="admin-grid-actions">
-          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}">${checkInBtnText}</button>
+          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}">${checkInBtnText}</button>
           <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
         </div>
       `;
@@ -3064,14 +3064,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${escapeHtml(user.email || '')}</td>
         <td><span class="badge badge-${badgeClass}">${escapeHtml(gender || 'N/A')}</span></td>
         <td>
-          <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
+          <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}">
             <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
             <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
           </select>
         </td>
         <td style="color: var(--text-dim); font-size: 0.8rem;">${date}</td>
         <td>
-          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}" style="margin-right: 4px;">${checkInBtnText}</button>
+          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}" style="margin-right: 4px;">${checkInBtnText}</button>
           <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
         </td>
       `;
@@ -3339,7 +3339,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const newAccess = selectEl.value;
 
       try {
-        const userProfile = adminFetchedUsers.find(u => u.id === userId);
+        const userProfile = adminFetchedUsers.find(u => String(u.id) === String(userId) || String(u.thirstyclub_id) === String(userId) || String(u.email) === String(userId));
         if (!userProfile) throw new Error("User not found in local state");
 
         const updatedSocials = {
@@ -3374,7 +3374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error updating access level:", err);
         alert("Failed to update access level: " + err.message);
         // Revert selection
-        const prevAccess = adminFetchedUsers.find(u => u.id === userId)?.socials?.access_level || 'REGULAR';
+        const prevAccess = adminFetchedUsers.find(u => String(u.id) === String(userId) || String(u.thirstyclub_id) === String(userId) || String(u.email) === String(userId))?.socials?.access_level || 'REGULAR';
         selectEl.value = prevAccess;
         if (prevAccess === 'VIP') {
           selectEl.classList.remove('access-regular');
@@ -3393,7 +3393,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const btn = e.target;
       const userId = btn.getAttribute('data-userid');
-      const user = adminFetchedUsers.find(u => u.id === userId);
+      const user = adminFetchedUsers.find(u => String(u.id) === String(userId) || String(u.thirstyclub_id) === String(userId) || String(u.email) === String(userId));
       if (!user) return;
       
       btn.textContent = '...';
@@ -3448,7 +3448,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const btn = e.target;
       const userId = btn.getAttribute('data-userid');
-      const user = adminFetchedUsers.find(u => u.id === userId);
+      const user = adminFetchedUsers.find(u => String(u.id) === String(userId) || String(u.thirstyclub_id) === String(userId) || String(u.email) === String(userId));
       if (!user) return;
 
       btn.textContent = '...';
