@@ -3001,9 +3001,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridWrapper = document.getElementById('admin-grid-view');
     if (!gridWrapper) return;
     gridWrapper.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-
     const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+    let htmlContent = '';
 
     users.forEach(user => {
       const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
@@ -3016,9 +3015,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (gender === 'M' || gender === 'MALE') badgeClass = 'm';
       if (gender === 'F' || gender === 'FEMALE') badgeClass = 'f';
 
-      const card = document.createElement('div');
-      card.className = 'admin-grid-card';
-      card.innerHTML = `
+      htmlContent += `
+      <div class="admin-grid-card">
         <div class="admin-grid-header">
           <div>
             <div class="admin-grid-name">${escapeHtml(user.username || 'UNKNOWN')}</div>
@@ -3043,19 +3041,18 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}">${checkInBtnText}</button>
           <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
         </div>
+      </div>
       `;
-      fragment.appendChild(card);
     });
-    gridWrapper.appendChild(fragment);
+    gridWrapper.innerHTML = htmlContent;
   };
 
   const renderAdminTable = (users) => {
     const tbody = document.getElementById('admin-users-list');
     if (!tbody) return;
     tbody.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-
     const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+    let htmlContent = '';
 
     users.forEach(user => {
       const gender = (user.socials?.gender || '').trim().toUpperCase();
@@ -3074,8 +3071,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
       const accessLvl = user.socials?.access_level || 'REGULAR';
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
+      htmlContent += `
+      <tr>
         <td><code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code></td>
         <td>${escapeHtml(user.username || '')}</td>
         <td>${escapeHtml(user.email || '')}</td>
@@ -3091,10 +3088,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id || user.thirstyclub_id || user.email)}" style="margin-right: 4px;">${checkInBtnText}</button>
           <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
         </td>
+      </tr>
       `;
-      fragment.appendChild(tr);
     });
-    tbody.appendChild(fragment);
+    tbody.innerHTML = htmlContent;
   };
 
   // Helper to draw admin passport
@@ -3806,8 +3803,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminViewGridBtn = document.getElementById('admin-view-grid-btn');
 
   if (adminTableSearch) {
+    let searchTimeout;
     adminTableSearch.addEventListener('input', () => {
-      renderAdminData();
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => renderAdminData(), 300);
     });
   }
   if (adminFilterSelect) {
