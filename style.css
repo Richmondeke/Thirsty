@@ -420,8 +420,9 @@ header nav .nav-btn.members-white:hover {
 .section-title {
   font-family: 'Kyrilla', sans-serif;
   font-weight: 900;
-  font-size: 3.5rem;
-  letter-spacing: 0.05em;
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   color: var(--text-color);
 }
 
@@ -2338,7 +2339,7 @@ dialog::backdrop {
     letter-spacing: 0.25em;
   }
   .section-title {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
   }
   .marquee span {
     font-size: 2.5rem;
@@ -3918,11 +3919,11 @@ body.logged-in-user #hero-bg-video {
   }
 
   .passport-viewer-section {
-    padding: 105px 0.75rem 60px 0.75rem !important;
+    padding: 85px 0.75rem 60px 0.75rem !important;
   }
   .hero-logged-in-container {
     padding: 0.75rem;
-    margin-top: 3.5rem;
+    margin-top: 1rem;
   }
   .hero-logged-in-grid {
     grid-template-columns: 1fr;
@@ -4081,7 +4082,7 @@ body.logged-in-user #hero-bg-video {
     gap: 1rem;
   }
   .section-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   /* Gallery */
@@ -4288,7 +4289,7 @@ body.logged-in-user #hero-bg-video {
 
   /* Section titles */
   .section-title {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
   }
   .section-subtitle-desc {
     font-size: 0.7rem;
@@ -4726,15 +4727,24 @@ img, video, canvas {
   text-align: left;
 }
 .event-tab-card {
-  border: 1px solid rgba(255, 62, 62, 0.15);
-  background: rgba(255, 62, 62, 0.02);
-  border-radius: 8px;
-  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  background: rgba(15, 15, 15, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 2.2rem 2rem;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 2rem;
   align-items: center;
   box-sizing: border-box;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: rgba(50, 50, 93, 0.1) 0px 15px 30px, rgba(0, 0, 0, 0.1) 0px 5px 15px;
+}
+.event-tab-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 45px -30px, rgba(0, 0, 0, 0.1) 0px 18px 36px -18px;
 }
 @media (max-width: 768px) {
   .event-tab-card {
@@ -4745,10 +4755,11 @@ img, video, canvas {
 }
 .event-tab-details h3 {
   font-family: 'Kyrilla', sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   margin: 0 0 0.5rem 0;
   color: #fff;
-  letter-spacing: 0.05em;
 }
 .event-tab-details p {
   color: var(--text-dim);
