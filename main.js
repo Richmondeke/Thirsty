@@ -2832,7 +2832,7 @@ document.addEventListener('DOMContentLoaded', () => {
       while (fetchMore) {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, username, email, thirstyclub_id, created_at, socials')
+          .select('id, username, email, thirstyclub_id, created_at, socials, avatar_url')
           .order('created_at', { ascending: false })
           .range(from, from + step - 1);
 
@@ -3364,7 +3364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const { error } = await supabase
           .from('profiles')
           .update({ socials: updatedSocials })
-          .eq('id', userId);
+          .eq('id', userProfile.id);
 
         if (error) throw error;
         
@@ -3442,7 +3442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-          const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', userId);
+          const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', user.id);
           if (error) throw error;
           user.socials = updatedSocials;
           btn.classList.remove('admin-checkin-btn');
@@ -3477,7 +3477,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', userId);
+        const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', user.id);
         if (error) throw error;
         user.socials = updatedSocials;
         btn.classList.remove('admin-checkout-btn', 'checkin-active');
