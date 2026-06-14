@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Load avatar image into the canvas representation
       if (profile?.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
         const img = new Image();
-        img.crossOrigin = "anonymous";
+        if (!profile.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
         img.onload = () => {
           uploadedImage = img;
           drawPassport();
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
               try {
                 if (profile.avatar_url && (!uploadedImage || uploadedImage.src !== profile.avatar_url)) {
                   const img = new Image();
-                  img.crossOrigin = "anonymous";
+                  if (!profile.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
                   img.onload = async () => {
                     uploadedImage = img;
                     drawPassport();
@@ -3521,7 +3521,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (user.avatar_url) {
         const img = new Image();
-        img.crossOrigin = "anonymous";
+        if (!user.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
         img.onload = () => {
           drawIt(img);
         };
@@ -3616,7 +3616,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Redraw passport to show stamp
             if (user.avatar_url) {
               const img = new Image();
-              img.crossOrigin = "anonymous";
+              if (!user.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
               img.onload = () => drawIt(img);
               img.src = user.avatar_url;
             } else {
