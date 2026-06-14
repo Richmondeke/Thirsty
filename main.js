@@ -3423,6 +3423,84 @@ document.addEventListener('DOMContentLoaded', () => {
           link.click();
         });
       }
+
+      // Hook up check-in in modal
+      const modalCheckinBtn = document.getElementById('admin-modal-checkin-btn');
+      if (modalCheckinBtn) {
+        const newCheckinBtn = modalCheckinBtn.cloneNode(true);
+        modalCheckinBtn.parentNode.replaceChild(newCheckinBtn, modalCheckinBtn);
+        
+        const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+        const EVENT_NAME = "THIRSTYNALIA X 2026";
+        const EVENT_DATE = "02.04.26";
+        const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
+        const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+        
+        if (isCheckedIn) {
+          newCheckinBtn.textContent = 'CHECKED IN';
+          newCheckinBtn.style.opacity = '0.5';
+          newCheckinBtn.disabled = true;
+        } else {
+          newCheckinBtn.textContent = 'CHECK IN';
+          newCheckinBtn.style.opacity = '1';
+          newCheckinBtn.disabled = false;
+        }
+
+        newCheckinBtn.addEventListener('click', async () => {
+          newCheckinBtn.textContent = '...';
+          newCheckinBtn.disabled = true;
+
+          const randomX = Math.floor(Math.random() * 80) + 40;
+          const randomY = Math.floor(Math.random() * 80) + 120;
+          const randomRotation = (Math.random() - 0.5) * 0.5;
+
+          const newStamp = {
+            event_id: CURRENT_EVENT_ID,
+            event_name: EVENT_NAME,
+            event_date: EVENT_DATE,
+            x: randomX,
+            y: randomY,
+            rotation: randomRotation,
+            color: 'rgba(255, 62, 62, 0.85)'
+          };
+
+          const updatedSocials = {
+            ...user.socials,
+            stamps: [...stamps, newStamp]
+          };
+
+          try {
+            const { error } = await supabase.from('profiles').update({ socials: updatedSocials }).eq('id', user.id);
+            if (error) throw error;
+            user.socials = updatedSocials;
+            newCheckinBtn.textContent = 'CHECKED IN';
+            newCheckinBtn.style.opacity = '0.5';
+            
+            // Sync the table button
+            const tableBtn = document.querySelector(`.admin-checkin-btn[data-userid="${user.id}"]`);
+            if (tableBtn) {
+              tableBtn.classList.remove('admin-checkin-btn');
+              tableBtn.classList.add('admin-checkout-btn', 'checkin-active');
+              tableBtn.textContent = 'Check Out';
+            }
+
+            // Redraw passport to show stamp
+            if (user.avatar_url) {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => drawIt(img);
+              img.src = user.avatar_url;
+            } else {
+              drawIt(null);
+            }
+          } catch (err) {
+            console.error("Modal Check-in error:", err);
+            alert("Failed to check in: " + err.message);
+            newCheckinBtn.textContent = 'CHECK IN';
+            newCheckinBtn.disabled = false;
+          }
+        });
+      }
     }
   });
 

@@ -973,7 +973,10 @@
         <div class="passport-glow-border"></div>
         <canvas id="admin-passport-canvas" width="600" height="800" style="width: 100%; height: auto; border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);"></canvas>
       </div>
-      <button class="buy-button" id="admin-download-passport-btn">DOWNLOAD PASSPORT</button>
+      <div style="display: flex; gap: 1rem; width: 100%; max-width: 450px;">
+        <button class="buy-button" id="admin-download-passport-btn" style="flex: 1;">DOWNLOAD</button>
+        <button class="buy-button" id="admin-modal-checkin-btn" style="flex: 1; background: #fff; color: var(--accent-color);">CHECK IN</button>
+      </div>
     </div>
   </dialog>
 
