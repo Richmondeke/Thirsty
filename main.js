@@ -2823,16 +2823,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const totalEl = document.getElementById('admin-stat-total');
       if (totalEl) totalEl.textContent = 'Loading...';
 
-      // Limit to latest 2000 records and fetch only required columns to prevent statement timeout
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, username, email, thirstyclub_id, created_at, socials')
-        .order('created_at', { ascending: false })
-        .limit(2000);
+      // Fetch all records with pagination to bypass Supabase's max_rows limit (typically 1000)
+      let allData = [];
+      let from = 0;
+      const step = 1000;
+      let fetchMore = true;
 
-      if (error) throw error;
+      while (fetchMore) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, username, email, thirstyclub_id, created_at, socials')
+          .order('created_at', { ascending: false })
+          .range(from, from + step - 1);
 
-      users = data || [];
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          allData = allData.concat(data);
+          from += step;
+          if (data.length < step) {
+            fetchMore = false; // less than step means it's the last page
+          }
+        } else {
+          fetchMore = false; // no more data
+        }
+      }
+
+      users = allData;
       adminFetchedUsers = users; // Store user profiles globally in the scope for reference
 
       // Set up Realtime Subscription if not already set
