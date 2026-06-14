@@ -2819,30 +2819,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadAdminDashboard = async () => {
     try {
       let users = [];
-      let page = 0;
-      const pageSize = 1000;
-      let hasMore = true;
 
       const totalEl = document.getElementById('admin-stat-total');
       if (totalEl) totalEl.textContent = 'Loading...';
 
-      while (hasMore) {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .range(page * pageSize, (page + 1) * pageSize - 1);
+      // Limit to latest 2000 records and fetch only required columns to prevent statement timeout
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, username, email, thirstyclub_id, created_at, socials')
+        .order('created_at', { ascending: false })
+        .limit(2000);
 
-        if (error) throw error;
+      if (error) throw error;
 
-        users = users.concat(data);
-        if (data.length < pageSize) {
-          hasMore = false;
-        } else {
-          page++;
-        }
-      }
-
+      users = data || [];
       adminFetchedUsers = users; // Store user profiles globally in the scope for reference
 
       // Set up Realtime Subscription if not already set
