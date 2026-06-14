@@ -316,6 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
             fileInfo.style.color = 'var(--accent-color)';
           }
         };
+        img.onerror = () => {
+          console.warn("Could not load stored profile avatar, drawing passport without it");
+          uploadedImage = null;
+          drawPassport();
+        };
         img.src = profile.avatar_url;
       } else {
         drawPassport();
@@ -516,7 +521,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     await triggerWelcomeEmail(profile);
                     isEmailTriggering = false;
                   };
-                  img.onerror = () => {
+                  img.onerror = async () => {
+                    console.warn("Could not load avatar for welcome email attachment, sending default silhouette.");
+                    uploadedImage = null;
+                    drawPassport();
+                    await triggerWelcomeEmail(profile);
                     isEmailTriggering = false;
                   };
                   img.src = profile.avatar_url;
@@ -610,7 +619,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (event === 'SIGNED_IN' && session) {
         // Clean up URL query parameters from Supabase redirect (e.g. code, token)
-        if (window.location.search || window.location.hash) {
+        const hasAuthParams = window.location.search.includes('code=') || 
+                            window.location.search.includes('error=') ||
+                            window.location.hash.includes('access_token=') ||
+                            window.location.hash.includes('error=') ||
+                            window.location.hash.includes('type=recovery');
+        if (hasAuthParams) {
           const cleanUrl = window.location.origin + window.location.pathname;
           window.history.replaceState({}, document.title, cleanUrl);
         }
@@ -2832,7 +2846,7 @@ document.addEventListener('DOMContentLoaded', () => {
       while (fetchMore) {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, username, email, thirstyclub_id, created_at, socials, avatar_url')
+          .select('id, username, email, thirstyclub_id, created_at, socials')
           .order('created_at', { ascending: false })
           .range(from, from + step - 1);
 
@@ -3516,9 +3530,27 @@ document.addEventListener('DOMContentLoaded', () => {
         drawAdminPassportOnCanvas('admin-passport-canvas', user, userImg);
       };
 
-      if (user.avatar_url) {
+      // Fetch avatar_url on-demand (not in bulk query to avoid huge payloads)
+      let avatarUrl = user.avatar_url || null;
+      if (!avatarUrl && user.id) {
+        try {
+          const { data: avatarData } = await supabase
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', user.id)
+            .single();
+          if (avatarData?.avatar_url) {
+            avatarUrl = avatarData.avatar_url;
+            user.avatar_url = avatarUrl; // Cache it
+          }
+        } catch (e) {
+          console.warn('Failed to fetch avatar:', e);
+        }
+      }
+
+      if (avatarUrl) {
         const img = new Image();
-        if (!user.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
+        if (!avatarUrl.startsWith('data:')) img.crossOrigin = "anonymous";
         img.onload = () => {
           drawIt(img);
         };
@@ -3526,7 +3558,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.warn("Could not load user avatar for admin drawing");
           drawIt(null);
         };
-        img.src = user.avatar_url;
+        img.src = avatarUrl;
       } else {
         drawIt(null);
       }
@@ -3603,18 +3635,25 @@ document.addEventListener('DOMContentLoaded', () => {
             newCheckinBtn.style.opacity = '0.5';
             
             // Sync the table button
-            const tableBtn = document.querySelector(`.admin-checkin-btn[data-userid="${user.id}"]`);
-            if (tableBtn) {
-              tableBtn.classList.remove('admin-checkin-btn');
-              tableBtn.classList.add('admin-checkout-btn', 'checkin-active');
-              tableBtn.textContent = '✓ Checked In';
-            }
+            // Sync the table and grid buttons
+            const checkinBtns = document.querySelectorAll(`[data-userid="${user.id}"]`);
+            checkinBtns.forEach(btn => {
+              if (btn.classList.contains('admin-checkin-btn')) {
+                btn.classList.remove('admin-checkin-btn');
+                btn.classList.add('admin-checkout-btn', 'checkin-active');
+                btn.textContent = '✓ Checked In';
+              }
+            });
 
             // Redraw passport to show stamp
             if (user.avatar_url) {
               const img = new Image();
               if (!user.avatar_url.startsWith('data:')) img.crossOrigin = "anonymous";
               img.onload = () => drawIt(img);
+              img.onerror = () => {
+                console.warn("Could not load user avatar for checkin redraw");
+                drawIt(null);
+              };
               img.src = user.avatar_url;
             } else {
               drawIt(null);

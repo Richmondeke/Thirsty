@@ -612,6 +612,11 @@
               uploadedImage = img;
               drawPassport();
             };
+            img.onerror = () => {
+              console.warn("Could not load guest avatar in check-in page, drawing passport without it");
+              uploadedImage = null;
+              drawPassport();
+            };
             img.src = profile.avatar_url;
           } else {
             drawPassport();
