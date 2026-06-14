@@ -2856,12 +2856,12 @@ document.addEventListener('DOMContentLoaded', () => {
               adminFetchedUsers = adminFetchedUsers.filter(u => u.id !== payload.old.id);
             }
             // Re-render the admin dashboard table without refetching
-            renderAdminTable(adminFetchedUsers);
+            renderAdminData();
           })
           .subscribe();
       }
 
-      renderAdminTable(users);
+      renderAdminData();
       
       // Populate welcome email settings from DB
       try {
@@ -2887,58 +2887,182 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const renderAdminTable = (users) => {
+  let currentAdminView = 'table';
+
+  const renderAdminData = () => {
+    if (!adminFetchedUsers) return;
+
+    let filtered = [...adminFetchedUsers];
+
+    // Search
+    const searchInput = document.getElementById('admin-table-search');
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    if (query) {
+      filtered = filtered.filter(user => {
+        const searchableText = `${user.thirstyclub_id || ''} ${user.username || ''} ${user.email || ''}`.toLowerCase();
+        return searchableText.includes(query);
+      });
+    }
+
+    // Filter
+    const filterSelect = document.getElementById('admin-filter-select');
+    const filterVal = filterSelect ? filterSelect.value : 'all';
+    
+    const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+
+    if (filterVal !== 'all') {
+      filtered = filtered.filter(user => {
+        const gender = (user.socials?.gender || '').trim().toLowerCase();
+        const accessLvl = (user.socials?.access_level || 'REGULAR').toLowerCase();
+        const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
+        const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+
+        switch (filterVal) {
+          case 'checked-in': return isCheckedIn;
+          case 'pending': return !isCheckedIn;
+          case 'vip': return accessLvl === 'vip';
+          case 'regular': return accessLvl === 'regular';
+          case 'male': return gender === 'm' || gender === 'male';
+          case 'female': return gender === 'f' || gender === 'female';
+          default: return true;
+        }
+      });
+    }
+
+    // Sort
+    const sortSelect = document.getElementById('admin-sort-select');
+    const sortVal = sortSelect ? sortSelect.value : 'newest';
+
+    filtered.sort((a, b) => {
+      if (sortVal === 'newest') {
+        return new Date(b.created_at) - new Date(a.created_at);
+      } else if (sortVal === 'oldest') {
+        return new Date(a.created_at) - new Date(b.created_at);
+      } else if (sortVal === 'name-asc') {
+        return (a.username || '').localeCompare(b.username || '');
+      } else if (sortVal === 'name-desc') {
+        return (b.username || '').localeCompare(a.username || '');
+      }
+      return 0;
+    });
+
+    // Update Stats based on filtered data
     let maleCount = 0;
     let femaleCount = 0;
     let otherCount = 0;
+    filtered.forEach(user => {
+      const gender = (user.socials?.gender || '').trim().toUpperCase();
+      if (gender === 'M' || gender === 'MALE') maleCount++;
+      else if (gender === 'F' || gender === 'FEMALE') femaleCount++;
+      else otherCount++;
+    });
 
-    const tbody = document.getElementById('admin-users-list');
     const totalEl = document.getElementById('admin-stat-total');
-    const searchInput = document.getElementById('admin-table-search');
-    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-    
-    if (tbody) {
-      tbody.innerHTML = '';
-      const fragment = document.createDocumentFragment();
+    const maleEl = document.getElementById('admin-stat-male');
+    const femaleEl = document.getElementById('admin-stat-female');
+    const otherEl = document.getElementById('admin-stat-other');
+    if (totalEl) totalEl.textContent = filtered.length;
+    if (maleEl) maleEl.textContent = maleCount;
+    if (femaleEl) femaleEl.textContent = femaleCount;
+    if (otherEl) otherEl.textContent = otherCount;
 
-      users.forEach(user => {
-          const gender = (user.socials?.gender || '').trim().toUpperCase();
-          if (gender === 'M' || gender === 'MALE') {
-            maleCount++;
-          } else if (gender === 'F' || gender === 'FEMALE') {
-            femaleCount++;
-          } else {
-            otherCount++;
-          }
+    const tableView = document.getElementById('admin-table-view');
+    const gridView = document.getElementById('admin-grid-view');
 
-          const date = new Date(user.created_at).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+    if (currentAdminView === 'table') {
+      if (tableView) tableView.style.display = 'block';
+      if (gridView) gridView.style.display = 'none';
+      renderAdminTable(filtered);
+    } else {
+      if (tableView) tableView.style.display = 'none';
+      if (gridView) gridView.style.display = 'grid';
+      renderAdminGrid(filtered);
+    }
+  };
 
-      const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+  const renderAdminGrid = (users) => {
+    const gridWrapper = document.getElementById('admin-grid-view');
+    if (!gridWrapper) return;
+    gridWrapper.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+
+    users.forEach(user => {
       const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
       const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
-      
       const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
       const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
-
       const accessLvl = user.socials?.access_level || 'REGULAR';
+      const gender = (user.socials?.gender || 'N/A').toUpperCase();
+      let badgeClass = 'na';
+      if (gender === 'M' || gender === 'MALE') badgeClass = 'm';
+      if (gender === 'F' || gender === 'FEMALE') badgeClass = 'f';
+
+      const card = document.createElement('div');
+      card.className = 'admin-grid-card';
+      card.innerHTML = `
+        <div class="admin-grid-header">
+          <div>
+            <div class="admin-grid-name">${escapeHtml(user.username || 'UNKNOWN')}</div>
+            <div class="admin-grid-email">${escapeHtml(user.email || '')}</div>
+          </div>
+          <span class="badge badge-${badgeClass}">${escapeHtml(gender)}</span>
+        </div>
+        <div class="admin-grid-details">
+          <div class="admin-grid-detail-row">
+            <span style="color: var(--admin-text-dim);">ID</span>
+            <code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code>
+          </div>
+          <div class="admin-grid-detail-row">
+            <span style="color: var(--admin-text-dim);">Access Level</span>
+            <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
+              <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
+              <option value="VIP" ${accessLvl === 'VIP' ? 'selected' : ''}>VIP</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-grid-actions">
+          <button class="${checkInBtnClass}" data-userid="${escapeHtml(user.id)}">${checkInBtnText}</button>
+          <button class="admin-view-passport-btn table-action-btn" data-email="${escapeHtml(user.email)}">View Passport</button>
+        </div>
+      `;
+      fragment.appendChild(card);
+    });
+    gridWrapper.appendChild(fragment);
+  };
+
+  const renderAdminTable = (users) => {
+    const tbody = document.getElementById('admin-users-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    const CURRENT_EVENT_ID = "THIRSTYNALIA_2026";
+
+    users.forEach(user => {
+      const gender = (user.socials?.gender || '').trim().toUpperCase();
+      let badgeClass = 'na';
+      if (gender === 'M' || gender === 'MALE') badgeClass = 'm';
+      if (gender === 'F' || gender === 'FEMALE') badgeClass = 'f';
+
+      const date = new Date(user.created_at).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
+      const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
+      const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
+      const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
+      const accessLvl = user.socials?.access_level || 'REGULAR';
+
       const tr = document.createElement('tr');
-
-      const searchableText = `${user.thirstyclub_id || ''} ${user.username || ''} ${user.email || ''}`.toLowerCase();
-      if (query && !searchableText.includes(query)) {
-        tr.style.display = 'none';
-      }
-
       tr.innerHTML = `
         <td><code class="glow-id-badge">${escapeHtml(user.thirstyclub_id || 'N/A')}</code></td>
         <td>${escapeHtml(user.username || '')}</td>
         <td>${escapeHtml(user.email || '')}</td>
-        <td><span class="badge badge-${gender.toLowerCase() || 'na'}">${escapeHtml(gender || 'N/A')}</span></td>
+        <td><span class="badge badge-${badgeClass}">${escapeHtml(gender || 'N/A')}</span></td>
         <td>
           <select class="admin-access-select ${accessLvl === 'VIP' ? 'access-vip' : 'access-regular'}" data-userid="${escapeHtml(user.id)}">
             <option value="REGULAR" ${accessLvl === 'REGULAR' ? 'selected' : ''}>REGULAR</option>
@@ -2953,20 +3077,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       fragment.appendChild(tr);
     });
-    
     tbody.appendChild(fragment);
-  }
-
-  // Update stats UI
-  const maleEl = document.getElementById('admin-stat-male');
-  const femaleEl = document.getElementById('admin-stat-female');
-  const otherEl = document.getElementById('admin-stat-other');
-
-  if (totalEl) totalEl.textContent = users.length;
-  if (maleEl) maleEl.textContent = maleCount;
-  if (femaleEl) femaleEl.textContent = femaleCount;
-  if (otherEl) otherEl.textContent = otherCount;
-};
+  };
 
   // Helper to draw admin passport
   const drawAdminPassportOnCanvas = (canvasId, profile, userImage) => {
@@ -3669,16 +3781,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Admin Table Live Search ───────────────────────────────
+  // ── Admin Dashboard Controls (Search, Filter, Sort, Views) ──
   const adminTableSearch = document.getElementById('admin-table-search');
+  const adminFilterSelect = document.getElementById('admin-filter-select');
+  const adminSortSelect = document.getElementById('admin-sort-select');
+  const adminViewTableBtn = document.getElementById('admin-view-table-btn');
+  const adminViewGridBtn = document.getElementById('admin-view-grid-btn');
+
   if (adminTableSearch) {
     adminTableSearch.addEventListener('input', () => {
-      const query = adminTableSearch.value.toLowerCase().trim();
-      const rows = document.querySelectorAll('#admin-users-list tr');
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(query) ? '' : 'none';
-      });
+      renderAdminData();
+    });
+  }
+  if (adminFilterSelect) {
+    adminFilterSelect.addEventListener('change', () => {
+      renderAdminData();
+    });
+  }
+  if (adminSortSelect) {
+    adminSortSelect.addEventListener('change', () => {
+      renderAdminData();
+    });
+  }
+  if (adminViewTableBtn && adminViewGridBtn) {
+    adminViewTableBtn.addEventListener('click', () => {
+      currentAdminView = 'table';
+      adminViewTableBtn.classList.add('active');
+      adminViewTableBtn.style.background = 'var(--accent-color)';
+      adminViewTableBtn.style.color = '#fff';
+      adminViewTableBtn.style.borderColor = 'var(--accent-color)';
+      
+      adminViewGridBtn.classList.remove('active');
+      adminViewGridBtn.style.background = '#fff';
+      adminViewGridBtn.style.color = 'var(--admin-text-dim)';
+      adminViewGridBtn.style.borderColor = 'var(--admin-border)';
+      renderAdminData();
+    });
+    adminViewGridBtn.addEventListener('click', () => {
+      currentAdminView = 'grid';
+      adminViewGridBtn.classList.add('active');
+      adminViewGridBtn.style.background = 'var(--accent-color)';
+      adminViewGridBtn.style.color = '#fff';
+      adminViewGridBtn.style.borderColor = 'var(--accent-color)';
+
+      adminViewTableBtn.classList.remove('active');
+      adminViewTableBtn.style.background = '#fff';
+      adminViewTableBtn.style.color = 'var(--admin-text-dim)';
+      adminViewTableBtn.style.borderColor = 'var(--admin-border)';
+      renderAdminData();
     });
   }
 

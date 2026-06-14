@@ -2220,6 +2220,82 @@ dialog::backdrop {
   .admin-header-bar { flex-direction: column; align-items: flex-start; }
 }
 
+/* Admin Grid View */
+.admin-users-grid-wrapper {
+  display: grid;
+}
+
+.admin-grid-card {
+  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.admin-grid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  border-color: rgba(255, 62, 62, 0.2);
+}
+
+.admin-grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-grid-name {
+  font-family: 'Kyrilla', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--admin-text);
+  margin-bottom: 0.25rem;
+}
+
+.admin-grid-email {
+  font-size: 0.8rem;
+  color: var(--admin-text-dim);
+}
+
+.admin-grid-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  border-top: 1px dashed var(--admin-border);
+  border-bottom: 1px dashed var(--admin-border);
+  padding: 0.75rem 0;
+  margin: 0.25rem 0;
+}
+
+.admin-grid-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-grid-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.admin-grid-actions .table-action-btn {
+  flex: 1;
+  text-align: center;
+}
+
+.admin-view-btn.active {
+  background: var(--accent-color) !important;
+  color: #ffffff !important;
+  border-color: var(--accent-color) !important;
+}
+
 
 /* --- Keyframes & Animations --- */
 @keyframes cardFadeIn {
