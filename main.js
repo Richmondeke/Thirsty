@@ -3008,7 +3008,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
       const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
       const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
-      const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
+      const checkInBtnText = isCheckedIn ? '✓ Checked In' : 'Check In';
       const accessLvl = user.socials?.access_level || 'REGULAR';
       const gender = (user.socials?.gender || 'N/A').toUpperCase();
       let badgeClass = 'na';
@@ -3068,7 +3068,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const stamps = Array.isArray(user.socials?.stamps) ? user.socials.stamps : [];
       const isCheckedIn = stamps.some(s => s.event_id === CURRENT_EVENT_ID);
       const checkInBtnClass = isCheckedIn ? 'admin-checkout-btn table-action-btn checkin-active' : 'admin-checkin-btn table-action-btn';
-      const checkInBtnText = isCheckedIn ? 'Check Out' : 'Check In';
+      const checkInBtnText = isCheckedIn ? '✓ Checked In' : 'Check In';
       const accessLvl = user.socials?.access_level || 'REGULAR';
 
       htmlContent += `
@@ -3447,7 +3447,7 @@ document.addEventListener('DOMContentLoaded', () => {
           user.socials = updatedSocials;
           btn.classList.remove('admin-checkin-btn');
           btn.classList.add('admin-checkout-btn', 'checkin-active');
-          btn.textContent = 'Check Out';
+          btn.textContent = '✓ Checked In';
         } catch (err) {
           console.error("Check-in error:", err);
           alert("Failed to check in: " + err.message);
@@ -3486,7 +3486,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         console.error("Check-out error:", err);
         alert("Failed to check out: " + err.message);
-        btn.textContent = 'Check Out';
+        btn.textContent = '✓ Checked In';
       }
       btn.disabled = false;
     }
@@ -3607,7 +3607,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tableBtn) {
               tableBtn.classList.remove('admin-checkin-btn');
               tableBtn.classList.add('admin-checkout-btn', 'checkin-active');
-              tableBtn.textContent = 'Check Out';
+              tableBtn.textContent = '✓ Checked In';
             }
 
             // Redraw passport to show stamp
