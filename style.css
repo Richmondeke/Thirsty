@@ -95,6 +95,7 @@ header .logo {
   letter-spacing: 0.1em;
   color: var(--text-color);
   text-decoration: none;
+  text-transform: uppercase;
 }
 
 header nav {
@@ -1146,6 +1147,7 @@ header .logout-btn {
   letter-spacing: 0.1em;
   color: var(--accent-color);
   text-shadow: 0 0 10px var(--accent-glow);
+  text-transform: uppercase;
 }
 
 .dash-welcome {
@@ -2337,6 +2339,7 @@ header .logout-btn {
   line-height: 1.2;
   color: #fff;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .welcome-banner-highlight {
@@ -3817,6 +3820,7 @@ header .logout-btn {
   margin-bottom: 2.5rem;
   text-align: center;
   text-shadow: 0 0 10px rgba(255, 62, 62, 0.25);
+  text-transform: uppercase;
 }
 
 .app-sidebar-nav .nav-tab-item {
@@ -4814,6 +4818,7 @@ header .logout-btn {
   color: #fff;
   letter-spacing: 0.02em;
   line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .product-details-price {
@@ -5503,5 +5508,11 @@ html.user-logged-in #user-dashboard-card {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-dim);
   cursor: not-allowed;
+}
+
+/* Global uppercase override for inline elements using Kyrilla */
+[style*="font-family: 'Kyrilla'"], 
+[style*="font-family:'Kyrilla'"] {
+  text-transform: uppercase !important;
 }
 

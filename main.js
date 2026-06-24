@@ -709,6 +709,8 @@ document.addEventListener('DOMContentLoaded', () => {
       title = "ADMIN PORTAL";
       loadAdminDashboard();
     }
+    else if (targetViewId === 'view-news-details') title = "NEWS DETAILS";
+    else if (targetViewId === 'view-event-details') title = "EVENT DETAILS";
     headerTitle.textContent = title;
 
     // Track history
@@ -1235,9 +1237,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // D. Events Data
   const mockEvents = [
-    { month: 'Jun', day: '07', title: 'UNDERGROUND NYC', organizer: 'THIRSTYCLUB999 PRESENTS', location: 'BROOKLYN, NYC' },
-    { month: 'Jul', day: '19', title: 'WORLDWIDE MEET', organizer: 'THIRSTYCLUB999', location: 'LONDON, UK' },
-    { month: 'Aug', day: '31', title: '999 DAY', organizer: 'THIRSTYCLUB999', location: 'WORLDWIDE' }
+    {
+      id: 'event-nyc',
+      month: 'Jun',
+      day: '07',
+      title: 'UNDERGROUND NYC',
+      organizer: 'THIRSTYCLUB999 PRESENTS',
+      location: 'BROOKLYN, NYC',
+      time: '10:00 PM EST',
+      image: 'images/THIRSTY_1.JPG',
+      description: 'An exclusive warehouse showcase in the heart of Brooklyn. Experience the raw street aesthetic of our summer collection release combined with industrial alt-beats.',
+      lineup: 'DJ TOBI • SANTI (SPECIAL SET) • DRUMMERBOY',
+      instructions: 'RSVP required. Presentation of verified ThirstyClub999 Digital Passport at the entrance is mandatory for priority access.'
+    },
+    {
+      id: 'event-london',
+      month: 'Jul',
+      day: '19',
+      title: 'WORLDWIDE MEET',
+      organizer: 'THIRSTYCLUB999',
+      location: 'LONDON, UK',
+      time: '08:00 PM GMT',
+      image: 'images/THIRSTY_63.JPG',
+      description: 'Connecting our UK members in an intimate cyber-lounge setting. A curated evening of music, panel talks, and early product design showcases.',
+      lineup: 'MINA • DJ KRYSTAL • ALÉ GUEST TALKS',
+      instructions: 'RSVP via passport portal. Admission is strictly based on active membership tier. QR check-in opens at 7:30 PM.'
+    },
+    {
+      id: 'event-day',
+      month: 'Aug',
+      day: '31',
+      title: '999 DAY',
+      organizer: 'THIRSTYCLUB999',
+      location: 'WORLDWIDE',
+      time: 'ALL DAY',
+      image: 'images/THIRSTY_75.JPG',
+      description: 'The annual global celebration of ThirstyClub999. Parallel offline pop-ups in major hubs, global digital passport updates, and limited-edition product drops.',
+      lineup: 'GLOBAL COLLABORATORS • COMMUNITY HIGHLIGHTS',
+      instructions: 'Check your app dashboard throughout the day for local pop-up locations, drop coordinates, and active bounty multipliers.'
+    }
   ];
 
   const renderEvents = () => {
@@ -1266,6 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mockEvents.forEach(e => {
         const card = document.createElement('div');
         card.className = 'event-card-item';
+        card.style.cursor = 'pointer';
         card.innerHTML = `
           <div class="event-date-block">
             <span class="ev-month">${e.month}</span>
@@ -1276,11 +1315,56 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="ev-title">${e.title}</div>
             <div class="ev-location">${e.location}</div>
           </div>
-          <button class="ev-rsvp-btn" onclick="alert('RSVP confirmed!')">RSVP</button>
+          <button class="ev-rsvp-btn">RSVP</button>
         `;
+        card.querySelector('.ev-rsvp-btn').onclick = (evt) => {
+          evt.stopPropagation();
+          alert('RSVP confirmed!');
+        };
+        card.addEventListener('click', () => showEventDetails(e.id));
         container.appendChild(card);
       });
     }, 400);
+  };
+
+  const showEventDetails = (eventId) => {
+    const ev = mockEvents.find(item => item.id === eventId);
+    if (!ev) return;
+
+    const detailsContainer = document.getElementById('event-details-content');
+    if (!detailsContainer) return;
+    
+    detailsContainer.innerHTML = `
+      <div class="event-details-hero" style="position: relative; width: 100%; height: 200px; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid rgba(255, 62, 62, 0.15);">
+        <img src="${ev.image}" alt="${ev.title}" style="width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%); padding: 1rem;">
+          <span style="font-size: 0.65rem; background: var(--accent-color); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">${ev.organizer}</span>
+        </div>
+      </div>
+      
+      <h2 style="font-family: 'Kyrilla', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">${ev.title}</h2>
+      <div style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1.25rem; text-transform: uppercase;">
+        📍 ${ev.location} • 📅 ${ev.month} ${ev.day}, 2026 • ⏰ ${ev.time}
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <div style="font-size: 0.75rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.05em; text-transform: uppercase;">DESCRIPTION</div>
+        <p style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin: 0;">${ev.description}</p>
+      </div>
+
+      <div style="margin-bottom: 1.5rem; background: rgba(255, 62, 62, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 8px; padding: 1rem;">
+        <div style="font-size: 0.75rem; font-weight: 800; color: var(--accent-color); margin-bottom: 0.4rem; letter-spacing: 0.05em; text-transform: uppercase;">🎵 LINEUP</div>
+        <div style="font-size: 0.85rem; color: #fff; font-weight: 700; line-height: 1.4;">${ev.lineup}</div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <div style="font-size: 0.75rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; letter-spacing: 0.05em; text-transform: uppercase;">ENTRY INSTRUCTIONS</div>
+        <p style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; margin: 0;">${ev.instructions}</p>
+      </div>
+
+      <button class="cta-button fill-btn" style="margin-bottom: 2rem;" onclick="alert('RSVP confirmed!')">RSVP FOR THIS EVENT</button>
+    `;
+    switchView('view-event-details');
   };
   const triviaData = {
     thirstynalia: [
@@ -3145,16 +3229,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newsReadBtn) {
       newsReadBtn.onclick = (e) => {
         e.stopPropagation();
-        switchView('view-community');
-        switchCommunityTab('events');
+        switchView('view-news-details');
       };
     }
 
     const newsCard = document.getElementById('home-news-card');
     if (newsCard) {
       newsCard.onclick = () => {
-        switchView('view-community');
-        switchCommunityTab('events');
+        switchView('view-news-details');
       };
     }
 
