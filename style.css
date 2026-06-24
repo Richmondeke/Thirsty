@@ -5516,3 +5516,78 @@ html.user-logged-in #user-dashboard-card {
   text-transform: uppercase !important;
 }
 
+/* --- Community Ad Carousel --- */
+.community-ad-carousel .carousel-slide {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.community-ad-carousel .carousel-slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.community-ad-carousel .carousel-dots {
+  position: absolute;
+  bottom: 0.5rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  gap: 0.4rem !important;
+  z-index: 5;
+}
+
+.community-ad-carousel .carousel-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.community-ad-carousel .carousel-dot.active {
+  background-color: var(--accent-color) !important;
+  transform: scale(1.3) !important;
+  box-shadow: 0 0 8px var(--accent-color) !important;
+}
+
+/* Glassmorphism details and semi-transparent overlay to ensure readability */
+.community-ad-carousel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.community-ad-carousel .carousel-slide::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.community-ad-carousel .carousel-slide > div {
+  position: relative;
+  z-index: 2;
+}
+
+

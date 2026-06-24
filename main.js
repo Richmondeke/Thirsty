@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
       avatar: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>",
       time: '2m ago',
       text: 'THE SYSTEM IS DRY. WE BRING THE THIRST.',
-      media: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=400&q=80',
+      media: 'images/THIRSTY_1.JPG',
       likes: 999,
       comments: 2,
       liked: false,
@@ -998,7 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
       avatar: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>",
       time: '1h ago',
       text: 'NO RULES. ONLY THE CLUB.',
-      media: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=400&q=80',
+      media: 'images/THIRSTY_69.JPG',
       likes: 854,
       comments: 1,
       liked: false,
@@ -3245,6 +3245,62 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   initCarousel();
+
+  // --- Community Ad Carousel Auto-Rotation & Clicks ---
+  let currentAdIndex = 0;
+  let adCarouselInterval = null;
+
+  const showAdSlide = (index) => {
+    const slides = document.querySelectorAll('#community-ad-card .carousel-slide');
+    const dots = document.querySelectorAll('#community-ad-dots .carousel-dot');
+    if (slides.length === 0) return;
+
+    slides.forEach((slide, idx) => {
+      if (idx === index) {
+        slide.style.display = 'flex';
+        slide.classList.add('active');
+      } else {
+        slide.style.display = 'none';
+        slide.classList.remove('active');
+      }
+    });
+
+    dots.forEach((dot, idx) => {
+      if (idx === index) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+
+    currentAdIndex = index;
+  };
+
+  const startAdRotation = () => {
+    if (adCarouselInterval) clearInterval(adCarouselInterval);
+    adCarouselInterval = setInterval(() => {
+      const slides = document.querySelectorAll('#community-ad-card .carousel-slide');
+      if (slides.length === 0) return;
+      const nextIndex = (currentAdIndex + 1) % slides.length;
+      showAdSlide(nextIndex);
+    }, 6000);
+  };
+
+  const initAdCarousel = () => {
+    const dots = document.querySelectorAll('#community-ad-dots .carousel-dot');
+    dots.forEach(dot => {
+      dot.onclick = () => {
+        const targetIdx = parseInt(dot.getAttribute('data-ad-go'), 10);
+        showAdSlide(targetIdx);
+        startAdRotation();
+      };
+    });
+
+    showAdSlide(0);
+    startAdRotation();
+  };
+
+  initAdCarousel();
 
   // --- Dynamic Overall Community Leaderboard ---
   const renderLeaderboard = async () => {

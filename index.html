@@ -495,7 +495,51 @@
           <div class="app-view" id="view-community">
             <div class="view-content">
               <div class="view-intro-title">COMMUNITY</div>
-              <div class="view-intro-desc">REAL TIME SIGNALS & PRIVATE EVENTS</div>
+              <div class="view-intro-desc" style="margin-bottom: 1rem;">REAL TIME SIGNALS & PRIVATE EVENTS</div>
+
+              <!-- Community Ad Banner Carousel -->
+              <div class="community-ad-carousel carousel-container" id="community-ad-card" style="margin-bottom: 1.5rem; height: 120px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255, 62, 62, 0.15); background: rgba(0,0,0,0.95); position: relative;">
+                <div class="carousel-track" id="community-ad-track" style="position: relative; width: 100%; height: 100%;">
+                  
+                  <!-- Ad Slide 1 -->
+                  <div class="carousel-slide active" data-ad-slide="0" style="position: absolute; top:0; left:0; width:100%; height:100%; display: flex; align-items: center; justify-content: center;">
+                    <img src="images/THIRSTY_77.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
+                    <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
+                      <span style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">SPONSORED</span>
+                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ThirstyClub999 Premium Wear</h4>
+                      <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Members get early access to drop coords</p>
+                    </div>
+                  </div>
+
+                  <!-- Ad Slide 2 -->
+                  <div class="carousel-slide" data-ad-slide="1" style="position: absolute; top:0; left:0; width:100%; height:100%; display: none; align-items: center; justify-content: center;">
+                    <img src="images/THIRSTY_37.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
+                    <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
+                      <span style="font-size: 0.55rem; background: #39b54a; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">LIVE AD</span>
+                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Wet Vibes Vol 2 Coming Soon</h4>
+                      <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Pre-save next mixtape streaming on Spotify</p>
+                    </div>
+                  </div>
+
+                  <!-- Ad Slide 3 -->
+                  <div class="carousel-slide" data-ad-slide="2" style="position: absolute; top:0; left:0; width:100%; height:100%; display: none; align-items: center; justify-content: center;">
+                    <img src="images/THIRSTY_75.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
+                    <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
+                      <span style="font-size: 0.55rem; background: #ffaa00; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">EXCLUSIVE</span>
+                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lagos Cyber-Lounge RSVP</h4>
+                      <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Lock your physical access passes now</p>
+                    </div>
+                  </div>
+
+                </div>
+                
+                <!-- Ad Carousel Indicators -->
+                <div class="carousel-dots" id="community-ad-dots" style="bottom: 0.5rem; gap: 0.4rem; z-index: 5;">
+                  <span class="carousel-dot active" data-ad-go="0" style="width: 4px; height: 4px;"></span>
+                  <span class="carousel-dot" data-ad-go="1" style="width: 4px; height: 4px;"></span>
+                  <span class="carousel-dot" data-ad-go="2" style="width: 4px; height: 4px;"></span>
+                </div>
+              </div>
 
               <!-- Community Sub-tabs -->
               <div class="community-subtabs" style="display: flex; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem; width: 100%;">
