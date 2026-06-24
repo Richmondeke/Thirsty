@@ -639,6 +639,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (tab === 'games') {
       renderGames();
     }
+
+    // Trigger transition on the newly opened subtab section container
+    const activeSection = document.getElementById(`community-${tab}-section`);
+    if (activeSection) {
+      triggerPageTransition(activeSection);
+    }
   };
 
   const bindCommunitySubTabs = () => {
@@ -673,7 +679,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Activate target view
     const targetView = document.getElementById(targetViewId);
-    if (targetView) targetView.classList.add('active');
+    if (targetView) {
+      targetView.classList.add('active');
+      triggerPageTransition(targetView);
+    }
 
     // Update Header Title depending on view
     let title = "THIRSTYCLUB999";
@@ -4735,8 +4744,105 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // --- Page Entry staggered slide-up transition ---
+  const triggerPageTransition = (containerEl) => {
+    if (!containerEl) return;
+    const targets = containerEl.querySelectorAll(
+      '.view-intro-title, .product-card, .game-select-card, .connected-apps-card, .referral-card, .signals-feed-list, .badge-card, .leaderboard-container, .top-members-podium, .per-game-leaderboard-grid, .checkout-summary-card, .events-timeline, .admin-metric-card, .admin-table-container, .news-body-text, .gallery-title, .event-photos-gallery-wrap'
+    );
+    if (targets.length === 0) return;
+
+    if (typeof motion !== 'undefined') {
+      targets.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(15px)';
+      });
+      motion.animate(
+        Array.from(targets),
+        { opacity: [0, 1], y: [15, 0] },
+        { delay: motion.stagger(0.04), duration: 0.45, easing: [0.16, 1, 0.3, 1] }
+      );
+    }
+  };
+
+  // --- Photo Gallery Lightbox Viewer ---
+  const initLightbox = () => {
+    const galleryItems = document.querySelectorAll('.gallery-photo-item img');
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.querySelector('.lightbox-close');
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    const currentIdxEl = document.getElementById('lightbox-current-idx');
+    const totalCountEl = document.getElementById('lightbox-total-count');
+
+    if (!lightbox || galleryItems.length === 0) return;
+
+    let imagesList = Array.from(galleryItems).map(img => img.getAttribute('src'));
+    let currentIdx = 0;
+
+    totalCountEl.textContent = imagesList.length;
+
+    const openLightbox = (idx) => {
+      currentIdx = idx;
+      lightboxImg.setAttribute('src', imagesList[currentIdx]);
+      currentIdxEl.textContent = currentIdx + 1;
+      lightbox.classList.add('active');
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+    };
+
+    const nextImage = (e) => {
+      if (e) e.stopPropagation();
+      currentIdx = (currentIdx + 1) % imagesList.length;
+      lightboxImg.setAttribute('src', imagesList[currentIdx]);
+      currentIdxEl.textContent = currentIdx + 1;
+    };
+
+    const prevImage = (e) => {
+      if (e) e.stopPropagation();
+      currentIdx = (currentIdx - 1 + imagesList.length) % imagesList.length;
+      lightboxImg.setAttribute('src', imagesList[currentIdx]);
+      currentIdxEl.textContent = currentIdx + 1;
+    };
+
+    galleryItems.forEach((imgEl, idx) => {
+      imgEl.parentElement.onclick = () => openLightbox(idx);
+    });
+
+    if (closeBtn) closeBtn.onclick = closeLightbox;
+    if (nextBtn) nextBtn.onclick = nextImage;
+    if (prevBtn) prevBtn.onclick = prevImage;
+
+    lightbox.onclick = (e) => {
+      if (e.target === lightbox || e.target === document.querySelector('.lightbox-content-wrap')) {
+        closeLightbox();
+      }
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    });
+  };
+
+  // --- Page Loader controller ---
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+      setTimeout(() => {
+        loader.classList.add('loaded');
+      }, 1200);
+    }
+  });
+
   initSponsorModal();
   initReferralCard();
+  initLightbox();
 
   updateUI();
   drawPassport();
