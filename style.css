@@ -3346,57 +3346,52 @@ header .logout-btn {
 .community-subtabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 30px;
-  padding: 5px;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
-  width: fit-content;
+  width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-:root.light-mode .community-subtabs {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.05);
 }
 
 .subtab-btn {
-  background: transparent;
-  border: none;
-  border-radius: 25px;
-  color: var(--text-dim);
-  padding: 0.6rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #888888;
+  padding: 0.65rem 1.4rem;
   font-family: 'Satoshi', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-transform: uppercase;
   outline: none;
 }
 
+:root.light-mode .subtab-btn {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #666666;
+}
+
 .subtab-btn:hover {
   color: var(--text-color);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 :root.light-mode .subtab-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 .subtab-btn.active {
-  background: #ffffff;
-  color: #000000 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-:root.light-mode .subtab-btn.active {
-  background: #000000;
+  background: var(--accent-color) !important;
+  border-color: transparent !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 15px var(--accent-glow) !important;
+  font-weight: 900;
 }
 
 /* Locked Crate Visuals */
