@@ -70,15 +70,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (session && profile) {
       // User is Logged In
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
-      if (userDashboardCard) userDashboardCard.style.display = 'flex';
+      if (userDashboardCard && userDashboardCard.style.display !== 'flex') {
+        userDashboardCard.style.display = 'flex';
+        // Reset view to homepage when first showing dashboard
+        viewHistory = ['view-homepage'];
+        switchView('view-homepage', false);
+      }
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
       
-      // Hide landing page components when logged in
-      const heroSec = document.getElementById('home');
-      if (heroSec) heroSec.style.display = 'none';
-      const passportSec = document.getElementById('passport');
-      if (passportSec) passportSec.style.display = 'none';
+      // Hide entire landing page components
+      const headerEl = document.querySelector('header');
+      if (headerEl) headerEl.style.display = 'none';
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.style.display = 'none';
+      const footerEl = document.querySelector('footer');
+      if (footerEl) footerEl.style.display = 'none';
+      
+      // Lock body scroll
+      document.body.style.overflow = 'hidden';
       
       if (navDashLink) {
         navDashLink.textContent = 'Dashboard';
@@ -144,15 +153,19 @@ document.addEventListener('DOMContentLoaded', () => {
       drawPassport();
     } else {
       // User is Logged Out
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
       
-      // Show landing page components when logged out
-      const heroSec = document.getElementById('home');
-      if (heroSec) heroSec.style.display = 'flex';
-      const passportSec = document.getElementById('passport');
-      if (passportSec) passportSec.style.display = 'block';
+      // Show landing page components
+      const headerEl = document.querySelector('header');
+      if (headerEl) headerEl.style.display = 'flex';
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.style.display = 'block';
+      const footerEl = document.querySelector('footer');
+      if (footerEl) footerEl.style.display = 'block';
+      
+      // Restore body scroll
+      document.body.style.overflow = '';
 
       const adminSidebarBtn = document.getElementById('admin-sidebar-btn');
       const adminBottomBtn = document.getElementById('admin-bottom-btn');
