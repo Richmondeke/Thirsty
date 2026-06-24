@@ -541,29 +541,58 @@
                 <div id="games-hub-select" class="games-hub-grid">
                   <div class="game-select-card" id="btn-select-trivia">
                     <div class="game-card-icon">🧠</div>
-                    <h3 class="game-card-title">TRIVIA CHALLENGE</h3>
-                    <p class="game-card-desc">Test your ThirstyClub knowledge. Prove your membership status and earn reward points.</p>
-                    <button class="cta-button game-action-btn">PLAY NOW</button>
+                    <h3 class="game-card-title">TRIVIA BLITZ</h3>
+                    <p class="game-card-desc">1-minute rapid-fire Thirsty quiz. Speed & accuracy determine your leaderboard rank.</p>
+                    <button class="cta-button game-action-btn">PLAY BLITZ</button>
                   </div>
                   
                   <div class="game-select-card" id="btn-select-treasure">
                     <div class="game-card-icon">🗺️</div>
                     <h3 class="game-card-title">TREASURE HUNT</h3>
-                    <p class="game-card-desc">Follow cryptic clues to find mystery boxes scattered around the city. Enter box codes to unlock.</p>
+                    <p class="game-card-desc">Follow cryptic clues to find secret mystery boxes. Enter codes to claim exclusive rewards.</p>
                     <button class="cta-button game-action-btn">EXPLORE HUNTS</button>
+                  </div>
+
+                  <div class="game-select-card" id="btn-select-speedtap">
+                    <div class="game-card-icon">🚀</div>
+                    <h3 class="game-card-title">SPEED TAP</h3>
+                    <p class="game-card-desc">How fast can you tap? Tap the button as many times as possible in 10 seconds.</p>
+                    <button class="cta-button game-action-btn">START TAPPING</button>
+                  </div>
+
+                  <div class="game-select-card" id="btn-select-reaction">
+                    <div class="game-card-icon">⏱️</div>
+                    <h3 class="game-card-title">REACTION TIME</h3>
+                    <p class="game-card-desc">Test your reflexes. Tap the target the millisecond it flashes green.</p>
+                    <button class="cta-button game-action-btn">TEST REFLEXES</button>
+                  </div>
+
+                  <div class="game-select-card" id="btn-select-raids">
+                    <div class="game-card-icon">📣</div>
+                    <h3 class="game-card-title">SOCIAL RAIDS</h3>
+                    <p class="game-card-desc">Help boost the club on social media! Raiding posts directly expands the ThirstyClub universe.</p>
+                    <button class="cta-button game-action-btn">OPEN RAIDS</button>
+                  </div>
+
+                  <div class="game-select-card" id="btn-select-bounties">
+                    <div class="game-card-icon">🏆</div>
+                    <h3 class="game-card-title">BOUNTIES</h3>
+                    <p class="game-card-desc">Complete special community tasks & verify to claim points & ascend the leaderboard.</p>
+                    <button class="cta-button game-action-btn">VIEW BOUNTIES</button>
                   </div>
                 </div>
 
-                <!-- Trivia Game Screen -->
+                <!-- Trivia Blitz View -->
                 <div id="trivia-game-view" style="display: none;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <button class="back-to-games-btn" id="trivia-back-btn">← BACK TO GAMES</button>
+                    <div id="trivia-timer-display" style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em; display: none;">TIME LEFT: <span id="trivia-timer-count">60</span>s</div>
                     <div id="trivia-points-display" style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">POINTS: <span id="trivia-current-points">0</span></div>
                   </div>
 
                   <!-- Category Selection Screen -->
                   <div id="trivia-category-select">
-                    <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">SELECT CATEGORY</h4>
+                    <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">SELECT BLITZ CATEGORY</h4>
                     <div class="category-grid">
                       <div class="category-card" data-category="thirstynalia">
                         <div class="category-icon">🎟️</div>
@@ -581,11 +610,11 @@
                   <!-- Active Question Screen -->
                   <div id="trivia-question-screen" style="display: none;">
                     <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                      <span id="trivia-progress-text">Question 1 of 5</span>
+                      <span id="trivia-progress-text">Question 1</span>
                       <span id="trivia-category-label">ThirstyNalia</span>
                     </div>
                     <div class="progress-bar-outer" style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden;">
-                      <div id="trivia-progress-bar" style="width: 20%; height: 100%; background: var(--accent-color); transition: width 0.3s ease;"></div>
+                      <div id="trivia-progress-bar" style="width: 0%; height: 100%; background: var(--accent-color); transition: width 0.3s ease;"></div>
                     </div>
                     
                     <h4 id="trivia-question-text" style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 1.5rem; font-weight: 700; color: #fff;">Question text goes here?</h4>
@@ -597,19 +626,20 @@
                     <div id="trivia-feedback-container" style="margin-top: 1.25rem; display: none; padding: 1rem; border-radius: 8px; font-size: 0.8rem; line-height: 1.4;">
                       <!-- Populated in JS -->
                     </div>
-
-                    <button class="cta-button" id="trivia-next-btn" style="width: 100%; margin-top: 1.5rem; display: none;">NEXT QUESTION</button>
                   </div>
 
                   <!-- Results Screen -->
                   <div id="trivia-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
                     <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
-                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">QUIZ COMPLETE</h4>
-                    <p id="trivia-score-text" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 700; margin-bottom: 0.5rem;">Score: 4 / 5</p>
+                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">BLITZ COMPLETE</h4>
+                    <p id="trivia-score-text" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 700; margin-bottom: 0.5rem;">Correct Answers: 0</p>
                     <p id="trivia-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS added to your wallet balance</p>
                     <button class="cta-button" id="trivia-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">PLAY AGAIN</button>
                     <button class="back-to-games-btn" id="trivia-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
                   </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-trivia-container"></div>
                 </div>
 
                 <!-- Treasure Hunt Screen -->
@@ -625,6 +655,117 @@
                   <div class="hunts-list" id="treasure-hunts-container">
                     <!-- Populated in JS -->
                   </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-treasure-container"></div>
+                </div>
+
+                <!-- Speed Tap View -->
+                <div id="speedtap-game-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="speedtap-back-btn">← BACK TO GAMES</button>
+                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">TIME LEFT: <span id="speedtap-timer-count">10.0</span>s</div>
+                  </div>
+
+                  <!-- Start screen -->
+                  <div id="speedtap-start-screen" style="text-align: center; padding: 2rem 1rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                    <h4 class="game-view-title" style="font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">SPEED TAP CHALLENGE</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; line-height: 1.5;">Tap the button as fast as you can. You have exactly 10 seconds. Rank high on the leaderboard!</p>
+                    <button class="cta-button" id="speedtap-start-btn" style="width: 100%;">START CHALLENGE</button>
+                  </div>
+
+                  <!-- Game screen -->
+                  <div id="speedtap-play-screen" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+                    <div id="speedtap-tap-count" style="font-size: 3.5rem; font-weight: 900; color: var(--accent-color); margin-bottom: 1.5rem; font-family: monospace;">0</div>
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+                      <button class="speedtap-button" id="speedtap-click-btn">TAP!</button>
+                    </div>
+                  </div>
+
+                  <!-- Results screen -->
+                  <div id="speedtap-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
+                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚡</div>
+                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">CHALLENGE COMPLETE</h4>
+                    <p id="speedtap-result-text" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 700; margin-bottom: 0.5rem;">Total Taps: 0</p>
+                    <p id="speedtap-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS awarded</p>
+                    <button class="cta-button" id="speedtap-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">PLAY AGAIN</button>
+                    <button class="back-to-games-btn" id="speedtap-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
+                  </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-speedtap-container"></div>
+                </div>
+
+                <!-- Reaction Time View -->
+                <div id="reaction-game-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="reaction-back-btn">← BACK TO GAMES</button>
+                  </div>
+
+                  <!-- Start screen -->
+                  <div id="reaction-start-screen" style="text-align: center; padding: 2rem 1rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
+                    <h4 class="game-view-title" style="font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">REACTION TEST</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; line-height: 1.5;">When the red box turns green, tap it as fast as you can. Tap too early and you fail!</p>
+                    <button class="cta-button" id="reaction-start-btn" style="width: 100%;">START TEST</button>
+                  </div>
+
+                  <!-- Active click area screen -->
+                  <div id="reaction-play-screen" style="display: none; padding: 1rem 0;">
+                    <div id="reaction-tap-area" class="reaction-tap-area waiting">
+                      <span id="reaction-tap-label">WAIT FOR GREEN</span>
+                    </div>
+                  </div>
+
+                  <!-- Results screen -->
+                  <div id="reaction-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
+                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚡</div>
+                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">YOUR TIME</h4>
+                    <p id="reaction-result-text" style="font-size: 1.5rem; color: var(--accent-color); font-weight: 900; margin-bottom: 0.5rem; font-family: monospace;">240 ms</p>
+                    <p id="reaction-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS awarded</p>
+                    <button class="cta-button" id="reaction-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">TEST AGAIN</button>
+                    <button class="back-to-games-btn" id="reaction-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
+                  </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-reaction-container"></div>
+                </div>
+
+                <!-- Social Raids View -->
+                <div id="raids-game-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="raids-back-btn">← BACK TO GAMES</button>
+                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">RAIDS: <span id="raids-completed-count">0/3</span></div>
+                  </div>
+
+                  <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">SOCIAL RAIDS</h4>
+                  <p class="game-view-subtitle" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.4;">Click on each tweet or post below to open it, support the club with a like/comment/retweet, then claim your CC points!</p>
+
+                  <div class="raids-list" id="raids-list-container">
+                    <!-- Populated dynamically in main.js -->
+                  </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-raids-container"></div>
+                </div>
+
+                <!-- Bounties View -->
+                <div id="bounties-game-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="bounties-back-btn">← BACK TO GAMES</button>
+                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">COMPLETED: <span id="bounties-completed-count">0/4</span></div>
+                  </div>
+
+                  <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">BOUNTY STREAM</h4>
+                  <p class="game-view-subtitle" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.4;">Complete the missions below to expand the ThirstyClub network and claim points to rise up the rank list!</p>
+
+                  <div class="bounties-list" id="bounties-list-container">
+                    <!-- Populated dynamically in main.js -->
+                  </div>
+
+                  <!-- Leaderboard -->
+                  <div class="game-leaderboard-container" id="leaderboard-bounties-container"></div>
                 </div>
 
               </div>

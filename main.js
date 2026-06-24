@@ -1256,10 +1256,6 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(card);
     });
   };
-
-  // ==========================================
-  // E. Games Hub Engine (Trivia & Treasure Hunt)
-  // ==========================================
   const triviaData = {
     thirstynalia: [
       {
@@ -1296,6 +1292,36 @@ document.addEventListener('DOMContentLoaded', () => {
         options: ["Your Instagram profile", "Your generated Digital Passport", "A printed paper ticket", "A password phrase"],
         answer: 1,
         explanation: "Your generated Digital Passport contains your unique ThirstyID and QR code for scanning at the gate."
+      },
+      {
+        question: "What is the color theme of ThirstyClub?",
+        options: ["Neon Red & Black", "Neon Green & Cyber Green", "Gold & Silver", "Blue & Purple"],
+        answer: 0,
+        explanation: "The iconic design theme of ThirstyClub is Neon Red and Black."
+      },
+      {
+        question: "How many private slots are in ThirstyClub founder tier?",
+        options: ["99", "999", "9", "9999"],
+        answer: 0,
+        explanation: "ThirstyClub has exactly 99 private founding slots."
+      },
+      {
+        question: "Who is the core team behind ThirstyClub?",
+        options: ["Thirstyzoids", "Dry System Corp", "Ethereum Foundation", "Alté Sound Crew"],
+        answer: 0,
+        explanation: "The community and founders are affectionately called Thirstyzoids."
+      },
+      {
+        question: "What cryptocurrency is used for passport check-ins?",
+        options: ["Ether", "ClubCoins", "None, check-in is gasless", "Solana"],
+        answer: 2,
+        explanation: "Member passport check-ins are fully gasless and handled on our backend."
+      },
+      {
+        question: "Which city did ThirstyClub host its launch event in?",
+        options: ["Lagos", "London", "Abuja", "New York"],
+        answer: 0,
+        explanation: "ThirstyClub's inaugural physical meetup and launch was held in Lagos."
       }
     ],
     songs: [
@@ -1328,6 +1354,24 @@ document.addEventListener('DOMContentLoaded', () => {
         options: ["A cash register ring", "A bottle pop & fizz sound", "A loud siren", "A laser beam blast"],
         answer: 1,
         explanation: "Checking in plays an animated bottle popping and fizzing sound effect."
+      },
+      {
+        question: "Which artist is known as the Thirsty Beats selector?",
+        options: ["DJ Zoid", "DJ Spinall", "DJ Obi", "DJ Neptune"],
+        answer: 0,
+        explanation: "The selector of our cyber music is DJ Zoid."
+      },
+      {
+        question: "What song plays during the landing video background?",
+        options: ["Thirsty Rhythm", "Alté Cyber Anthem", "Wet Vibe Track", "Dry System Beat"],
+        answer: 0,
+        explanation: "Thirsty Rhythm is the official background music of our landing site."
+      },
+      {
+        question: "Who produced the 'Dry System' synth line?",
+        options: ["VibeLord", "Kidxmini", "ZoidMaster", "Straffitti"],
+        answer: 0,
+        explanation: "VibeLord designed the industrial synths for the Dry System album."
       }
     ]
   };
@@ -1359,19 +1403,247 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  const raidsData = [
+    { id: 1, title: "DRY SYSTEM ENDS", link: "https://x.com/ThirstyClub999/status/1782256247823", body: "Like, retweet & comment: 'The system is dry. We bring the thirst.'", points: 100 },
+    { id: 2, title: "WET VIBES VOL 1 OUT NOW", link: "https://x.com/ThirstyClub999/status/1782256375743", body: "Raid this post on Twitter. Share the alté afrobeats vibes.", points: 150 },
+    { id: 3, title: "PASSPORT MINT NOTICE", link: "https://x.com/ThirstyClub999/status/1782267093731", body: "Help amplify our gasless passport announcement on X.", points: 200 }
+  ];
+
+  const bountiesData = [
+    { id: 'follow_twitter', title: "Follow ThirstyClub on X", desc: "Keep updated with digital passport releases and live event slots.", points: 150 },
+    { id: 'join_discord', title: "Join Club Discord Server", desc: "Connect with verified members in cyber-lounge voice rooms.", points: 200 },
+    { id: 'post_instagram', title: "Share Passport on Instagram Story", desc: "Share your passport design & tag @ThirstyClub999.", points: 300 },
+    { id: 'add_wallet', title: "Add Pass to Google/Apple Wallet", desc: "Download the pkpass check-in file to your phone wallet.", points: 100 }
+  ];
+
   // Game States
   let activeCategory = null;
   let currentQuestionIdx = 0;
   let triviaScore = 0;
+  let triviaQuestionsPool = [];
+  let triviaTimeLeft = 60;
+  let triviaTimerInterval = null;
+
+  let speedTapTaps = 0;
+  let speedTapTimeLeft = 10.0;
+  let speedTapTimerInterval = null;
+
+  let reactionState = 'idle'; // idle, waiting, ready, results
+  let reactionStartTime = 0;
+  let reactionTimerId = null;
+
+  // Generic Game Switcher
+  const switchGameView = (viewId) => {
+    const views = [
+      'games-hub-select',
+      'trivia-game-view',
+      'treasure-hunt-view',
+      'speedtap-game-view',
+      'reaction-game-view',
+      'raids-game-view',
+      'bounties-game-view'
+    ];
+    views.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = id === viewId ? 'block' : 'none';
+    });
+    if (viewId === 'games-hub-select') {
+      const el = document.getElementById(viewId);
+      if (el) el.style.display = 'grid';
+    }
+  };
+
+  // Sync Score helper
+  const updateUserGameScore = async (gameKey, score, operation = 'max') => {
+    const localKey = `thirsty_game_${gameKey}`;
+    const prevLocal = parseFloat(localStorage.getItem(localKey) || (gameKey === 'reaction_time' ? '9999' : '0'));
+    
+    let newScore = score;
+    if (operation === 'max') {
+      newScore = Math.max(prevLocal, score);
+    } else if (operation === 'min') {
+      newScore = Math.min(prevLocal, score);
+    } else if (operation === 'add') {
+      newScore = prevLocal + score;
+    }
+    
+    localStorage.setItem(localKey, newScore.toString());
+
+    if (currentUserProfile) {
+      try {
+        const currentSocials = currentUserProfile.socials || {};
+        const currentGameScores = currentSocials.game_scores || {};
+        const prevDB = parseFloat(currentGameScores[gameKey] || (gameKey === 'reaction_time' ? '9999' : '0'));
+
+        let finalDBScore = score;
+        if (operation === 'max') {
+          finalDBScore = Math.max(prevDB, score);
+        } else if (operation === 'min') {
+          finalDBScore = Math.min(prevDB, score);
+        } else if (operation === 'add') {
+          finalDBScore = prevDB + score;
+        }
+
+        const updatedGameScores = {
+          ...currentGameScores,
+          [gameKey]: finalDBScore
+        };
+
+        const updatedSocials = {
+          ...currentSocials,
+          game_scores: updatedGameScores
+        };
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ socials: updatedSocials })
+          .eq('id', currentUserProfile.id);
+
+        if (!error) {
+          currentUserProfile.socials = updatedSocials;
+          console.log(`Synced game score for ${gameKey}: ${finalDBScore}`);
+        } else {
+          console.warn("Failed to sync game score to database:", error);
+        }
+      } catch (err) {
+        console.warn("Error updating game score in Supabase:", err);
+      }
+    }
+  };
+
+  // Build Leaderboard
+  const fetchGameLeaderboard = async (gameKey, containerId) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const mockLeaderboards = {
+      trivia_blitz: [
+        { username: 'THIRSTYZOID', score: 12, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 10, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 8, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 7, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 5, thirstyclub_id: 'T999-5566' }
+      ],
+      treasure_hunt: [
+        { username: 'THIRSTYZOID', score: 3, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 2, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 2, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 1, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 1, thirstyclub_id: 'T999-5566' }
+      ],
+      speed_tap: [
+        { username: 'THIRSTYZOID', score: 87, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 78, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 72, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 65, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 58, thirstyclub_id: 'T999-5566' }
+      ],
+      reaction_time: [
+        { username: 'THIRSTYZOID', score: 180, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 210, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 245, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 280, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 320, thirstyclub_id: 'T999-5566' }
+      ],
+      social_raids: [
+        { username: 'THIRSTYZOID', score: 3, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 2, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 2, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 1, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 0, thirstyclub_id: 'T999-5566' }
+      ],
+      bounties_completed: [
+        { username: 'THIRSTYZOID', score: 4, thirstyclub_id: 'T999-1337' },
+        { username: 'Adeline Palmerston', score: 3, thirstyclub_id: 'T999-2468' },
+        { username: 'Lekan Thirsty', score: 2, thirstyclub_id: 'T999-1122' },
+        { username: 'Tunde Gold', score: 2, thirstyclub_id: 'T999-9081' },
+        { username: 'Evelyn Drinker', score: 1, thirstyclub_id: 'T999-5566' }
+      ]
+    };
+
+    let entries = [...mockLeaderboards[gameKey]];
+
+    try {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('username, thirstyclub_id, socials');
+      
+      if (profiles && !error) {
+        profiles.forEach(p => {
+          const gameScores = p.socials?.game_scores || {};
+          const score = gameScores[gameKey];
+          if (score !== undefined && score !== null) {
+            const idx = entries.findIndex(e => e.thirstyclub_id === p.thirstyclub_id || e.username === p.username);
+            if (idx !== -1) {
+              if (gameKey === 'reaction_time') {
+                entries[idx].score = Math.min(entries[idx].score, score);
+              } else {
+                entries[idx].score = Math.max(entries[idx].score, score);
+              }
+            } else {
+              entries.push({
+                username: p.username || 'Anonymous',
+                thirstyclub_id: p.thirstyclub_id || 'T999-XXXX',
+                score: score
+              });
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to fetch game leaderboard, using mock:", e);
+    }
+
+    if (gameKey === 'reaction_time') {
+      entries.sort((a, b) => a.score - b.score);
+    } else {
+      entries.sort((a, b) => b.score - a.score);
+    }
+
+    const top5 = entries.slice(0, 5);
+
+    let metricSuffix = ' correct';
+    if (gameKey === 'treasure_hunt') metricSuffix = ' codes';
+    else if (gameKey === 'speed_tap') metricSuffix = ' taps';
+    else if (gameKey === 'reaction_time') metricSuffix = ' ms';
+    else if (gameKey === 'social_raids') metricSuffix = ' raids';
+    else if (gameKey === 'bounties_completed') metricSuffix = ' bounties';
+
+    const gameTitle = gameKey.toUpperCase().replace('_', ' ');
+
+    container.innerHTML = `
+      <div class="game-leaderboard-header">
+        <div class="game-leaderboard-title">🏆 ${gameTitle} LEADERBOARD</div>
+        <div class="game-leaderboard-subtitle">TOP MEMBERS</div>
+      </div>
+      <ul class="game-leaderboard-list">
+        ${top5.map((item, idx) => {
+          const isCurrentUser = currentUserProfile && 
+            (item.thirstyclub_id === currentUserProfile.thirstyclub_id || item.username === currentUserProfile.username);
+          return `
+            <li class="game-leaderboard-item rank-${idx+1} ${isCurrentUser ? 'user-row' : ''}">
+              <span class="rank">#${idx+1}</span>
+              <span class="name">${item.username}</span>
+              <span class="score">${item.score}${metricSuffix}</span>
+            </li>
+          `;
+        }).join('')}
+      </ul>
+    `;
+  };
+
+  // Helper to shuffle list of questions
+  const shuffleArray = (array) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
 
   const renderGames = () => {
-    const selectScreen = document.getElementById('games-hub-select');
-    const triviaView = document.getElementById('trivia-game-view');
-    const treasureView = document.getElementById('treasure-hunt-view');
-    
-    if (selectScreen) selectScreen.style.display = 'grid';
-    if (triviaView) triviaView.style.display = 'none';
-    if (treasureView) treasureView.style.display = 'none';
+    switchGameView('games-hub-select');
 
     const savedTriviaPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
     const triviaPointsDisplay = document.getElementById('trivia-current-points');
@@ -1386,27 +1658,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     renderTreasureHunts();
+    renderSocialRaids();
+    renderBounties();
   };
 
+  // --- TRIVIA BLITZ ---
   const startQuiz = (category) => {
     activeCategory = category;
     currentQuestionIdx = 0;
     triviaScore = 0;
+    triviaQuestionsPool = shuffleArray(triviaData[category]);
+    triviaTimeLeft = 60;
 
     document.getElementById('trivia-category-select').style.display = 'none';
     document.getElementById('trivia-question-screen').style.display = 'block';
     document.getElementById('trivia-results-screen').style.display = 'none';
+    
+    const timerDisplay = document.getElementById('trivia-timer-display');
+    if (timerDisplay) timerDisplay.style.display = 'block';
+    
+    document.getElementById('trivia-timer-count').textContent = triviaTimeLeft;
+
+    // Start 60s countdown
+    if (triviaTimerInterval) clearInterval(triviaTimerInterval);
+    triviaTimerInterval = setInterval(() => {
+      triviaTimeLeft -= 1;
+      document.getElementById('trivia-timer-count').textContent = triviaTimeLeft;
+      if (triviaTimeLeft <= 0) {
+        clearInterval(triviaTimerInterval);
+        showQuizResults();
+      }
+    }, 1000);
 
     renderTriviaQuestion();
   };
 
   const renderTriviaQuestion = () => {
-    const list = triviaData[activeCategory];
-    const q = list[currentQuestionIdx];
+    if (triviaTimeLeft <= 0) return;
     
-    document.getElementById('trivia-progress-text').textContent = `Question ${currentQuestionIdx + 1} of ${list.length}`;
+    // Load question (modulo handles wrapping around if player answers all questions within 60s)
+    const qIdx = currentQuestionIdx % triviaQuestionsPool.length;
+    const q = triviaQuestionsPool[qIdx];
+    
+    document.getElementById('trivia-progress-text').textContent = `Question ${currentQuestionIdx + 1}`;
     document.getElementById('trivia-category-label').textContent = activeCategory === 'thirstynalia' ? 'ThirstyNalia' : 'Songs';
-    document.getElementById('trivia-progress-bar').style.width = `${((currentQuestionIdx + 1) / list.length) * 100}%`;
+    document.getElementById('trivia-progress-bar').style.width = `${((qIdx + 1) / triviaQuestionsPool.length) * 100}%`;
     document.getElementById('trivia-question-text').textContent = q.question;
 
     const optionsContainer = document.getElementById('trivia-options-container');
@@ -1421,12 +1717,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('trivia-feedback-container').style.display = 'none';
-    document.getElementById('trivia-next-btn').style.display = 'none';
   };
 
   const selectQuizAnswer = (selectedIndex) => {
-    const list = triviaData[activeCategory];
-    const q = list[currentQuestionIdx];
+    if (triviaTimeLeft <= 0) return;
+
+    const qIdx = currentQuestionIdx % triviaQuestionsPool.length;
+    const q = triviaQuestionsPool[qIdx];
     const optionsContainer = document.getElementById('trivia-options-container');
     const buttons = optionsContainer.querySelectorAll('.quiz-option-btn');
 
@@ -1444,37 +1741,21 @@ document.addEventListener('DOMContentLoaded', () => {
       triviaScore += 1;
     }
 
-    const feedbackBox = document.getElementById('trivia-feedback-container');
-    feedbackBox.style.display = 'block';
-    feedbackBox.style.backgroundColor = isCorrect ? 'rgba(46, 213, 115, 0.08)' : 'rgba(255, 62, 62, 0.08)';
-    feedbackBox.style.border = `1px solid ${isCorrect ? 'rgba(46, 213, 115, 0.3)' : 'rgba(255, 62, 62, 0.3)'}`;
-    feedbackBox.style.color = isCorrect ? '#2ed573' : 'var(--accent-color)';
-    feedbackBox.innerHTML = `
-      <div style="font-weight: 700; margin-bottom: 0.25rem;">${isCorrect ? '✓ CORRECT' : '✗ INCORRECT'}</div>
-      <div style="color: #ccc; font-size: 0.75rem;">${q.explanation}</div>
-    `;
-
-    const nextBtn = document.getElementById('trivia-next-btn');
-    nextBtn.style.display = 'block';
-    nextBtn.textContent = currentQuestionIdx === list.length - 1 ? 'VIEW RESULTS' : 'NEXT QUESTION';
-  };
-
-  const nextTriviaQuestion = () => {
-    const list = triviaData[activeCategory];
-    if (currentQuestionIdx === list.length - 1) {
-      showQuizResults();
-    } else {
+    // Auto-advance after 300ms delay for visual feedback
+    setTimeout(() => {
       currentQuestionIdx += 1;
       renderTriviaQuestion();
-    }
+    }, 350);
   };
 
   const showQuizResults = () => {
+    if (triviaTimerInterval) clearInterval(triviaTimerInterval);
+    
+    document.getElementById('trivia-timer-display').style.display = 'none';
     document.getElementById('trivia-question-screen').style.display = 'none';
     document.getElementById('trivia-results-screen').style.display = 'block';
 
-    const list = triviaData[activeCategory];
-    document.getElementById('trivia-score-text').textContent = `Score: ${triviaScore} / ${list.length}`;
+    document.getElementById('trivia-score-text').textContent = `Correct Answers: ${triviaScore}`;
 
     const earnedPoints = triviaScore * 50;
     document.getElementById('trivia-xp-awarded').textContent = `+${earnedPoints} PTS added to your wallet balance`;
@@ -1485,8 +1766,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const triviaPointsDisplay = document.getElementById('trivia-current-points');
     if (triviaPointsDisplay) triviaPointsDisplay.textContent = newPointsTotal;
+
+    // Sync high score to Supabase
+    updateUserGameScore('trivia_blitz', triviaScore, 'max');
+    fetchGameLeaderboard('trivia_blitz', 'leaderboard-trivia-container');
   };
 
+  // --- TREASURE HUNT ---
   const renderTreasureHunts = () => {
     const container = document.getElementById('treasure-hunts-container');
     if (!container) return;
@@ -1538,6 +1824,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             alert(`🎉 Success! Box Unlocked. You earned +${hunt.points} PTS!`);
             renderTreasureHunts();
+            
+            // Sync codes count to Supabase leaderboard
+            updateUserGameScore('treasure_hunt', unlockedIds.length, 'max');
+            fetchGameLeaderboard('treasure_hunt', 'leaderboard-treasure-container');
           } else {
             alert('✗ Invalid box code. Look closer at the clue!');
           }
@@ -1548,51 +1838,307 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('treasure-completed-count').textContent = `${completedCount}/${treasureHunts.length}`;
   };
 
+  // --- SPEED TAP CHALLENGE ---
+  const startSpeedTap = () => {
+    speedTapTaps = 0;
+    speedTapTimeLeft = 10.0;
+    
+    document.getElementById('speedtap-start-screen').style.display = 'none';
+    document.getElementById('speedtap-play-screen').style.display = 'block';
+    document.getElementById('speedtap-results-screen').style.display = 'none';
+    
+    document.getElementById('speedtap-tap-count').textContent = speedTapTaps;
+    document.getElementById('speedtap-timer-count').textContent = speedTapTimeLeft.toFixed(1);
+
+    if (speedTapTimerInterval) clearInterval(speedTapTimerInterval);
+    speedTapTimerInterval = setInterval(() => {
+      speedTapTimeLeft -= 0.1;
+      if (speedTapTimeLeft <= 0) {
+        speedTapTimeLeft = 0;
+        clearInterval(speedTapTimerInterval);
+        endSpeedTap();
+      }
+      document.getElementById('speedtap-timer-count').textContent = speedTapTimeLeft.toFixed(1);
+    }, 1000 / 10);
+  };
+
+  const clickSpeedTap = () => {
+    if (speedTapTimeLeft <= 0) return;
+    speedTapTaps += 1;
+    document.getElementById('speedtap-tap-count').textContent = speedTapTaps;
+  };
+
+  const endSpeedTap = () => {
+    document.getElementById('speedtap-play-screen').style.display = 'none';
+    document.getElementById('speedtap-results-screen').style.display = 'block';
+    document.getElementById('speedtap-result-text').textContent = `Total Taps: ${speedTapTaps}`;
+    
+    const earnedPoints = speedTapTaps * 10;
+    document.getElementById('speedtap-xp-awarded').textContent = `+${earnedPoints} PTS awarded`;
+
+    const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+    localStorage.setItem('thirsty_trivia_points', currentPoints + earnedPoints);
+
+    updateUserGameScore('speed_tap', speedTapTaps, 'max');
+    fetchGameLeaderboard('speed_tap', 'leaderboard-speedtap-container');
+  };
+
+  // --- REACTION TIME TEST ---
+  const startReactionTime = () => {
+    reactionState = 'waiting';
+    
+    document.getElementById('reaction-start-screen').style.display = 'none';
+    document.getElementById('reaction-play-screen').style.display = 'block';
+    document.getElementById('reaction-results-screen').style.display = 'none';
+
+    const tapArea = document.getElementById('reaction-tap-area');
+    tapArea.className = 'reaction-tap-area waiting';
+    tapArea.querySelector('span').textContent = 'WAIT FOR GREEN';
+
+    if (reactionTimerId) clearTimeout(reactionTimerId);
+    reactionTimerId = setTimeout(() => {
+      reactionState = 'ready';
+      tapArea.className = 'reaction-tap-area ready';
+      tapArea.querySelector('span').textContent = 'TAP NOW!';
+      reactionStartTime = Date.now();
+    }, 1500 + Math.random() * 3000);
+  };
+
+  const tapReactionTime = () => {
+    const tapArea = document.getElementById('reaction-tap-area');
+    if (reactionState === 'waiting') {
+      // Clicked too early
+      clearTimeout(reactionTimerId);
+      reactionState = 'early';
+      tapArea.className = 'reaction-tap-area early';
+      tapArea.querySelector('span').textContent = 'TOO EARLY! TAP TO RETRY';
+    } else if (reactionState === 'ready') {
+      const delta = Date.now() - reactionStartTime;
+      reactionState = 'results';
+      endReactionTime(delta);
+    } else if (reactionState === 'early') {
+      startReactionTime();
+    }
+  };
+
+  const endReactionTime = (time) => {
+    document.getElementById('reaction-play-screen').style.display = 'none';
+    document.getElementById('reaction-results-screen').style.display = 'block';
+    document.getElementById('reaction-result-text').textContent = `${time} ms`;
+
+    // Lower time yields higher rewards
+    const earnedPoints = time < 200 ? 300 : (time < 300 ? 150 : (time < 450 ? 80 : 20));
+    document.getElementById('reaction-xp-awarded').textContent = `+${earnedPoints} PTS awarded`;
+
+    const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+    localStorage.setItem('thirsty_trivia_points', currentPoints + earnedPoints);
+
+    updateUserGameScore('reaction_time', time, 'min');
+    fetchGameLeaderboard('reaction_time', 'leaderboard-reaction-container');
+  };
+
+  // --- SOCIAL RAIDS ---
+  const renderSocialRaids = () => {
+    const container = document.getElementById('raids-list-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const completedRaids = JSON.parse(localStorage.getItem('thirsty_completed_raids') || '[]');
+
+    raidsData.forEach(raid => {
+      const isClaimed = completedRaids.includes(raid.id);
+      const isOpened = sessionStorage.getItem(`opened_raid_${raid.id}`) === 'true';
+
+      const card = document.createElement('div');
+      card.className = 'raid-card';
+      card.innerHTML = `
+        <div class="raid-header">
+          <span class="raid-title">${raid.title}</span>
+          <span class="raid-points">+${raid.points} PTS</span>
+        </div>
+        <div class="raid-body">${raid.body}</div>
+        <div class="raid-actions">
+          <a class="raid-btn action" href="${raid.link}" target="_blank" id="raid-link-btn-${raid.id}">Raid Link 📣</a>
+          <button class="raid-btn claim" id="raid-claim-btn-${raid.id}" ${isClaimed ? 'disabled' : ''}>
+            ${isClaimed ? 'Claimed ✓' : 'Claim points'}
+          </button>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      const linkBtn = card.querySelector(`#raid-link-btn-${raid.id}`);
+      linkBtn.onclick = () => {
+        sessionStorage.setItem(`opened_raid_${raid.id}`, 'true');
+        // Enable claim button immediately
+        const claimBtn = card.querySelector(`#raid-claim-btn-${raid.id}`);
+        if (claimBtn) claimBtn.disabled = false;
+      };
+
+      const claimBtn = card.querySelector(`#raid-claim-btn-${raid.id}`);
+      // Disabled if not claimed and not opened yet
+      if (!isClaimed && !isOpened) {
+        claimBtn.disabled = true;
+      }
+
+      claimBtn.onclick = () => {
+        completedRaids.push(raid.id);
+        localStorage.setItem('thirsty_completed_raids', JSON.stringify(completedRaids));
+
+        const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+        localStorage.setItem('thirsty_trivia_points', currentPoints + raid.points);
+
+        alert(`🎉 Raid completed! You claimed +${raid.points} PTS!`);
+        renderSocialRaids();
+
+        // Increment raids completed in database
+        updateUserGameScore('social_raids', 1, 'add');
+        fetchGameLeaderboard('social_raids', 'leaderboard-raids-container');
+      };
+    });
+
+    document.getElementById('raids-completed-count').textContent = `${completedRaids.length}/${raidsData.length}`;
+  };
+
+  // --- BOUNTIES ---
+  const renderBounties = () => {
+    const container = document.getElementById('bounties-list-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const completedBounties = JSON.parse(localStorage.getItem('thirsty_completed_bounties') || '[]');
+
+    bountiesData.forEach(bounty => {
+      const isClaimed = completedBounties.includes(bounty.id);
+
+      const card = document.createElement('div');
+      card.className = 'bounty-card';
+      card.innerHTML = `
+        <div class="bounty-details">
+          <div class="bounty-title">${bounty.title}</div>
+          <div class="bounty-desc">${bounty.desc}</div>
+          <div class="bounty-reward">+${bounty.points} PTS</div>
+        </div>
+        <button class="bounty-claim-btn" id="bounty-claim-${bounty.id}" ${isClaimed ? 'disabled' : ''}>
+          ${isClaimed ? 'Claimed ✓' : 'Verify & Claim'}
+        </button>
+      `;
+
+      container.appendChild(card);
+
+      const claimBtn = card.querySelector(`#bounty-claim-${bounty.id}`);
+      claimBtn.onclick = () => {
+        completedBounties.push(bounty.id);
+        localStorage.setItem('thirsty_completed_bounties', JSON.stringify(completedBounties));
+
+        const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+        localStorage.setItem('thirsty_trivia_points', currentPoints + bounty.points);
+
+        alert(`🎉 Mission accomplished! You verified and claimed +${bounty.points} PTS!`);
+        renderBounties();
+
+        // Increment bounties completed in database
+        updateUserGameScore('bounties_completed', 1, 'add');
+        fetchGameLeaderboard('bounties_completed', 'leaderboard-bounties-container');
+      };
+    });
+
+    document.getElementById('bounties-completed-count').textContent = `${completedBounties.length}/${bountiesData.length}`;
+  };
+
+  // --- GAME VIEW SWITCHERS / LISTENERS ---
   const initGamesListeners = () => {
     const btnSelectTrivia = document.getElementById('btn-select-trivia');
     const btnSelectTreasure = document.getElementById('btn-select-treasure');
+    const btnSelectSpeedTap = document.getElementById('btn-select-speedtap');
+    const btnSelectReaction = document.getElementById('btn-select-reaction');
+    const btnSelectRaids = document.getElementById('btn-select-raids');
+    const btnSelectBounties = document.getElementById('btn-select-bounties');
+
     const triviaBackBtn = document.getElementById('trivia-back-btn');
     const treasureBackBtn = document.getElementById('treasure-back-btn');
-    const triviaNextBtn = document.getElementById('trivia-next-btn');
+    const speedtapBackBtn = document.getElementById('speedtap-back-btn');
+    const reactionBackBtn = document.getElementById('reaction-back-btn');
+    const raidsBackBtn = document.getElementById('raids-back-btn');
+    const bountiesBackBtn = document.getElementById('bounties-back-btn');
+
     const triviaRestartBtn = document.getElementById('trivia-restart-btn');
     const triviaFinishBtn = document.getElementById('trivia-finish-btn');
 
+    const speedtapStartBtn = document.getElementById('speedtap-start-btn');
+    const speedtapClickBtn = document.getElementById('speedtap-click-btn');
+    const speedtapRestartBtn = document.getElementById('speedtap-restart-btn');
+    const speedtapFinishBtn = document.getElementById('speedtap-finish-btn');
+
+    const reactionStartBtn = document.getElementById('reaction-start-btn');
+    const reactionTapArea = document.getElementById('reaction-tap-area');
+    const reactionRestartBtn = document.getElementById('reaction-restart-btn');
+    const reactionFinishBtn = document.getElementById('reaction-finish-btn');
+
+    // Selection Grid
     if (btnSelectTrivia) {
       btnSelectTrivia.onclick = () => {
-        document.getElementById('games-hub-select').style.display = 'none';
-        document.getElementById('trivia-game-view').style.display = 'block';
+        switchGameView('trivia-game-view');
         document.getElementById('trivia-category-select').style.display = 'block';
         document.getElementById('trivia-question-screen').style.display = 'none';
         document.getElementById('trivia-results-screen').style.display = 'none';
+        fetchGameLeaderboard('trivia_blitz', 'leaderboard-trivia-container');
       };
     }
 
     if (btnSelectTreasure) {
       btnSelectTreasure.onclick = () => {
-        document.getElementById('games-hub-select').style.display = 'none';
-        document.getElementById('treasure-hunt-view').style.display = 'block';
+        switchGameView('treasure-hunt-view');
         renderTreasureHunts();
+        fetchGameLeaderboard('treasure_hunt', 'leaderboard-treasure-container');
       };
     }
 
-    if (triviaBackBtn) {
-      triviaBackBtn.onclick = () => {
-        renderGames();
+    if (btnSelectSpeedTap) {
+      btnSelectSpeedTap.onclick = () => {
+        switchGameView('speedtap-game-view');
+        document.getElementById('speedtap-start-screen').style.display = 'block';
+        document.getElementById('speedtap-play-screen').style.display = 'none';
+        document.getElementById('speedtap-results-screen').style.display = 'none';
+        fetchGameLeaderboard('speed_tap', 'leaderboard-speedtap-container');
       };
     }
 
-    if (treasureBackBtn) {
-      treasureBackBtn.onclick = () => {
-        renderGames();
+    if (btnSelectReaction) {
+      btnSelectReaction.onclick = () => {
+        switchGameView('reaction-game-view');
+        document.getElementById('reaction-start-screen').style.display = 'block';
+        document.getElementById('reaction-play-screen').style.display = 'none';
+        document.getElementById('reaction-results-screen').style.display = 'none';
+        fetchGameLeaderboard('reaction_time', 'leaderboard-reaction-container');
       };
     }
 
-    if (triviaNextBtn) {
-      triviaNextBtn.onclick = () => {
-        nextTriviaQuestion();
+    if (btnSelectRaids) {
+      btnSelectRaids.onclick = () => {
+        switchGameView('raids-game-view');
+        renderSocialRaids();
+        fetchGameLeaderboard('social_raids', 'leaderboard-raids-container');
       };
     }
 
+    if (btnSelectBounties) {
+      btnSelectBounties.onclick = () => {
+        switchGameView('bounties-game-view');
+        renderBounties();
+        fetchGameLeaderboard('bounties_completed', 'leaderboard-bounties-container');
+      };
+    }
+
+    // Back Buttons
+    if (triviaBackBtn) triviaBackBtn.onclick = () => { if (triviaTimerInterval) clearInterval(triviaTimerInterval); renderGames(); };
+    if (treasureBackBtn) treasureBackBtn.onclick = () => renderGames();
+    if (speedtapBackBtn) speedtapBackBtn.onclick = () => { if (speedTapTimerInterval) clearInterval(speedTapTimerInterval); renderGames(); };
+    if (reactionBackBtn) reactionBackBtn.onclick = () => { if (reactionTimerId) clearTimeout(reactionTimerId); renderGames(); };
+    if (raidsBackBtn) raidsBackBtn.onclick = () => renderGames();
+    if (bountiesBackBtn) bountiesBackBtn.onclick = () => renderGames();
+
+    // Trivia Actions
     if (triviaRestartBtn) {
       triviaRestartBtn.onclick = () => {
         document.getElementById('trivia-category-select').style.display = 'block';
@@ -1600,12 +2146,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('trivia-results-screen').style.display = 'none';
       };
     }
+    if (triviaFinishBtn) triviaFinishBtn.onclick = () => renderGames();
 
-    if (triviaFinishBtn) {
-      triviaFinishBtn.onclick = () => {
-        renderGames();
-      };
-    }
+    // Speed Tap Actions
+    if (speedtapStartBtn) speedtapStartBtn.onclick = startSpeedTap;
+    if (speedtapClickBtn) speedtapClickBtn.onclick = clickSpeedTap;
+    if (speedtapRestartBtn) speedtapRestartBtn.onclick = startSpeedTap;
+    if (speedtapFinishBtn) speedtapFinishBtn.onclick = renderGames();
+
+    // Reaction Actions
+    if (reactionStartBtn) reactionStartBtn.onclick = startReactionTime;
+    if (reactionTapArea) reactionTapArea.onclick = tapReactionTime;
+    if (reactionRestartBtn) reactionRestartBtn.onclick = startReactionTime;
+    if (reactionFinishBtn) reactionFinishBtn.onclick = renderGames();
   };
 
   initGamesListeners();
