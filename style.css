@@ -2111,16 +2111,17 @@ header .logout-btn {
    13. Redesigned Mobile-First Dashboard App Styles (Matching UI Mockups)
    ========================================================================== */
 
-/* App Container (Emulating premium mobile shell) */
+/* App Container (Premium Responsive Dashboard Layout) */
 .mobile-app-container {
   width: 100%;
-  max-width: 440px;
-  height: 820px;
+  max-width: 1000px;
+  height: 85vh;
+  min-height: 680px;
   margin: 2rem auto;
   background-color: #050505;
   border: 1px solid rgba(255, 62, 62, 0.15);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 50px rgba(255, 62, 62, 0.05);
-  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 62, 62, 0.03);
+  border-radius: 12px;
   overflow: hidden;
   display: flex !important;
   flex-direction: column;
@@ -2129,18 +2130,9 @@ header .logout-btn {
   z-index: 10;
 }
 
-/* Outer Glow Indicator */
+/* Outer Glow Indicator - Disabled phone frame mock */
 .mobile-app-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 40px;
-  border: 1.5px solid rgba(255, 62, 62, 0.25);
-  pointer-events: none;
-  z-index: 5;
+  display: none;
 }
 
 /* App Header */
@@ -3395,4 +3387,31 @@ header .logout-btn {
     border-radius: 0;
     border: none;
   }
+}
+
+/* Center and bound view content widths on larger screens */
+.view-content {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#view-wearthirsty .view-content,
+#view-signals .view-content,
+#view-badges .view-content {
+  max-width: 850px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+  gap: 0.75rem;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+  gap: 0.75rem;
 }
