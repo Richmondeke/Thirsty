@@ -68,13 +68,25 @@
           </div>
 
           <div class="passport-inputs">
-            <div class="input-group">
-              <label for="passport-input-name">Passport Holder Name</label>
-              <input type="text" id="passport-input-name" placeholder="Enter username..." maxlength="20">
+            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-name">Full Name</label>
+                <input type="text" id="passport-input-name" placeholder="Enter username..." value="ADELINE PALMERSTON" maxlength="30">
+              </div>
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-pob">Place of Thirst</label>
+                <input type="text" id="passport-input-pob" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20">
+              </div>
             </div>
-            <div class="input-group">
-              <label for="passport-input-id">ThirstyID</label>
-              <input type="text" id="passport-input-id" placeholder="T999-XXXX" maxlength="12">
+            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-gender">Gender</label>
+                <input type="text" id="passport-input-gender" placeholder="M/F..." value="F" maxlength="5">
+              </div>
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-sig">Signature Text</label>
+                <input type="text" id="passport-input-sig" placeholder="Signature name..." value="A. Palmerston" maxlength="20">
+              </div>
             </div>
           </div>
 
@@ -84,7 +96,7 @@
         <div class="passport-preview-card">
           <div class="canvas-wrapper">
             <div class="passport-glow-border"></div>
-            <canvas id="passport-canvas" width="600" height="400"></canvas>
+            <canvas id="passport-canvas" class="passport-canvas" width="600" height="800"></canvas>
           </div>
           <p class="canvas-tip">Preview of your ThirstyClub999 Passport. Click Download to save.</p>
         </div>
@@ -114,8 +126,35 @@
       <!-- 2. Redesigned Logged-In Mobile Dashboard App -->
       <div class="dashboard-card mobile-app-container" id="user-dashboard-card" style="display: none;">
         
-        <!-- App Header (Dynamic title and icons) -->
-        <div class="app-header">
+        <!-- Sidebar Navigation (Desktop/Web only) -->
+        <div class="app-sidebar-nav">
+          <div class="sidebar-logo">THIRSTYCLUB999</div>
+          <button class="nav-tab-item active" data-target-view="view-homepage">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+            <span>HOME</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-passport">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
+            <span>PASSPORT</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-wearthirsty">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>WEARTHIRSTY</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-signals">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
+            <span>SIGNALS</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-profile">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>PROFILE</span>
+          </button>
+        </div>
+
+        <!-- Main Content (Header, Viewport, Bottom Nav) -->
+        <div class="app-main-content">
+          <!-- App Header (Dynamic title and icons) -->
+          <div class="app-header">
           <button class="header-back-btn" id="app-header-back" style="visibility: hidden;">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
@@ -185,20 +224,38 @@
               
               <div class="passport-canvas-container">
                 <div class="passport-glow-border"></div>
-                <canvas id="passport-canvas" width="600" height="400"></canvas>
+                <canvas id="dash-passport-canvas" class="passport-canvas" width="600" height="800"></canvas>
               </div>
               
-              <!-- Passport Details Custom Inputs -->
-              <div class="passport-config-box" style="display:none;">
-                <input type="text" id="passport-input-name" placeholder="Holder Name">
-                <input type="text" id="passport-input-id" placeholder="Holder Code">
+              <!-- Passport Details Custom Inputs (Visible on dashboard!) -->
+              <div class="passport-inputs" style="margin-top: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-name" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Full Name</label>
+                    <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Full name..." value="ADELINE PALMERSTON" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-pob" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Place of Thirst</label>
+                    <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                </div>
+                <div class="input-row split-2" style="display: flex; gap: 1.5rem;">
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-gender" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Gender</label>
+                    <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="F" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-sig" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Signature Text</label>
+                    <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="A. Palmerston" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                </div>
               </div>
 
               <div class="passport-actions-group">
                 <button class="cta-button stroke-btn" id="download-passport-btn">DOWNLOAD PASSPORT</button>
-                <div class="dropzone-area" id="passport-dropzone">
+                <div class="dropzone-area" id="passport-dropzone" style="cursor: pointer; border: 1px dashed rgba(255, 62, 62, 0.3); padding: 1rem; border-radius: 4px; background: rgba(255, 62, 62, 0.02); transition: 0.25s;">
                   <input type="file" id="passport-file-input" accept="image/*" style="display:none;">
-                  <span id="passport-file-info">TAP TO CHANGE PHOTO</span>
+                  <span id="passport-file-info" style="font-size: 0.85rem; font-weight: 700; color: var(--text-dim);">TAP TO UPLOAD PHOTO</span>
                 </div>
                 <button class="cta-button fill-btn" id="btn-scan-view">SCAN OR NFC</button>
               </div>
@@ -554,9 +611,9 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span>PROFILE</span>
           </button>
-        </div>
-
-      </div>
+        </div> <!-- Close .app-bottom-nav -->
+      </div> <!-- Close .app-main-content -->
+    </div> <!-- Close #user-dashboard-card -->
 
     </section>
   </main>

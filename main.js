@@ -817,218 +817,278 @@ document.addEventListener('DOMContentLoaded', () => {
   let uploadedImage = null;
 
   const drawPassport = () => {
-    const canvas = document.getElementById('passport-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    
-    // Clear canvas
-    ctx.fillStyle = '#050505';
-    ctx.fillRect(0, 0, 600, 400);
-    
-    ctx.strokeStyle = 'rgba(255, 62, 62, 0.04)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 600; i += 20) {
+    const canvases = [
+      document.getElementById('passport-canvas'),
+      document.getElementById('dash-passport-canvas')
+    ];
+
+    const w = 600;
+    const h = 800;
+
+    // Fetch inputs
+    const nameInput = document.getElementById('passport-input-name') || document.getElementById('dash-passport-input-name');
+    const pobInput = document.getElementById('passport-input-pob') || document.getElementById('dash-passport-input-pob');
+    const genderInput = document.getElementById('passport-input-gender') || document.getElementById('dash-passport-input-gender');
+    const sigInput = document.getElementById('passport-input-sig') || document.getElementById('dash-passport-input-sig');
+
+    const holderName = (nameInput?.value || 'ADELINE PALMERSTON').toUpperCase();
+    const pobVal = (pobInput?.value || 'MANCHESTER').toUpperCase();
+    const genderVal = (genderInput?.value || 'F').toUpperCase();
+    const sigText = sigInput?.value || 'A. Palmerston';
+
+    canvases.forEach(canvas => {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // Clear canvas
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. Burgundy Cover
+      ctx.fillStyle = '#5A060C';
       ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, 400);
-      ctx.stroke();
-    }
-    for (let i = 0; i < 400; i += 20) {
+      ctx.roundRect(0, 0, w, h, 24);
+      ctx.fill();
+
+      // Page dimensions
+      const pageW = 560;
+      const pageH = 365;
+      const pageBgColor = '#EDE8DC';
+
+      // 2. Draw Top Page
+      ctx.fillStyle = pageBgColor;
       ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(600, i);
+      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
-    }
 
-    ctx.strokeStyle = '#ff3e3e';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(15, 15, 570, 370);
+      // 3. Draw Bottom Page
+      ctx.fillStyle = pageBgColor;
+      ctx.beginPath();
+      ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+      ctx.fill();
+      ctx.stroke();
 
-    ctx.fillStyle = '#ff3e3e';
-    ctx.fillRect(10, 10, 20, 4);
-    ctx.fillRect(10, 10, 4, 20);
-    ctx.fillRect(570, 10, 20, 4);
-    ctx.fillRect(586, 10, 4, 20);
-    ctx.fillRect(10, 386, 20, 4);
-    ctx.fillRect(10, 370, 4, 20);
-    ctx.fillRect(570, 386, 20, 4);
-    ctx.fillRect(586, 370, 4, 20);
+      // Security waves
+      const drawWaves = (topY, bottomY) => {
+        ctx.strokeStyle = 'rgba(139, 131, 120, 0.11)';
+        ctx.lineWidth = 1.0;
+        for (let y = topY - 15; y < bottomY + 15; y += 12) {
+          ctx.beginPath();
+          for (let x = 20; x <= 580; x += 10) {
+            const waveY = y + Math.sin((x - 20) * 0.03) * 6 + Math.cos((x - 20) * 0.015) * 3;
+            if (x === 20) ctx.moveTo(x, waveY);
+            else ctx.lineTo(x, waveY);
+          }
+          ctx.stroke();
+        }
+      };
 
-    ctx.fillStyle = 'rgba(255, 62, 62, 0.6)';
-    ctx.font = '8px monospace';
-    ctx.fillText("SECURE ACCESS TERMINAL // T999", 25, 28);
-    ctx.fillText("SYS.STATUS: VALID", 495, 28);
+      // Clip security waves to Top Page
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+      ctx.clip();
+      drawWaves(20, 385);
+      ctx.restore();
 
-    const targetX = 40;
-    const targetY = 70;
-    const targetWidth = 220;
-    const targetHeight = 260;
+      // Clip security waves to Bottom Page
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
+      ctx.clip();
+      drawWaves(415, 780);
+      ctx.restore();
 
-    if (uploadedImage) {
-      const imgWidth = uploadedImage.width;
-      const imgHeight = uploadedImage.height;
-      const aspect = targetWidth / targetHeight;
-      let srcWidth, srcHeight, srcX, srcY;
-      
-      if (imgWidth / imgHeight > aspect) {
-        srcHeight = imgHeight;
-        srcWidth = imgHeight * aspect;
-        srcX = (imgWidth - srcWidth) / 2;
-        srcY = 0;
-      } else {
-        srcWidth = imgWidth;
-        srcHeight = imgWidth / aspect;
-        srcX = 0;
-        srcY = (imgHeight - srcHeight) / 2;
-      }
+      // Crease and shadows
+      let gradTop = ctx.createLinearGradient(0, 350, 0, 385);
+      gradTop.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      gradTop.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+      ctx.fillStyle = gradTop;
+      ctx.fillRect(20, 350, pageW, 35);
 
-      ctx.drawImage(uploadedImage, srcX, srcY, srcWidth, srcHeight, targetX, targetY, targetWidth, targetHeight);
-      
-      ctx.fillStyle = 'rgba(255, 62, 62, 0.12)';
-      ctx.fillRect(targetX, targetY, targetWidth, targetHeight);
+      let gradBottom = ctx.createLinearGradient(0, 415, 0, 450);
+      gradBottom.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
+      gradBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = gradBottom;
+      ctx.fillRect(20, 415, pageW, 35);
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      for (let y = targetY; y < targetY + targetHeight; y += 4) {
-        ctx.fillRect(targetX, y, targetWidth, 1.5);
-      }
-    } else {
-      ctx.fillStyle = 'rgba(255, 62, 62, 0.03)';
-      ctx.fillRect(targetX, targetY, targetWidth, targetHeight);
-      ctx.strokeStyle = 'rgba(255, 62, 62, 0.2)';
+      // Spine crease line
+      let gradSpine = ctx.createLinearGradient(0, 385, 0, 415);
+      gradSpine.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+      gradSpine.addColorStop(0.5, 'rgba(0, 0, 0, 0.85)');
+      gradSpine.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+      ctx.fillStyle = gradSpine;
+      ctx.fillRect(0, 385, w, 30);
+
+      // 5. Draw Top Page Content
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
       ctx.lineWidth = 1;
-      ctx.strokeRect(targetX, targetY, targetWidth, targetHeight);
-
-      ctx.strokeStyle = 'rgba(255, 62, 62, 0.15)';
       ctx.beginPath();
-      ctx.moveTo(targetX + targetWidth/2 - 15, targetY + targetHeight/2);
-      ctx.lineTo(targetX + targetWidth/2 + 15, targetY + targetHeight/2);
-      ctx.moveTo(targetX + targetWidth/2, targetY + targetHeight/2 - 15);
-      ctx.lineTo(targetX + targetWidth/2, targetY + targetHeight/2 + 15);
+      ctx.moveTo(85, 60);
+      ctx.lineTo(85, 345);
       ctx.stroke();
 
-      ctx.fillStyle = 'rgba(255, 62, 62, 0.5)';
-      ctx.font = 'bold 9px monospace';
+      ctx.save();
+      ctx.translate(65, 202);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#000000';
+      ctx.font = 'italic 24px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText("NO PHOTO UPLOADED", targetX + targetWidth/2, targetY + targetHeight/2 - 25);
-      ctx.fillText("DRAG & DROP PICTURE", targetX + targetWidth/2, targetY + targetHeight/2 + 25);
+      ctx.fillText(sigText, 0, 0);
+      ctx.restore();
+
+      // Biohazard Watermark
+      const drawBiohazard = (x0, y0) => {
+        ctx.strokeStyle = 'rgba(139, 131, 120, 0.16)';
+        ctx.fillStyle = 'rgba(139, 131, 120, 0.16)';
+        ctx.lineWidth = 9;
+        const rOuter = 35;
+        const offset = 26;
+
+        ctx.beginPath();
+        ctx.arc(x0, y0 - offset, rOuter, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x0 - offset * Math.cos(Math.PI/6), y0 + offset * Math.sin(Math.PI/6), rOuter, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x0 + offset * Math.cos(Math.PI/6), y0 + offset * Math.sin(Math.PI/6), rOuter, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(x0, y0, 48, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x0, y0, 9, 0, Math.PI * 2);
+        ctx.fill();
+      };
+      drawBiohazard(300, 202);
+
+      // Right vertical title on Top Page
+      ctx.save();
+      ctx.translate(505, 202);
+      ctx.rotate(Math.PI / 2);
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.font = '900 28px "Kyrilla", sans-serif';
+      ctx.fillText("Thirstyclub999", 0, -8);
+      ctx.font = '700 13px "Kyrilla", sans-serif';
+      ctx.fillText("PASSPORT", 0, 18);
+      ctx.restore();
+
+      // 6. Draw Bottom Page Content
+      ctx.fillStyle = '#000000';
       ctx.textAlign = 'left';
-    }
+      ctx.font = '900 22px "Kyrilla", sans-serif';
+      ctx.fillText("ThirstyClub999", 45, 452);
+      ctx.font = '700 11px "Kyrilla", sans-serif';
+      ctx.fillText("PASSPORT", 45 + 5, 470);
 
-    ctx.strokeStyle = '#ff3e3e';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(targetX, targetY, targetWidth, targetHeight);
+      // Photo slot on bottom page
+      const uPhotoX = 45;
+      const uPhotoY = 492;
+      const uPhotoW = 185;
+      const uPhotoH = 245;
 
-    ctx.fillStyle = '#ff3e3e';
-    ctx.fillRect(targetX - 4, targetY - 4, 12, 3);
-    ctx.fillRect(targetX - 4, targetY - 4, 3, 12);
-    ctx.fillRect(targetX + targetWidth - 8, targetY - 4, 12, 3);
-    ctx.fillRect(targetX + targetWidth + 1, targetY - 4, 3, 12);
-    ctx.fillRect(targetX - 4, targetY + targetHeight + 1, 12, 3);
-    ctx.fillRect(targetX - 4, targetY + targetHeight - 8, 3, 12);
-    ctx.fillRect(targetX + targetWidth - 8, targetY + targetHeight + 1, 12, 3);
-    ctx.fillRect(targetX + targetWidth + 1, targetY + targetHeight - 8, 3, 12);
+      if (uploadedImage) {
+        ctx.save();
+        const imgW = uploadedImage.width;
+        const imgH = uploadedImage.height;
+        const aspect = uPhotoW / uPhotoH;
+        let srcW, srcH, srcX, srcY;
 
-    const holderName = (document.getElementById('passport-input-name')?.value || 'UNREGISTERED GUEST').toUpperCase();
-    const holderId = (document.getElementById('passport-input-id')?.value || 'T999-XXXX').toUpperCase();
+        if (imgW / imgH > aspect) {
+          srcH = imgH;
+          srcW = imgH * aspect;
+          srcX = (imgW - srcW) / 2;
+          srcY = 0;
+        } else {
+          srcW = imgW;
+          srcH = imgW / aspect;
+          srcX = 0;
+          srcY = (imgH - srcH) / 2;
+        }
+        ctx.drawImage(uploadedImage, srcX, srcY, srcW, srcH, uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+        ctx.fillRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '900 20px Kyrilla, Inter, sans-serif';
-    ctx.fillText("THIRSTYCLUB999 ACCESS PASS", 290, 95);
+        // Avatar silhouette placeholder
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.beginPath();
+        ctx.arc(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH/3, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH * 0.72, 52, 36, 0, Math.PI, 0);
+        ctx.fill();
 
-    ctx.fillStyle = '#ff3e3e';
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText("LEVEL // GUEST AUTHENTICATED", 290, 115);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.font = '900 9px "Kyrilla", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("UPLOAD PHOTO", uPhotoX + uPhotoW/2, uPhotoY + uPhotoH - 22);
+      }
 
-    ctx.fillStyle = '#888888';
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText("HOLDER NAME", 290, 155);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '900 16px Kyrilla, Inter, sans-serif';
-    ctx.fillText(holderName, 290, 175);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
 
-    ctx.fillStyle = '#888888';
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText("HOLDER CODE", 290, 215);
-    ctx.fillStyle = '#ff3e3e';
-    ctx.font = 'bold 15px monospace';
-    ctx.fillText(holderId, 290, 235);
+      // Details Table
+      const tblX = 250;
+      const tblY = 495;
+      const tblW = 295;
+      const tblH = 240;
+      const rowH = 60;
 
-    ctx.fillStyle = '#888888';
-    ctx.font = 'bold 9px monospace';
-    ctx.fillText("EXPIRY DATE", 290, 275);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText("14.06.2026", 290, 290);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(tblX, tblY, tblW, tblH);
 
-    ctx.fillStyle = '#888888';
-    ctx.font = 'bold 9px monospace';
-    ctx.fillText("ACCESS LEVEL", 420, 275);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText("CLUB GUEST", 420, 290);
+      for (let r = 1; r < 4; r++) {
+        ctx.beginPath();
+        ctx.moveTo(tblX, tblY + r * rowH);
+        ctx.lineTo(tblX + tblW, tblY + r * rowH);
+        ctx.stroke();
+      }
 
-    const badgeX = 485;
-    const badgeY = 78;
-    const badgeW = 75;
-    const badgeH = 18;
+      const drawRowFull = (label, value, rx, ry, rw, isCursive = false) => {
+        ctx.fillStyle = '#1b4d3e';
+        ctx.textAlign = 'left';
+        ctx.font = 'italic 10px sans-serif';
+        ctx.fillText(label, rx + 8, ry + 16);
 
-    ctx.strokeStyle = '#ff3e3e';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
-    ctx.fillStyle = 'rgba(255, 62, 62, 0.1)';
-    ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        if (isCursive) {
+          ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+          ctx.fillText(value, rx + rw / 2, ry + 42);
+        } else {
+          ctx.font = '900 13px "Kyrilla", sans-serif';
+          ctx.fillText(value, rx + rw / 2, ry + 42);
+        }
+      };
 
-    ctx.fillStyle = '#ff3e3e';
-    ctx.font = 'bold 8px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText("ACCESS GRANTED", badgeX + badgeW/2, badgeY + badgeH/2);
-    
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
-
-    const barcodeX = 290;
-    const barcodeY = 315;
-    const barcodeWidth = 270;
-    const barcodeHeight = 35;
-
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(barcodeX, barcodeY, barcodeWidth, barcodeHeight);
-
-    ctx.fillStyle = '#000000';
-    let seed = 0;
-    for (let i = 0; i < holderId.length; i++) {
-      seed += holderId.charCodeAt(i);
-    }
-
-    let currentBarX = barcodeX + 10;
-    const endBarX = barcodeX + barcodeWidth - 10;
-
-    function random() {
-      let x = Math.sin(seed++) * 10000;
-      return x - Math.floor(x);
-    }
-
-    while (currentBarX < endBarX) {
-      const barWidth = Math.floor(random() * 4) + 1;
-      ctx.fillRect(currentBarX, barcodeY, barWidth, barcodeHeight);
-      const space = Math.floor(random() * 4) + 1;
-      currentBarX += barWidth + space;
-    }
+      drawRowFull("Name:", holderName, tblX, tblY, tblW);
+      drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
+      drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
+      drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
+    });
   };
-
-  // Upload handlers
-  const passportDropzone = document.getElementById('passport-dropzone');
-  const passportFileInput = document.getElementById('passport-file-input');
-  const downloadPassportBtn = document.getElementById('download-passport-btn');
-  const passportInputName = document.getElementById('passport-input-name');
-  const passportInputId = document.getElementById('passport-input-id');
 
   const handlePassportFile = (file) => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File size exceeds 5MB limit.");
+      alert("File size exceeds 5MB limit. Please upload a smaller image.");
       return;
     }
 
@@ -1038,66 +1098,84 @@ document.addEventListener('DOMContentLoaded', () => {
       img.onload = () => {
         uploadedImage = img;
         drawPassport();
-        if (downloadPassportBtn) {
-          downloadPassportBtn.disabled = false;
-        }
-        const fileInfo = document.getElementById('passport-file-info');
-        if (fileInfo) {
-          fileInfo.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
-          fileInfo.style.color = 'var(--accent-color)';
-        }
+
+        const fileInfos = document.querySelectorAll('#passport-file-info');
+        fileInfos.forEach(info => {
+          info.textContent = `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+          info.style.color = 'var(--accent-color)';
+        });
+
+        const downloadPassportBtns = document.querySelectorAll('#download-passport-btn');
+        downloadPassportBtns.forEach(btn => {
+          btn.disabled = false;
+        });
       };
       img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   };
 
-  if (passportDropzone && passportFileInput) {
-    passportDropzone.addEventListener('click', () => passportFileInput.click());
-    passportFileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      handlePassportFile(file);
-    });
+  // Bind file dropzones & inputs for both landing page and dashboard views
+  const hookAllUploaders = () => {
+    const dropzones = document.querySelectorAll('#passport-dropzone, .dropzone-area');
+    dropzones.forEach(zone => {
+      const input = zone.querySelector('input[type="file"]') || document.getElementById('passport-file-input');
+      if (!zone || !input) return;
 
-    passportDropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      passportDropzone.classList.add('dragover');
-    });
+      zone.addEventListener('click', () => input.click());
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        handlePassportFile(file);
+      });
 
-    ['dragleave', 'dragend'].forEach(type => {
-      passportDropzone.addEventListener(type, () => {
-        passportDropzone.classList.remove('dragover');
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+      });
+
+      ['dragleave', 'dragend'].forEach(type => {
+        zone.addEventListener(type, () => {
+          zone.classList.remove('dragover');
+        });
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+          handlePassportFile(file);
+        }
       });
     });
+  };
+  hookAllUploaders();
 
-    passportDropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      passportDropzone.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handlePassportFile(file);
-      }
-    });
-  }
+  // Redraw whenever any passport builder inputs change values (desktop & mobile)
+  const allPassportFields = document.querySelectorAll(
+    '#passport-input-name, #passport-input-pob, #passport-input-gender, #passport-input-sig, ' +
+    '#dash-passport-input-name, #dash-passport-input-pob, #dash-passport-input-gender, #dash-passport-input-sig'
+  );
+  allPassportFields.forEach(field => {
+    if (field) field.addEventListener('input', () => drawPassport());
+  });
 
-  if (passportInputName) {
-    passportInputName.addEventListener('input', () => drawPassport());
-  }
-  if (passportInputId) {
-    passportInputId.addEventListener('input', () => drawPassport());
-  }
-
-  if (downloadPassportBtn) {
-    downloadPassportBtn.addEventListener('click', () => {
-      const canvas = document.getElementById('passport-canvas');
+  // Download listeners for both buttons
+  const downloadBtns = document.querySelectorAll('#download-passport-btn');
+  downloadBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const canvas = document.getElementById('dash-passport-canvas') || document.getElementById('passport-canvas');
       if (!canvas || !uploadedImage) return;
 
+      const nameInput = document.getElementById('passport-input-name') || document.getElementById('dash-passport-input-name');
+      const holderName = (nameInput?.value || 'guest').toLowerCase().replace(/\s+/g, '-');
+
       const link = document.createElement('a');
-      link.download = `thirstyclub999-passport-${(passportInputName?.value || 'guest').toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.download = `thirstyclub999-passport-${holderName}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
-  }
+  });
 
   // ==========================================
   // 13. Initialization & Counter Animation
