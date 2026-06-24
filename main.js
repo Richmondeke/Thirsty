@@ -638,6 +638,8 @@ document.addEventListener('DOMContentLoaded', () => {
       renderSignals();
     } else if (tab === 'events') {
       renderEvents();
+    } else if (tab === 'leaderboard') {
+      renderLeaderboard();
     } else if (tab === 'games') {
       renderGames();
     }
@@ -692,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (eventsSection && eventsSection.style.display === 'block') {
         renderEvents();
       } else if (leaderboardSection && leaderboardSection.style.display === 'block') {
-        // preserve active leaderboard tab
+        renderLeaderboard();
       } else if (gamesSection && gamesSection.style.display === 'block') {
         renderGames();
       } else {
@@ -1243,23 +1245,42 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
     container.innerHTML = '';
 
-    mockEvents.forEach(e => {
-      const card = document.createElement('div');
-      card.className = 'event-card-item';
-      card.innerHTML = `
-        <div class="event-date-block">
-          <span class="ev-month">${e.month}</span>
-          <span class="ev-day">${e.day}</span>
+    // Render 2 skeleton event cards first
+    for (let i = 0; i < 2; i++) {
+      const skel = document.createElement('div');
+      skel.className = 'event-card-item skeleton-card';
+      skel.innerHTML = `
+        <div class="event-date-block skeleton" style="width: 50px; height: 50px; border-radius: 8px;"></div>
+        <div class="event-details-block" style="flex: 1; display: flex; flex-direction: column; gap: 0.4rem; padding-left: 10px;">
+          <div class="skeleton" style="width: 30%; height: 0.75rem;"></div>
+          <div class="skeleton" style="width: 70%; height: 1.1rem;"></div>
+          <div class="skeleton" style="width: 50%; height: 0.75rem;"></div>
         </div>
-        <div class="event-details-block">
-          <div class="ev-organizer">${e.organizer}</div>
-          <div class="ev-title">${e.title}</div>
-          <div class="ev-location">${e.location}</div>
-        </div>
-        <button class="ev-rsvp-btn" onclick="alert('RSVP confirmed!')">RSVP</button>
+        <div class="skeleton" style="width: 70px; height: 32px; border-radius: 4px; margin-left: auto;"></div>
       `;
-      container.appendChild(card);
-    });
+      container.appendChild(skel);
+    }
+
+    setTimeout(() => {
+      container.innerHTML = '';
+      mockEvents.forEach(e => {
+        const card = document.createElement('div');
+        card.className = 'event-card-item';
+        card.innerHTML = `
+          <div class="event-date-block">
+            <span class="ev-month">${e.month}</span>
+            <span class="ev-day">${e.day}</span>
+          </div>
+          <div class="event-details-block">
+            <div class="ev-organizer">${e.organizer}</div>
+            <div class="ev-title">${e.title}</div>
+            <div class="ev-location">${e.location}</div>
+          </div>
+          <button class="ev-rsvp-btn" onclick="alert('RSVP confirmed!')">RSVP</button>
+        `;
+        container.appendChild(card);
+      });
+    }, 400);
   };
   const triviaData = {
     thirstynalia: [
@@ -2987,37 +3008,273 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Setup Next Drop countdown timers (Homepage and Drops view)
-  const targetDropTime = new Date('June 14, 2026 16:00:00').getTime();
+  // Setup Next Carousel countdown timers (Homepage and Drops view)
+  const targetDropTime = new Date('June 28, 2026 16:00:00').getTime();
+  const targetRaidTime = new Date('June 20, 2026 12:00:00').getTime();
+  const targetBountyTime = new Date('June 22, 2026 18:00:00').getTime();
 
   const updateCountdownTimers = () => {
     const now = new Date().getTime();
-    const distance = targetDropTime - now;
 
-    if (distance < 0) {
+    // 1. Next Drop Timer (Countdown)
+    const distanceDrop = targetDropTime - now;
+    const dropTimer = document.getElementById('carousel-drop-timer');
+    const crateTimer = document.getElementById('drops-crate-timer');
+    if (distanceDrop < 0) {
       const expiredText = "00 : 00 : 00 : 00";
-      const homeTimer = document.getElementById('home-drop-timer');
-      const crateTimer = document.getElementById('drops-crate-timer');
-      if (homeTimer) homeTimer.textContent = expiredText;
+      if (dropTimer) dropTimer.textContent = expiredText;
       if (crateTimer) crateTimer.textContent = expiredText;
-      return;
+    } else {
+      const d = Math.floor(distanceDrop / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distanceDrop % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distanceDrop % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distanceDrop % (1000 * 60)) / 1000);
+      const timeStr = `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+      if (dropTimer) dropTimer.textContent = timeStr;
+      if (crateTimer) crateTimer.textContent = timeStr;
     }
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // 2. Next Raid Timer (Live in Past)
+    const distanceRaid = targetRaidTime - now;
+    const raidTimer = document.getElementById('carousel-raid-timer');
+    if (distanceRaid < 0) {
+      if (raidTimer) raidTimer.textContent = "00 : 00 : 00 : 00";
+    } else {
+      const d = Math.floor(distanceRaid / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distanceRaid % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distanceRaid % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distanceRaid % (1000 * 60)) / 1000);
+      if (raidTimer) raidTimer.textContent = `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+    }
 
-    const timeString = `${String(days).padStart(2, '0')} : ${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`;
-
-    const homeTimer = document.getElementById('home-drop-timer');
-    const crateTimer = document.getElementById('drops-crate-timer');
-    if (homeTimer) homeTimer.textContent = timeString;
-    if (crateTimer) crateTimer.textContent = timeString;
+    // 3. Next Bounty Timer (Live in Past)
+    const distanceBounty = targetBountyTime - now;
+    const bountyTimer = document.getElementById('carousel-bounty-timer');
+    if (distanceBounty < 0) {
+      if (bountyTimer) bountyTimer.textContent = "00 : 00 : 00 : 00";
+    } else {
+      const d = Math.floor(distanceBounty / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distanceBounty % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distanceBounty % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distanceBounty % (1000 * 60)) / 1000);
+      if (bountyTimer) bountyTimer.textContent = `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+    }
   };
 
   setInterval(updateCountdownTimers, 1000);
   updateCountdownTimers();
+
+  // --- Carousel Auto-Rotation & Dot Clicks ---
+  let currentSlideIndex = 0;
+  let carouselInterval = null;
+
+  const showCarouselSlide = (index) => {
+    const slides = document.querySelectorAll('#home-carousel-card .carousel-slide');
+    const dots = document.querySelectorAll('#home-carousel-card .carousel-dot');
+    if (slides.length === 0) return;
+
+    slides.forEach((slide, idx) => {
+      if (idx === index) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+
+    dots.forEach((dot, idx) => {
+      if (idx === index) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+
+    currentSlideIndex = index;
+  };
+
+  const startCarouselRotation = () => {
+    if (carouselInterval) clearInterval(carouselInterval);
+    carouselInterval = setInterval(() => {
+      const slides = document.querySelectorAll('#home-carousel-card .carousel-slide');
+      if (slides.length === 0) return;
+      const nextIndex = (currentSlideIndex + 1) % slides.length;
+      showCarouselSlide(nextIndex);
+    }, 5000);
+  };
+
+  const initCarousel = () => {
+    const dots = document.querySelectorAll('#home-carousel-card .carousel-dot');
+    dots.forEach(dot => {
+      dot.onclick = () => {
+        const targetIdx = parseInt(dot.getAttribute('data-go-to'), 10);
+        showCarouselSlide(targetIdx);
+        startCarouselRotation();
+      };
+    });
+
+    // Button Actions inside carousel
+    const carouselDropBtn = document.getElementById('carousel-drop-btn');
+    if (carouselDropBtn) {
+      carouselDropBtn.onclick = () => switchView('view-drops');
+    }
+
+    const carouselRaidBtn = document.getElementById('carousel-raid-btn');
+    if (carouselRaidBtn) {
+      carouselRaidBtn.onclick = () => {
+        switchView('view-community');
+        switchCommunityTab('games');
+        switchGameView('raids-game-view');
+        renderSocialRaids();
+        fetchGameLeaderboard('social_raids', 'leaderboard-raids-container');
+      };
+    }
+
+    const carouselBountyBtn = document.getElementById('carousel-bounty-btn');
+    if (carouselBountyBtn) {
+      carouselBountyBtn.onclick = () => {
+        switchView('view-community');
+        switchCommunityTab('games');
+        switchGameView('bounties-game-view');
+        renderBounties();
+        fetchGameLeaderboard('bounties_completed', 'leaderboard-bounties-container');
+      };
+    }
+
+    // Latest News Card click handlers
+    const newsReadBtn = document.getElementById('home-news-read-btn');
+    if (newsReadBtn) {
+      newsReadBtn.onclick = (e) => {
+        e.stopPropagation();
+        switchView('view-community');
+        switchCommunityTab('events');
+      };
+    }
+
+    const newsCard = document.getElementById('home-news-card');
+    if (newsCard) {
+      newsCard.onclick = () => {
+        switchView('view-community');
+        switchCommunityTab('events');
+      };
+    }
+
+    showCarouselSlide(0);
+    startCarouselRotation();
+  };
+
+  initCarousel();
+
+  // --- Dynamic Overall Community Leaderboard ---
+  const renderLeaderboard = async () => {
+    const container = document.getElementById('community-leaderboard-container');
+    if (!container) return;
+
+    // Render 5 skeleton list items first
+    container.innerHTML = [1, 2, 3, 4, 5].map(() => `
+      <li class="leaderboard-item skeleton-card" style="display: flex; align-items: center; padding: 1rem 1.5rem; height: 58px; box-sizing: border-box; margin-bottom: 0.5rem; border-radius: 4px;">
+        <div class="skeleton" style="width: 25px; height: 14px; margin-right: 1.5rem;"></div>
+        <div class="skeleton" style="width: 140px; height: 14px;"></div>
+        <div class="skeleton" style="width: 60px; height: 14px; margin-left: auto;"></div>
+      </li>
+    `).join('');
+
+    const mockPlayers = [
+      { username: 'THIRSTYZOID', thirstyclub_id: 'T999-1337', socials: { game_scores: { trivia_blitz: 12, treasure_hunt: 3, speed_tap: 87, reaction_time: 180, social_raids: 3, bounties_completed: 4 } } },
+      { username: 'Adeline Palmerston', thirstyclub_id: 'T999-2468', socials: { game_scores: { trivia_blitz: 10, treasure_hunt: 2, speed_tap: 78, reaction_time: 210, social_raids: 2, bounties_completed: 3 } } },
+      { username: 'Lekan Thirsty', thirstyclub_id: 'T999-1122', socials: { game_scores: { trivia_blitz: 8, treasure_hunt: 2, speed_tap: 72, reaction_time: 245, socials_raids: 2, bounties_completed: 2 } } },
+      { username: 'Tunde Gold', thirstyclub_id: 'T999-9081', socials: { game_scores: { trivia_blitz: 7, treasure_hunt: 1, speed_tap: 65, reaction_time: 280, socials_raids: 1, bounties_completed: 2 } } },
+      { username: 'Evelyn Drinker', thirstyclub_id: 'T999-5566', socials: { game_scores: { trivia_blitz: 5, treasure_hunt: 1, speed_tap: 58, reaction_time: 320, socials_raids: 0, bounties_completed: 1 } } }
+    ];
+
+    const calculatePoints = (p) => {
+      const scores = p.socials?.game_scores || {};
+      let pts = 0;
+      if (scores.trivia_blitz) pts += scores.trivia_blitz * 50;
+      if (scores.treasure_hunt) pts += scores.treasure_hunt * 150;
+      if (scores.speed_tap) pts += scores.speed_tap * 10;
+      if (scores.reaction_time) {
+        const rt = scores.reaction_time;
+        pts += rt < 200 ? 300 : (rt < 300 ? 150 : (rt < 450 ? 80 : 20));
+      }
+      if (scores.social_raids) pts += scores.social_raids * 150;
+      if (scores.bounties_completed) pts += scores.bounties_completed * 200;
+      return pts;
+    };
+
+    let entries = [...mockPlayers];
+    const fetchStart = Date.now();
+
+    try {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('username, thirstyclub_id, socials');
+      
+      if (profiles && !error) {
+        profiles.forEach(p => {
+          const idx = entries.findIndex(e => e.thirstyclub_id === p.thirstyclub_id || e.username === p.username);
+          if (idx !== -1) {
+            entries[idx].username = p.username || entries[idx].username;
+            entries[idx].socials = {
+              ...entries[idx].socials,
+              ...p.socials
+            };
+          } else {
+            entries.push(p);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to fetch profiles for leaderboard, using mock data:", e);
+    }
+
+    const mappedEntries = entries.map(e => ({
+      username: e.username || 'Anonymous',
+      thirstyclub_id: e.thirstyclub_id || 'T999-XXXX',
+      points: calculatePoints(e)
+    }));
+
+    if (currentUserProfile) {
+      const userExists = mappedEntries.some(e => e.thirstyclub_id === currentUserProfile.thirstyclub_id);
+      if (!userExists) {
+        const dbPoints = calculatePoints(currentUserProfile);
+        const localPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+        mappedEntries.push({
+          username: currentUserProfile.username || 'Guest',
+          thirstyclub_id: currentUserProfile.thirstyclub_id || 'T999-XXXX',
+          points: Math.max(dbPoints, localPoints)
+        });
+      } else {
+        const userRow = mappedEntries.find(e => e.thirstyclub_id === currentUserProfile.thirstyclub_id);
+        const localPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+        userRow.points = Math.max(userRow.points, localPoints);
+      }
+    }
+
+    mappedEntries.sort((a, b) => b.points - a.points);
+
+    const elapsed = Date.now() - fetchStart;
+    const remainingDelay = Math.max(0, 400 - elapsed);
+    await new Promise(resolve => setTimeout(resolve, remainingDelay));
+
+    container.innerHTML = '';
+    mappedEntries.forEach((e, idx) => {
+      const isCurrentUser = currentUserProfile && e.thirstyclub_id === currentUserProfile.thirstyclub_id;
+      const li = document.createElement('li');
+      li.className = `leaderboard-item ${idx < 3 ? 'top-rank' : ''}`;
+      if (isCurrentUser) {
+        li.id = 'user-leaderboard-row';
+        li.style.border = '1px solid rgba(255, 62, 62, 0.35)';
+        li.style.background = 'rgba(255, 62, 62, 0.02)';
+        li.style.boxShadow = '0 0 10px rgba(255, 62, 62, 0.05)';
+      }
+      li.innerHTML = `
+        <span class="rank">#${idx + 1}</span>
+        <span class="name">${e.username}</span>
+        <span class="points">${e.points.toLocaleString()} PTS</span>
+      `;
+      container.appendChild(li);
+    });
+  };
 
   // ==========================================
   // Admin Portal Functionalities

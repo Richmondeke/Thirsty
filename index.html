@@ -232,26 +232,66 @@
                 </div>
               </div>
 
-              <!-- Next Drop Countdown Card -->
-              <div class="drop-countdown-card">
-                <div class="card-subtitle">NEXT DROP</div>
-                <div class="countdown-clock" id="home-drop-timer">02 : 18 : 45 : 36</div>
-                <div class="countdown-labels">
-                  <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+              <!-- Next Drop/Raid/Bounty Countdown Carousel Card -->
+              <div class="drop-countdown-card carousel-container" id="home-carousel-card">
+                <div class="carousel-track" id="home-carousel-track">
+                  
+                  <!-- Slide 0: Next Drop (Upcoming) -->
+                  <div class="carousel-slide active" data-slide-index="0" id="slide-drop">
+                    <div class="card-subtitle">NEXT DROP</div>
+                    <div class="countdown-clock" id="carousel-drop-timer">00 : 00 : 00 : 00</div>
+                    <div class="countdown-labels">
+                      <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                    </div>
+                    <button class="cta-button mini-cta-btn" id="carousel-drop-btn">VIEW DROP</button>
+                  </div>
+
+                  <!-- Slide 1: Next Raid (Live Now!) -->
+                  <div class="carousel-slide" data-slide-index="1" id="slide-raid">
+                    <div class="card-subtitle status-live-label"><span class="pulse-dot"></span>NEXT X-RAID (LIVE)</div>
+                    <div class="countdown-clock live-pulse" id="carousel-raid-timer">00 : 00 : 00 : 00</div>
+                    <div class="countdown-labels">
+                      <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                    </div>
+                    <button class="cta-button mini-cta-btn btn-live-accent" id="carousel-raid-btn">ENTER RAID</button>
+                  </div>
+
+                  <!-- Slide 3: Next Bounty (Live Now!) -->
+                  <div class="carousel-slide" data-slide-index="2" id="slide-bounty">
+                    <div class="card-subtitle status-live-label"><span class="pulse-dot"></span>NEXT BOUNTY (LIVE)</div>
+                    <div class="countdown-clock live-pulse" id="carousel-bounty-timer">00 : 00 : 00 : 00</div>
+                    <div class="countdown-labels">
+                      <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                    </div>
+                    <button class="cta-button mini-cta-btn btn-live-accent" id="carousel-bounty-btn">CLAIM BOUNTY</button>
+                  </div>
+
                 </div>
-                <button class="cta-button mini-cta-btn" id="home-view-drop-btn">VIEW DROP</button>
+
+                <!-- Carousel Navigation Dots -->
+                <div class="carousel-dots" id="home-carousel-dots">
+                  <span class="carousel-dot active" data-go-to="0"></span>
+                  <span class="carousel-dot" data-go-to="1"></span>
+                  <span class="carousel-dot" data-go-to="2"></span>
+                </div>
               </div>
 
-              <!-- Latest Signal Preview Card -->
-              <div class="latest-signal-preview-card" id="home-signal-card">
-                <div class="signal-header">
-                  <span class="signal-label">LATEST SIGNAL</span>
-                  <span class="signal-time">2m ago</span>
+              <!-- Latest News Card -->
+              <div class="latest-signal-preview-card" id="home-news-card" style="display: flex; gap: 12px; align-items: center; padding: 1.25rem; margin-top: 1.25rem;">
+                <div class="news-thumbnail-frame" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <img src="images/THIRSTY_77.JPG" alt="ThirstyClub999 Past Event" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <p class="signal-text">THE SYSTEM IS DRY. WE BRING THE THIRST.</p>
-                <div class="signal-footer">
-                  <span>READ SIGNAL</span>
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <div class="news-content-block" style="flex: 1; text-align: left;">
+                  <div class="signal-header" style="margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span class="signal-label" style="color: var(--accent-color); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.1em;">LATEST NEWS</span>
+                    <span class="signal-time">RECENT EVENT</span>
+                  </div>
+                  <div class="news-title" style="font-weight: 800; font-size: 0.95rem; color: #fff; margin-bottom: 0.2rem; line-height: 1.2;">ThirstyClub999 Launch</div>
+                  <p class="news-snippet" style="font-size: 0.75rem; color: var(--text-dim); margin: 0 0 0.5rem 0; line-height: 1.3;">Our last private VIP meetup in Lagos was a massive success. Relive the cyber-lounge experience.</p>
+                  <div class="news-link-btn" id="home-news-read-btn" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-color); display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                    <span>VIEW GALLERY</span>
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -507,32 +547,8 @@
                 <!-- Leaderboard rankings -->
                 <div class="leaderboard-container">
                   <div class="tab-title">MEMBER RANKINGS</div>
-                  <ul class="leaderboard-list">
-                    <li class="leaderboard-item top-rank" id="user-leaderboard-row">
-                      <span class="rank">#1</span>
-                      <span class="name" id="user-leaderboard-name">THIRSTYZOID</span>
-                      <span class="points">1,420 PTS</span>
-                    </li>
-                    <li class="leaderboard-item top-rank">
-                      <span class="rank">#2</span>
-                      <span class="name">Adeline Palmerston</span>
-                      <span class="points">1,250 PTS</span>
-                    </li>
-                    <li class="leaderboard-item top-rank">
-                      <span class="rank">#3</span>
-                      <span class="name">Lekan Thirsty</span>
-                      <span class="points">1,100 PTS</span>
-                    </li>
-                    <li class="leaderboard-item">
-                      <span class="rank">#4</span>
-                      <span class="name">Tunde Gold</span>
-                      <span class="points">950 PTS</span>
-                    </li>
-                    <li class="leaderboard-item">
-                      <span class="rank">#5</span>
-                      <span class="name">Evelyn Drinker</span>
-                      <span class="points">800 PTS</span>
-                    </li>
+                  <ul class="leaderboard-list" id="community-leaderboard-container">
+                    <!-- Dynamically populated in main.js with skeleton loaders -->
                   </ul>
                 </div>
               </div>

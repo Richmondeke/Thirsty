@@ -2504,6 +2504,131 @@ header .logout-btn {
   margin-bottom: 1rem;
 }
 
+/* --- Homepage Crate/Raid/Bounty Carousel --- */
+.drop-countdown-card.carousel-container {
+  position: relative;
+  overflow: hidden;
+  min-height: 185px;
+  padding-bottom: 2.2rem;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 1;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+  z-index: 2;
+}
+
+/* Dots navigation indicators */
+.carousel-dots {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: var(--accent-color);
+  transform: scale(1.2);
+  box-shadow: 0 0 6px var(--accent-color);
+}
+
+/* Pulsing and Live states */
+.pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #ff3e3e;
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulse-live 1.2s infinite;
+}
+
+@keyframes pulse-live {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+    box-shadow: 0 0 0 0 rgba(255, 62, 62, 0.7);
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 0 6px rgba(255, 62, 62, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+    box-shadow: 0 0 0 0 rgba(255, 62, 62, 0);
+  }
+}
+
+.status-live-label {
+  color: #ff3e3e !important;
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(255, 62, 62, 0.4);
+}
+
+.countdown-clock.live-pulse {
+  color: #ff3e3e !important;
+  text-shadow: 0 0 12px rgba(255, 62, 62, 0.6);
+  animation: text-pulse 2s infinite alternate;
+}
+
+@keyframes text-pulse {
+  0% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.btn-live-accent {
+  background-color: #ff3e3e !important;
+  color: #fff !important;
+  box-shadow: 0 0 12px rgba(255, 62, 62, 0.4);
+  font-weight: 800;
+  border: none !important;
+}
+.btn-live-accent:hover {
+  background-color: #e02d2d !important;
+  box-shadow: 0 0 18px rgba(255, 62, 62, 0.7);
+}
+
+
 .countdown-labels span {
   width: 40px;
 }
