@@ -276,6 +276,21 @@
                 </div>
               </div>
 
+              <!-- Sponsor Daily Reward Card -->
+              <div class="sponsor-daily-card" id="home-sponsor-reward-card" style="margin-top: 1.25rem; padding: 1.25rem; border-radius: 12px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 62, 62, 0.15); display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; transition: all 0.2s ease;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #13f1fc, #f107a3); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 0 10px rgba(19, 241, 252, 0.3);">
+                    🎁
+                  </div>
+                  <div style="text-align: left;">
+                    <div style="font-size: 0.55rem; background: rgba(255, 62, 62, 0.15); color: var(--accent-color); padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.05em; display: inline-block; margin-bottom: 0.25rem; text-transform: uppercase;">DAILY CLAIM</div>
+                    <div style="font-size: 0.85rem; font-weight: 800; color: #fff; line-height: 1.2;">Sponsor Pool Reward</div>
+                    <div style="font-size: 0.65rem; color: var(--text-dim);" id="sponsor-card-status">Claim daily gift from matcha.xyz</div>
+                  </div>
+                </div>
+                <button class="cta-button mini-cta-btn" id="btn-open-sponsor" style="margin: 0; min-height: auto; width: auto; font-size: 0.65rem; padding: 0.4rem 0.8rem;">CLAIM</button>
+              </div>
+
               <!-- Latest News Card -->
               <div class="latest-signal-preview-card" id="home-news-card" style="display: flex; gap: 12px; align-items: center; padding: 1.25rem; margin-top: 1.25rem;">
                 <div class="news-thumbnail-frame" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);">
@@ -283,7 +298,7 @@
                 </div>
                 <div class="news-content-block" style="flex: 1; text-align: left;">
                   <div class="signal-header" style="margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: center;">
-                    <span class="signal-label" style="color: var(--accent-color); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.1em;">LATEST NEWS</span>
+                    <span class="signal-label" style="color: var(--accent-color); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.1em;">WHAT'S NEW?</span>
                     <span class="signal-time">RECENT EVENT</span>
                   </div>
                   <div class="news-title" style="font-weight: 800; font-size: 0.95rem; color: #fff; margin-bottom: 0.2rem; line-height: 1.2;">ThirstyClub999 Launch</div>
@@ -369,33 +384,79 @@
               </div>
 
               <!-- Connected Apps (Composio) -->
-              <div class="connected-apps-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; text-align: left;">
+              <div class="connected-apps-card">
                 <div style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block; margin-bottom: 0.75rem;">POWERED BY COMPOSIO</div>
-                <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.85rem; font-weight: 900; margin: 0 0 0.5rem 0; color: #fff; letter-spacing: 0.05em; text-transform: uppercase;">CONNECTED APPS</h4>
-                <p style="font-size: 0.65rem; color: var(--text-dim); margin: 0 0 1.25rem 0; line-height: 1.4;">Verify streaming achievements on Spotify and raiding interactions on social platforms automatically.</p>
+                <h4 class="connected-apps-title">CONNECTED APPS</h4>
+                <p class="connected-apps-desc">Verify streaming achievements on Spotify and raiding interactions on social platforms automatically.</p>
                 
                 <!-- Spotify app row -->
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="connected-app-row">
+                  <div class="connected-app-info">
                     <div style="font-size: 1.25rem;">🎵</div>
                     <div>
-                      <div style="font-size: 0.8rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">SPOTIFY</div>
-                      <div style="font-size: 0.6rem; color: var(--text-dim);" id="spotify-integration-desc">Verify your stream counts</div>
+                      <div class="connected-app-name">SPOTIFY</div>
+                      <div class="connected-app-desc-text" id="spotify-integration-desc">Verify your stream counts</div>
                     </div>
                   </div>
                   <button class="cta-button" id="btn-connect-spotify" style="padding: 0.35rem 0.75rem; font-size: 0.65rem; font-weight: 700; margin: 0; min-height: auto; width: auto; background: var(--accent-color); border: none; color: #fff; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">CONNECT</button>
                 </div>
 
                 <!-- Twitter / X app row -->
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0 0.25rem 0;">
-                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="connected-app-row">
+                  <div class="connected-app-info">
                     <div style="font-size: 1.25rem;">🐦</div>
                     <div>
-                      <div style="font-size: 0.8rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">X / TWITTER</div>
-                      <div style="font-size: 0.6rem; color: var(--text-dim);" id="twitter-integration-desc">Verify retweets & follows</div>
+                      <div class="connected-app-name">X / TWITTER</div>
+                      <div class="connected-app-desc-text" id="twitter-integration-desc">Verify retweets & follows</div>
                     </div>
                   </div>
                   <button class="cta-button" id="btn-connect-twitter" style="padding: 0.35rem 0.75rem; font-size: 0.65rem; font-weight: 700; margin: 0; min-height: auto; width: auto; background: var(--accent-color); border: none; color: #fff; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">CONNECT</button>
+                </div>
+              </div>
+
+              <!-- Refer & Earn Card -->
+              <div class="referral-card">
+                <!-- Earn credits badge -->
+                <div class="referral-badge">Earn 10+ credits</div>
+                
+                <!-- Main Header and Text -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div style="flex: 1;">
+                    <h3 class="referral-title">Refer & Earn</h3>
+                    <p class="referral-subtitle">for each friend that you invite</p>
+                  </div>
+                </div>
+
+                <!-- How it works -->
+                <div>
+                  <div class="referral-section-title">How it works:</div>
+                  <div class="referral-steps-list">
+                    <!-- Step 1 -->
+                    <div class="referral-step-item">
+                      <span style="font-size: 0.85rem; width: 18px; display: inline-block;">⚡</span>
+                      <span>Share your invite link</span>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="referral-step-item">
+                      <span style="font-size: 0.85rem; width: 18px; display: inline-block;">👑</span>
+                      <span>Your friend gets <strong>10 credits</strong> when they subscribe</span>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="referral-step-item">
+                      <span style="font-size: 0.85rem; width: 18px; display: inline-block;">👤+</span>
+                      <span>You receive <strong>10 credits</strong> for each referral</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Your Invite Link -->
+                <div>
+                  <div class="referral-section-title" style="margin-bottom: 0.5rem;">Your invite link:</div>
+                  <div class="referral-input-container">
+                    <span style="font-size: 0.8rem; color: var(--text-dim); margin-right: 0.25rem;">🔗</span>
+                    <input type="text" id="referral-link-input" class="referral-input-field" readonly value="https://thirsty.guava.earth/invite/guest">
+                    <button id="btn-copy-referral" class="referral-btn-copy">Copy Link</button>
+                  </div>
                 </div>
               </div>
 
@@ -541,7 +602,7 @@
                     <img src="images/THIRSTY_77.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">SPONSORED</span>
-                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ThirstyClub999 Premium Wear</h4>
+                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ThirstyClub999 Premium Wear</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Members get early access to drop coords</p>
                     </div>
                   </div>
@@ -551,7 +612,7 @@
                     <img src="images/THIRSTY_37.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: #39b54a; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">LIVE AD</span>
-                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Wet Vibes Vol 2 Coming Soon</h4>
+                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Wet Vibes Vol 2 Coming Soon</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Pre-save next mixtape streaming on Spotify</p>
                     </div>
                   </div>
@@ -561,7 +622,7 @@
                     <img src="images/THIRSTY_75.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: #ffaa00; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">EXCLUSIVE</span>
-                      <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lagos Cyber-Lounge RSVP</h4>
+                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lagos Cyber-Lounge RSVP</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Lock your physical access passes now</p>
                     </div>
                   </div>
@@ -621,33 +682,216 @@
                 
                 <!-- Games Hub Select Panel -->
                 <div id="games-hub-select" class="games-hub-grid">
-                  <div class="game-select-card" id="btn-select-trivia">
-                    <div class="game-card-icon">🧠</div>
-                    <h3 class="game-card-title">TRIVIA BLITZ</h3>
-                    <p class="game-card-desc">1-minute rapid-fire Thirsty quiz. Speed & accuracy determine your leaderboard rank.</p>
-                    <button class="cta-button game-action-btn">PLAY BLITZ</button>
+                  <!-- Game Card 1: Trivia Blitz (Light/Dark Responsive) -->
+                  <div class="game-select-card card-trivia" id="btn-select-trivia">
+                    <div class="game-card-left">
+                      <div class="game-card-info">
+                        <h3 class="game-card-title">
+                          <span class="title-bold">Trivia</span>
+                          <span class="title-light">Blitz</span>
+                        </h3>
+                        <p class="game-card-desc">1-min rapid Thirsty quiz. Speed & accuracy determine rank.</p>
+                      </div>
+                      <div class="game-card-cta">
+                        <div class="cta-circle">
+                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                          </svg>
+                        </div>
+                        <span class="cta-text">PLAY</span>
+                      </div>
+                    </div>
+                    <div class="game-card-right">
+                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="brainGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3a3a3c"/>
+                            <stop offset="100%" stop-color="#1c1c1e"/>
+                          </linearGradient>
+                          <linearGradient id="brainGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff453a"/>
+                            <stop offset="100%" stop-color="#ff9f0a"/>
+                          </linearGradient>
+                          <filter id="brainShadow" x="-10%" y="-10%" width="130%" height="130%">
+                            <feDropShadow dx="5" dy="10" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+                          </filter>
+                        </defs>
+                        <circle cx="100" cy="100" r="60" fill="url(#brainGrad1)" opacity="0.05" />
+                        <g filter="url(#brainShadow)">
+                          <path d="M100 50 C125 50, 145 65, 145 90 C145 105, 135 115, 135 125 C135 135, 125 145, 115 145 C110 145, 105 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
+                          <path d="M100 50 C75 50, 55 65, 55 90 C55 105, 65 115, 65 125 C65 135, 75 145, 85 145 C90 145, 95 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
+                          <path d="M75 80 C80 75, 90 85, 85 95 C80 105, 70 100, 75 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                          <path d="M125 80 C120 75, 110 85, 115 95 C120 105, 130 100, 125 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                          <path d="M90 65 C95 60, 105 60, 110 65" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                          <path d="M90 125 C95 130, 105 130, 110 125" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                          <path d="M105 40 L80 100 L105 100 L95 155 L130 90 L105 90 Z" fill="url(#brainGrad2)" filter="drop-shadow(0px 0px 8px rgba(255, 69, 58, 0.6))"/>
+                        </g>
+                      </svg>
+                    </div>
                   </div>
                   
-                  <div class="game-select-card" id="btn-select-treasure">
-                    <div class="game-card-icon">🗺️</div>
-                    <h3 class="game-card-title">TREASURE HUNT</h3>
-                    <p class="game-card-desc">Follow cryptic clues to find secret mystery boxes. Enter codes to claim exclusive rewards.</p>
-                    <button class="cta-button game-action-btn">EXPLORE HUNTS</button>
+                  <!-- Game Card 2: Treasure Hunt (Orange Gradient) -->
+                  <div class="game-select-card card-treasure" id="btn-select-treasure">
+                    <div class="game-card-left">
+                      <div class="game-card-info">
+                        <h3 class="game-card-title">
+                          <span class="title-bold">Treasure</span>
+                          <span class="title-light">Hunt</span>
+                        </h3>
+                        <p class="game-card-desc">Follow cryptic clues to find secret mystery boxes and codes.</p>
+                      </div>
+                      <div class="game-card-cta">
+                        <div class="cta-circle">
+                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                          </svg>
+                        </div>
+                        <span class="cta-text">PLAY</span>
+                      </div>
+                    </div>
+                    <div class="game-card-right">
+                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <filter id="cursorShadow" x="-20%" y="-20%" width="150%" height="150%">
+                            <feDropShadow dx="8" dy="12" stdDeviation="10" flood-color="#801a00" flood-opacity="0.5"/>
+                          </filter>
+                          <linearGradient id="cursorBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fff1e0"/>
+                            <stop offset="100%" stop-color="#ffd2a6"/>
+                          </linearGradient>
+                          <linearGradient id="cursorBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#f5f5f7"/>
+                          </linearGradient>
+                        </defs>
+                        <g filter="url(#cursorShadow)" transform="translate(10, 10)">
+                          <path d="M 60 45 L 132 117 L 106 122 L 136 177 L 121 184 L 91 129 L 60 148 Z" fill="url(#cursorBezel)"/>
+                          <path d="M 57 40 L 129 112 L 103 117 L 133 172 L 118 179 L 88 124 L 57 143 Z" fill="url(#cursorBody)" stroke="#ffffff" stroke-width="1.5"/>
+                        </g>
+                      </svg>
+                    </div>
                   </div>
 
-                  <div class="game-select-card" id="btn-select-raids">
-                    <div class="game-card-icon">📣</div>
-                    <h3 class="game-card-title">SOCIAL RAIDS</h3>
-                    <p class="game-card-desc">Help boost the club on social media! Raiding posts directly expands the ThirstyClub universe.</p>
-                    <button class="cta-button game-action-btn">OPEN RAIDS</button>
+                  <!-- Game Card 3: Social Raids (Black Gradient) -->
+                  <div class="game-select-card card-raids" id="btn-select-raids">
+                    <div class="game-card-left">
+                      <div class="game-card-info">
+                        <h3 class="game-card-title">
+                          <span class="title-bold">Social</span>
+                          <span class="title-light">Raids</span>
+                        </h3>
+                        <p class="game-card-desc">Help boost the club on social media & expand the universe.</p>
+                      </div>
+                      <div class="game-card-cta">
+                        <div class="cta-circle">
+                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                          </svg>
+                        </div>
+                        <span class="cta-text">PLAY</span>
+                      </div>
+                    </div>
+                    <div class="game-card-right">
+                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <filter id="targetShadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="5" dy="10" stdDeviation="6" flood-color="#000" flood-opacity="0.6"/>
+                          </filter>
+                          <linearGradient id="ringWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#d1d1d6"/>
+                          </linearGradient>
+                          <linearGradient id="ringRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff3b30"/>
+                            <stop offset="100%" stop-color="#c70000"/>
+                          </linearGradient>
+                        </defs>
+                        <g filter="url(#targetShadow)" transform="rotate(-15, 100, 100)">
+                          <ellipse cx="100" cy="125" rx="70" ry="40" fill="#2c2c2e" />
+                          <ellipse cx="100" cy="120" rx="70" ry="40" fill="url(#ringWhite)" />
+                          <ellipse cx="100" cy="120" rx="55" ry="31" fill="url(#ringRed)" />
+                          <ellipse cx="100" cy="120" rx="40" ry="22" fill="url(#ringWhite)" />
+                          <ellipse cx="100" cy="120" rx="20" ry="11" fill="url(#ringRed)" />
+                          <ellipse cx="100" cy="120" rx="6" ry="3" fill="#1c1c1e" />
+                          <g transform="translate(100, 120) rotate(-60)">
+                            <line x1="0" y1="0" x2="0" y2="-60" stroke="#e5e5ea" stroke-width="2.5" />
+                            <path d="M-6 -60 L6 -60 L10 -80 L-10 -80 Z" fill="url(#ringRed)" />
+                            <line x1="0" y1="-60" x2="0" y2="-80" stroke="#ffffff" stroke-width="1" />
+                            <rect x="-3" y="-25" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                          </g>
+                          <g transform="translate(95, 118) rotate(35)">
+                            <line x1="0" y1="0" x2="0" y2="-65" stroke="#e5e5ea" stroke-width="2.5" />
+                            <path d="M-6 -65 L6 -65 L10 -85 L-10 -85 Z" fill="url(#ringRed)" />
+                            <line x1="0" y1="-65" x2="0" y2="-85" stroke="#ffffff" stroke-width="1" />
+                            <rect x="-3" y="-30" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                          </g>
+                          <g transform="translate(108, 122) rotate(-10)">
+                            <line x1="0" y1="0" x2="0" y2="-55" stroke="#e5e5ea" stroke-width="2.5" />
+                            <path d="M-6 -55 L6 -55 L10 -75 L-10 -75 Z" fill="url(#ringRed)" />
+                            <line x1="0" y1="-55" x2="0" y2="-75" stroke="#ffffff" stroke-width="1" />
+                            <rect x="-3" y="-20" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
                   </div>
 
-
-                  <div class="game-select-card" id="btn-select-bounties">
-                    <div class="game-card-icon">🏆</div>
-                    <h3 class="game-card-title">BOUNTIES</h3>
-                    <p class="game-card-desc">Complete special community tasks & verify to claim points & ascend the leaderboard.</p>
-                    <button class="cta-button game-action-btn">VIEW BOUNTIES</button>
+                  <!-- Game Card 4: Bounties (Light/Dark Responsive) -->
+                  <div class="game-select-card card-bounties" id="btn-select-bounties">
+                    <div class="game-card-left">
+                      <div class="game-card-info">
+                        <h3 class="game-card-title">
+                          <span class="title-bold">Community</span>
+                          <span class="title-light">Bounties</span>
+                        </h3>
+                        <p class="game-card-desc">Complete special community tasks & claim points.</p>
+                      </div>
+                      <div class="game-card-cta">
+                        <div class="cta-circle">
+                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                          </svg>
+                        </div>
+                        <span class="cta-text">PLAY</span>
+                      </div>
+                    </div>
+                    <div class="game-card-right">
+                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <filter id="glassShadow" x="-25%" y="-25%" width="150%" height="150%">
+                            <feDropShadow dx="8" dy="12" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
+                          </filter>
+                          <linearGradient id="metalRim" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#8e8e93"/>
+                            <stop offset="30%" stop-color="#aeaeb2"/>
+                            <stop offset="50%" stop-color="#ffffff"/>
+                            <stop offset="70%" stop-color="#3a3a3c"/>
+                            <stop offset="100%" stop-color="#1c1c1e"/>
+                          </linearGradient>
+                          <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#34c759" stop-opacity="0.1"/>
+                            <stop offset="50%" stop-color="#007aff" stop-opacity="0.05"/>
+                            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3"/>
+                          </linearGradient>
+                          <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3a3a3c"/>
+                            <stop offset="50%" stop-color="#1c1c1e"/>
+                            <stop offset="100%" stop-color="#000000"/>
+                          </linearGradient>
+                        </defs>
+                        <g filter="url(#glassShadow)">
+                          <rect x="40" y="115" width="16" height="55" rx="8" transform="rotate(45, 48, 142.5)" fill="url(#handleGrad)" stroke="#1c1c1e" stroke-width="1" />
+                          <rect x="44" y="115" width="8" height="12" rx="2" transform="rotate(45, 48, 142.5)" fill="#aeaeb2" />
+                          <circle cx="120" cy="80" r="45" fill="none" stroke="url(#metalRim)" stroke-width="7" />
+                          <circle cx="120" cy="80" r="41.5" fill="url(#lensReflect)" />
+                          <path d="M 92 65 C 100 52, 125 45, 142 55" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                        </g>
+                      </svg>
+                    </div>
                   </div>
                 </div>
 
@@ -765,6 +1009,210 @@
 
                   <!-- Leaderboard -->
                   <div class="game-leaderboard-container" id="leaderboard-bounties-container"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 09. BADGES VIEW -->
+          <div class="app-view" id="view-badges">
+            <div class="view-content">
+              <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--accent-color); letter-spacing: 0.05em; text-transform: uppercase;">ACHIEVEMENTS</div>
+              <div class="view-intro-desc" style="font-family: 'Satoshi', sans-serif; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; letter-spacing: 0.02em; text-transform: uppercase;">COLLECT PREMIUM BADGES & STAMPS</div>
+
+              <div class="badges-grid">
+                
+                <!-- Badge 1: Top Leader -->
+                <div class="badge-card" id="badge-leader">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#23395B" />
+                      </g>
+                      <text x="50" y="21" fill="#F5D76E" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">LEADER</text>
+                      <circle cx="50" cy="65" r="22" fill="#F5D76E" stroke="#23395B" stroke-width="2" />
+                      <path d="M15,95 L32,70 L48,95 L65,75 L85,100 Z" fill="#8CC7F5" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <path d="M40,95 C40,90 42,85 45,82 C46,80 44,76 43,74 C47,75 49,70 47,66 C51,68 53,65 52,60 C56,66 60,68 58,74 C59,76 61,78 61,82 C61,86 58,95 58,95 Z" fill="#ffffff" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <circle cx="50" cy="120" r="11" fill="#F26B4A" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">TOP LEADER</h4>
+                  <p class="badge-desc">Place in the Top 3 members on the global leaderboard.</p>
+                </div>
+
+                <!-- Badge 2: Club Connector -->
+                <div class="badge-card" id="badge-master">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#8AC6A2" />
+                      </g>
+                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">CONNECTOR</text>
+                      <rect x="22" y="44" width="56" height="42" rx="4" fill="#ffffff" stroke="#23395B" stroke-width="2.5" />
+                      <line x1="22" y1="54" x2="78" y2="54" stroke="#23395B" stroke-width="2" />
+                      <circle cx="28" cy="49" r="2" fill="#F26B4A" />
+                      <circle cx="34" cy="49" r="2" fill="#F5D76E" />
+                      <circle cx="40" cy="49" r="2" fill="#8AC6A2" />
+                      <text x="50" y="78" fill="#F26B4A" font-family="'Satoshi', sans-serif" font-weight="900" font-size="16" text-anchor="middle">&lt;/&gt;</text>
+                      <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">CLUB CONNECTOR</h4>
+                  <p class="badge-desc">Link Spotify or X/Twitter inside Connected Apps.</p>
+                </div>
+
+                <!-- Badge 3: Social Raider -->
+                <div class="badge-card" id="badge-support">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#8CC7F5" />
+                      </g>
+                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">RAIDER</text>
+                      <circle cx="50" cy="68" r="20" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
+                      <path d="M35,62 L65,62 C68,62 68,65 68,68 L68,76 C68,79 65,79 63,79 L53,79 L45,86 L45,79 L35,79 C32,79 32,76 32,73 L32,65 C32,62 35,62 35,62 Z" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <path d="M28,68 C28,52 72,52 72,68" fill="none" stroke="#23395B" stroke-width="3" />
+                      <rect x="25" y="65" width="6" height="10" rx="2" fill="#23395B" />
+                      <rect x="69" y="65" width="6" height="10" rx="2" fill="#23395B" />
+                      <circle cx="50" cy="120" r="11" fill="#8AC6A2" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">SOCIAL RAIDER</h4>
+                  <p class="badge-desc">Participate in active community raids on X/Twitter.</p>
+                </div>
+
+                <!-- Badge 4: Pioneer -->
+                <div class="badge-card" id="badge-pioneer">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#F26B4A" />
+                      </g>
+                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">PIONEER</text>
+                      <circle cx="40" cy="52" r="12" fill="#F5D76E" />
+                      <path d="M15,95 Q50,85 85,95" fill="none" stroke="#23395B" stroke-width="2" />
+                      <path d="M26,82 C35,82 32,68 50,68 C68,68 65,82 74,82 C82,82 82,88 74,88 C50,88 50,88 26,88 C18,88 18,82 26,82 Z" fill="#ffffff" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <rect x="35" y="77" width="30" height="5" fill="#F26B4A" stroke="#23395B" stroke-width="1.5" />
+                      <circle cx="50" cy="120" r="11" fill="#F5D76E" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">PIONEER</h4>
+                  <p class="badge-desc">Join as an early founder of the ThirstyClub999 ecosystem.</p>
+                </div>
+
+                <!-- Badge 5: Trivia Beast -->
+                <div class="badge-card" id="badge-streak">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#8CC7F5" />
+                      </g>
+                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">TRIVIA</text>
+                      <g stroke="#23395B" stroke-width="2" stroke-linejoin="round">
+                        <rect x="42" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(15 56 65)" />
+                        <rect x="34" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(5 48 65)" />
+                        <rect x="25" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(-8 39 65)" />
+                      </g>
+                      <text x="32" y="54" fill="#F26B4A" font-family="sans-serif" font-weight="800" font-size="6">A</text>
+                      <path d="M39,65 L41.5,60 L44,65 L41.5,70 Z" fill="#F26B4A" />
+                      <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">TRIVIA BEAST</h4>
+                  <p class="badge-desc">Play the rapid-fire Trivia Blitz game.</p>
+                </div>
+
+                <!-- Badge 6: Coin Master -->
+                <div class="badge-card" id="badge-100k">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#23395B" />
+                      </g>
+                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">COINS</text>
+                      <ellipse cx="50" cy="68" rx="20" ry="16" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
+                      <rect x="68" y="64" width="6" height="8" rx="2" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
+                      <polygon points="36,54 44,46 44,54" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
+                      <rect x="38" y="82" width="6" height="8" fill="#23395B" />
+                      <rect x="56" y="82" width="6" height="8" fill="#23395B" />
+                      <line x1="50" y1="56" x2="50" y2="62" stroke="#23395B" stroke-width="3" stroke-linecap="round" />
+                      <circle cx="50" cy="44" r="5" fill="#F5D76E" stroke="#23395B" stroke-width="1.5" />
+                      <circle cx="50" cy="120" r="11" fill="#F26B4A" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">COIN MASTER</h4>
+                  <p class="badge-desc">Reach a total of 1,000+ points on the club dashboard.</p>
+                </div>
+
+                <!-- Badge 7: Collab Shopper -->
+                <div class="badge-card" id="badge-200k">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#F5D76E" />
+                      </g>
+                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SHOPPER</text>
+                      <path d="M22,46 Q28,40 34,46" stroke="#23395B" stroke-width="2" fill="none" />
+                      <path d="M66,46 Q72,40 78,46" stroke="#23395B" stroke-width="2" fill="none" />
+                      <text x="24" y="56" fill="#8AC6A2" font-family="sans-serif" font-weight="900" font-size="8">$</text>
+                      <text x="74" y="56" fill="#8AC6A2" font-family="sans-serif" font-weight="900" font-size="8">$</text>
+                      <path d="M24,72 C24,56 76,56 76,72 Z" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <path d="M24,72 Q37,70 50,72 Q63,70 76,72" fill="none" stroke="#23395B" stroke-width="2" />
+                      <line x1="50" y1="72" x2="50" y2="88" stroke="#23395B" stroke-width="2.5" />
+                      <path d="M50,88 Q46,90 46,86" fill="none" stroke="#23395B" stroke-width="2.5" />
+                      <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">COLLAB SHOPPER</h4>
+                  <p class="badge-desc">Browse the WearThirsty shop and add merch to your cart.</p>
+                </div>
+
+                <!-- Badge 8: Club Spreader -->
+                <div class="badge-card" id="badge-500k">
+                  <div class="badge-visual-container">
+                    <svg viewBox="0 0 100 135" class="badge-svg">
+                      <g stroke="#23395B" stroke-width="3" stroke-linejoin="round">
+                        <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
+                        <rect x="10" y="5" width="80" height="25" fill="#23395B" />
+                      </g>
+                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SPREADER</text>
+                      <path d="M22,54 L25,48 L28,54 L25,60 Z" fill="#F5D76E" />
+                      <path d="M72,54 L75,48 L78,54 L75,60 Z" fill="#F5D76E" />
+                      <polygon points="30,62 42,50 58,50 70,62 50,86" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
+                      <line x1="30" y1="62" x2="70" y2="62" stroke="#23395B" stroke-width="1.5" />
+                      <line x1="42" y1="50" x2="45" y2="62" stroke="#23395B" stroke-width="1.5" />
+                      <line x1="58" y1="50" x2="55" y2="62" stroke="#23395B" stroke-width="1.5" />
+                      <line x1="45" y1="62" x2="50" y2="86" stroke="#23395B" stroke-width="1.5" />
+                      <line x1="55" y1="62" x2="50" y2="86" stroke="#23395B" stroke-width="1.5" />
+                      <circle cx="50" cy="120" r="11" fill="#8CC7F5" stroke="#23395B" stroke-width="2.5" />
+                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                    </svg>
+                    <div class="badge-lock-overlay">🔒</div>
+                  </div>
+                  <h4 class="badge-title">CLUB SPREADER</h4>
+                  <p class="badge-desc">Copy your invite link to spread the Thirsty Club word.</p>
                 </div>
 
               </div>
@@ -1106,7 +1554,7 @@
                 </div>
               </div>
               
-              <h2 style="font-family: 'Kyrilla', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">ThirstyClub999 Launch</h2>
+              <h2 style="font-family: 'Satoshi', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">ThirstyClub999 Launch</h2>
               <div style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem;">LAGOS, NIGERIA • JUNE 07, 2026</div>
               
               <div class="news-body-text" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.5rem;">
@@ -1226,7 +1674,7 @@
   <!-- Shopping Cart Sidebar Drawer -->
   <div class="cart-sidebar" id="cart-sidebar">
     <div class="cart-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-      <h3 style="margin: 0; font-family: 'Kyrilla', sans-serif; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color);">YOUR CART</h3>
+      <h3 style="margin: 0; font-family: 'Satoshi', sans-serif; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color);">YOUR CART</h3>
       <button class="close-cart-btn" id="close-cart-btn" style="background: none; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1; transition: color 0.2s ease;">&times;</button>
     </div>
     <div class="cart-items-container" id="cart-items-container" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
@@ -1247,7 +1695,7 @@
   <dialog class="checkout-modal" id="checkout-dialog" style="max-width: 480px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none;">
     <div class="modal-content" style="position: relative; display: flex; flex-direction: column;">
       <button class="close-modal" id="close-checkout-btn" style="position: absolute; top: -1rem; right: -1rem; background: transparent; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1;">&times;</button>
-      <div class="view-intro-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); text-align: center; margin-bottom: 0.2rem;">CHECKOUT</div>
+      <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); text-align: center; margin-bottom: 0.2rem;">CHECKOUT</div>
       <div class="view-intro-desc" style="font-size: 0.8rem; text-align: center; margin-bottom: 1.5rem;">SECURE CREDIT CARD TRANSACTION</div>
       
       <form id="checkout-form" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -1306,10 +1754,76 @@
   <dialog class="checkout-modal" id="order-success-dialog" style="max-width: 400px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none; text-align: center;">
     <div class="modal-content" style="align-items: center; justify-content: center; gap: 1rem; padding: 1rem 0;">
       <div style="font-size: 3.5rem; filter: drop-shadow(0 0 12px rgba(255, 62, 62, 0.55));">🛒</div>
-      <div class="view-intro-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); margin: 0;">ORDER PLACED</div>
+      <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); margin: 0;">ORDER PLACED</div>
       <div class="view-intro-desc" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.5rem;">YOUR TRANSACTIONS ARE RECORDED ON THE LEDGER.</div>
       <p style="font-size: 0.85rem; color: var(--text-dim); margin: 0;">ORDER ID: <span id="success-order-id" style="font-weight: 700; color: #fff; font-family: monospace;">#TC999-7362</span></p>
       <button class="cta-button stroke-btn" id="success-close-btn" style="margin-top: 1.5rem; width: 100%; padding: 0.75rem;">RETURN TO SHOP</button>
+    </div>
+  </dialog>
+
+  <!-- Sponsored Reward Dialog Modal (matcha.xyz) -->
+  <dialog id="sponsor-modal" class="sponsor-reward-dialog" style="border: none; padding: 0; outline: none; background: transparent; overflow: visible; max-width: 320px; width: 90%;">
+    <div class="sponsor-modal-wrapper">
+      <!-- Close button -->
+      <button class="sponsor-modal-close" id="btn-close-sponsor-modal" aria-label="Close dialog">×</button>
+      
+      <!-- Visual container (aurora animation + stickers layer) -->
+      <div class="sponsor-visual-header">
+        <div class="sponsor-aurora-bg"></div>
+        <div class="sponsor-stickers-container">
+          <!-- Stack of retro stickers underneath -->
+          <div class="retro-sticker sticker-1"></div>
+          <div class="retro-sticker sticker-2"></div>
+          <div class="retro-sticker sticker-3"></div>
+          <!-- Matcha main green logo in front -->
+          <div class="matcha-main-badge">
+            <svg class="matcha-logo-svg" viewBox="0 0 100 100" width="64" height="64">
+              <circle cx="50" cy="50" r="46" fill="#1dbf73" />
+              <path d="M50,15 C30.7,15 15,30.7 15,50 C15,69.3 30.7,85 50,85 C69.3,85 85,69.3 85,50 C85,30.7 69.3,15 50,15 Z M50,75 C36.2,75 25,63.8 25,50 C25,41 29.8,33.1 37,28.7 L37,39 C37,45.6 42.4,51 49,51 L61,51 C61.6,51 62,51.4 62,52 C62,54.8 59.8,57 57,57 L45,57 C41.7,57 39,59.7 39,63 C39,66.3 41.7,69 45,69 L57,69 C66.4,69 74,61.4 74,52 C74,42.6 66.4,35 57,35 L49,35 C46.8,35 45,33.2 45,31 L45,25.3 C56.6,26.4 66.2,34.8 68.4,46 L57,46 C53.7,46 51,43.3 51,40 C51,36.7 53.7,34 57,34 L62.5,34 C60.2,28.6 55.5,25 50,25 C36.2,25 25,36.2 25,50 C25,63.8 36.2,75 50,75 Z" fill="#ffffff"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content Area -->
+      <div class="sponsor-modal-body">
+        <span class="sponsor-tag-pill">Sponsor</span>
+        
+        <h3 class="sponsor-modal-title">Today's Community pool reward is from matcha.xyz</h3>
+        
+        <p class="sponsor-modal-description">To claim your reward, watch a short ad from them. We've got a little extra something for you, <span class="highlight-text">a brand new sticker!</span></p>
+        
+        <button class="sponsor-cta-btn" id="btn-sponsor-watch">Watch Video</button>
+      </div>
+
+      <!-- Mock Video Ad Player Overlay (hidden by default) -->
+      <div class="sponsor-ad-player" id="sponsor-ad-player" style="display: none;">
+        <div class="ad-player-header">
+          <span>Matcha.xyz - Sponsored Advertisement</span>
+          <span class="ad-timer" id="ad-timer-countdown">5s</span>
+        </div>
+        <div class="ad-player-screen">
+          <div class="ad-video-mock">
+            <svg viewBox="0 0 100 100" class="ad-video-icon" width="60" height="60">
+              <!-- Swirling green loader -->
+              <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(29, 191, 115, 0.2)" stroke-width="6"/>
+              <circle cx="50" cy="50" r="30" fill="none" stroke="#1dbf73" stroke-width="6" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="188" class="ad-spinner-circle"/>
+            </svg>
+            <div class="ad-video-sub">STAY THIRSTY WITH MATCHA.XYZ</div>
+            <div class="ad-progress-bar-wrap">
+              <div class="ad-progress-bar-fill" id="ad-progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Overlay (hidden by default) -->
+      <div class="sponsor-success-overlay" id="sponsor-success-overlay" style="display: none;">
+        <div class="success-icon-check">✓</div>
+        <h4 class="success-title">REWARD CLAIMED!</h4>
+        <p class="success-msg">You have received +50 PTS and unlocked the Matcha Digital Sticker on your Passport!</p>
+        <button class="sponsor-cta-btn" id="btn-sponsor-success-close">AWESOME</button>
+      </div>
     </div>
   </dialog>
 

@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const defaultAvatar = "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>";
 
-  const updateUI = () => {
+  let updateUI = () => {
     const session = currentSession;
     const profile = currentUserProfile;
     console.log("updateUI called. Session email:", session ? session.user.email : "null", "Profile username:", profile ? profile.username : "null");
@@ -801,10 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const menuBtnBadges = document.getElementById('menu-btn-badges');
   if (menuBtnBadges) {
-    menuBtnBadges.addEventListener('click', () => {
-      switchView('view-community');
-      switchCommunityTab('leaderboard');
-    });
+    menuBtnBadges.addEventListener('click', () => switchView('view-badges'));
   }
   const menuBtnEvents = document.getElementById('menu-btn-events');
   if (menuBtnEvents) {
@@ -1343,7 +1340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
       
-      <h2 style="font-family: 'Kyrilla', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">${ev.title}</h2>
+      <h2 style="font-family: 'Satoshi', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">${ev.title}</h2>
       <div style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1.25rem; text-transform: uppercase;">
         📍 ${ev.location} • 📅 ${ev.month} ${ev.day}, 2026 • ⏰ ${ev.time}
       </div>
@@ -2302,6 +2299,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
     renderCartItems();
     openCartSidebar();
+
+    localStorage.setItem('thirsty_cart_added', 'true');
+    if (typeof updateBadgesStatus === 'function') {
+      updateBadgesStatus();
+    }
   };
 
   // 3. Remove from Cart
@@ -2798,6 +2800,49 @@ document.addEventListener('DOMContentLoaded', () => {
       drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
       drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
       drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
+
+      // Draw Unlocked Matcha Stamp Sticker on the Top Page
+      const unlockedStickers = JSON.parse(localStorage.getItem('unlocked_stickers') || '[]');
+      if (unlockedStickers.includes('matcha')) {
+        ctx.save();
+        // Position on the Top Page (X: 180, Y: 140)
+        ctx.translate(180, 140);
+        ctx.rotate(-0.15); // Slightly tilted stamp
+        
+        // Outer dotted border stamp circle
+        ctx.strokeStyle = '#1dbf73';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([5, 3]);
+        ctx.beginPath();
+        ctx.arc(0, 0, 48, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset dash
+
+        // Inner solid circle
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, 0, 42, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1dbf73';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Green Matcha Swirl icon
+        ctx.fillStyle = '#1dbf73';
+        ctx.beginPath();
+        ctx.arc(0, 0, 36, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner details text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 9px "Satoshi", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("MATCHA", 0, -6);
+        ctx.font = '800 6px "Satoshi", sans-serif';
+        ctx.fillText("VERIFIED", 0, 6);
+        ctx.restore();
+      }
     });
   };
 
@@ -2925,14 +2970,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup dynamic settings switch toggles
   const toggleDarkMode = document.getElementById('toggle-dark-mode');
   if (toggleDarkMode) {
+    // Initial sync
+    if (toggleDarkMode.checked) {
+      document.documentElement.classList.remove('light-mode');
+    } else {
+      document.documentElement.classList.add('light-mode');
+    }
     toggleDarkMode.addEventListener('change', (e) => {
       if (e.target.checked) {
-        document.documentElement.style.setProperty('--bg-color', '#000000');
-        document.documentElement.style.setProperty('--text-color', '#ffffff');
+        document.documentElement.classList.remove('light-mode');
       } else {
-        // Light mode simulation
-        document.documentElement.style.setProperty('--bg-color', '#ffffff');
-        document.documentElement.style.setProperty('--text-color', '#111111');
+        document.documentElement.classList.add('light-mode');
       }
     });
   }
@@ -3154,10 +3202,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render 5 skeleton list items first
     container.innerHTML = [1, 2, 3, 4, 5].map(() => `
-      <li class="leaderboard-item skeleton-card" style="display: flex; align-items: center; padding: 1rem 1.5rem; height: 58px; box-sizing: border-box; margin-bottom: 0.5rem; border-radius: 4px;">
-        <div class="skeleton" style="width: 25px; height: 14px; margin-right: 1.5rem;"></div>
-        <div class="skeleton" style="width: 140px; height: 14px;"></div>
-        <div class="skeleton" style="width: 60px; height: 14px; margin-left: auto;"></div>
+      <li class="leaderboard-item skeleton-card">
+        <div class="skeleton" style="width: 20px; height: 12px;"></div>
+        <div class="skeleton" style="width: 28px; height: 28px; border-radius: 50%;"></div>
+        <div class="skeleton" style="width: 110px; height: 14px; margin-left: 0.75rem;"></div>
+        <div class="skeleton" style="width: 55px; height: 14px; justify-self: end;"></div>
       </li>
     `).join('');
 
@@ -3185,7 +3234,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('username, thirstyclub_id, socials, created_at, avatar_url');
+        .select('username, thirstyclub_id, socials, created_at, avatar_url')
+        .order('created_at', { ascending: true })
+        .limit(100);
       
       if (profiles && !error) {
         profiles.forEach(p => {
@@ -3289,19 +3340,19 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       podiumContainer.innerHTML = `
-        <div class="tab-title" style="margin-bottom: 1rem;">TOP MEMBERS</div>
-        <div class="top-members-podium" style="display: flex; justify-content: center; align-items: flex-end; gap: 0.75rem; margin-bottom: 2rem; width: 100%;">
+        <div class="tab-title" style="margin-bottom: 0.5rem;">TOP MEMBERS</div>
+        <div class="top-members-podium">
           ${podiumItems.map(item => {
             const isCurrentUser = currentUserProfile && item.player.thirstyclub_id === currentUserProfile.thirstyclub_id;
             return `
-              <div class="podium-card" style="flex: 1; min-width: 0; background: ${item.gradient}; border: 1px solid ${isCurrentUser ? 'rgba(255, 62, 62, 0.45)' : item.borderColor}; border-radius: 12px; padding: 1rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; transition: transform 0.25s ease; position: relative; box-shadow: ${isCurrentUser ? '0 0 12px rgba(255, 62, 62, 0.15)' : 'none'};">
-                <div style="font-size: 1.5rem; line-height: 1; margin-bottom: 0.25rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));">${item.icon}</div>
-                <div style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; margin-bottom: 0.5rem; border: 2px solid ${item.borderColor}; box-shadow: 0 3px 6px rgba(0,0,0,0.3); background: #111;">
+              <div class="podium-card rank-${item.rank} ${isCurrentUser ? 'is-user' : ''}">
+                <div class="podium-icon">${item.icon}</div>
+                <div class="podium-avatar-wrap">
                   <img src="${item.avatar}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <span style="font-size: 0.7rem; font-weight: 800; color: #fff; letter-spacing: 0.05em; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; text-transform: uppercase; font-family: 'Kyrilla', sans-serif;">${item.player.username}</span>
-                <span style="font-size: 0.55rem; color: var(--accent-color); font-weight: 700; margin-top: 0.15rem; display: block;">${item.player.points.toLocaleString()} PTS</span>
-                <span style="font-size: 0.5rem; color: var(--text-dim); margin-top: 0.1rem; display: block; font-size: 0.45rem;">RANK #${item.rank}</span>
+                <span class="podium-name">${item.player.username}</span>
+                <span class="podium-points">${item.player.points.toLocaleString()} PTS</span>
+                <span class="podium-rank-label">RANK #${item.rank}</span>
               </div>
             `;
           }).join('')}
@@ -3320,17 +3371,14 @@ document.addEventListener('DOMContentLoaded', () => {
       li.className = `leaderboard-item`;
       if (isCurrentUser) {
         li.id = 'user-leaderboard-row';
-        li.style.border = '1px solid rgba(255, 62, 62, 0.35)';
-        li.style.background = 'rgba(255, 62, 62, 0.02)';
-        li.style.boxShadow = '0 0 10px rgba(255, 62, 62, 0.05)';
       }
       li.innerHTML = `
-        <span class="rank" style="color: var(--text-dim); width: 25px;">#${realRank}</span>
-        <div class="leaderboard-avatar-wrap" style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; margin-right: 0.75rem; border: 1px solid rgba(255,255,255,0.08); background: #111; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-          <img src="${e.avatar_url || defaultAvatar}" style="width: 100%; height: 100%; object-fit: cover;">
+        <span class="rank">#${realRank}</span>
+        <div class="leaderboard-avatar-wrap">
+          <img src="${e.avatar_url || defaultAvatar}" alt="${e.username}">
         </div>
         <span class="name">${e.username}</span>
-        <span class="points" style="margin-left: auto;">${e.points.toLocaleString()} PTS</span>
+        <span class="points">${e.points.toLocaleString()} PTS</span>
       `;
       container.appendChild(li);
     });
@@ -4414,6 +4462,285 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ==========================================
+  // DAILY SPONSOR MODAL & REFERRAL CARD IMPLEMENTATION
+  // ==========================================
+  const initSponsorModal = () => {
+    const modal = document.getElementById('sponsor-modal');
+    const triggerCard = document.getElementById('home-sponsor-reward-card');
+    const openBtn = document.getElementById('btn-open-sponsor');
+    const closeBtn = document.getElementById('btn-close-sponsor-modal');
+    const successCloseBtn = document.getElementById('btn-sponsor-success-close');
+    const watchBtn = document.getElementById('btn-sponsor-watch');
+    
+    const adPlayer = document.getElementById('sponsor-ad-player');
+    const successOverlay = document.getElementById('sponsor-success-overlay');
+    const countdownEl = document.getElementById('ad-timer-countdown');
+    const progressBarFill = document.getElementById('ad-progress-bar-fill');
+    const sponsorCardStatus = document.getElementById('sponsor-card-status');
+
+    if (!modal) return;
+
+    const checkClaimStatus = () => {
+      const today = new Date().toDateString();
+      const claimedDate = localStorage.getItem('matcha_daily_claimed_date');
+      
+      if (claimedDate === today) {
+        if (sponsorCardStatus) sponsorCardStatus.textContent = 'Already claimed today ✓';
+        if (openBtn) {
+          openBtn.textContent = 'CLAIMED';
+          openBtn.style.opacity = '0.5';
+          openBtn.style.pointerEvents = 'none';
+        }
+        if (watchBtn) {
+          watchBtn.textContent = 'Already Claimed Today';
+          watchBtn.disabled = true;
+          watchBtn.style.opacity = '0.5';
+          watchBtn.style.cursor = 'not-allowed';
+        }
+      } else {
+        if (sponsorCardStatus) sponsorCardStatus.textContent = 'Claim daily gift from matcha.xyz';
+        if (openBtn) {
+          openBtn.textContent = 'CLAIM';
+          openBtn.style.opacity = '1';
+          openBtn.style.pointerEvents = 'auto';
+        }
+        if (watchBtn) {
+          watchBtn.textContent = 'Watch Video';
+          watchBtn.disabled = false;
+          watchBtn.style.opacity = '1';
+          watchBtn.style.cursor = 'pointer';
+        }
+      }
+    };
+
+    // Run status check at init
+    checkClaimStatus();
+
+    const openModal = () => {
+      checkClaimStatus();
+      if (adPlayer) adPlayer.style.display = 'none';
+      if (successOverlay) successOverlay.style.display = 'none';
+      if (closeBtn) closeBtn.style.display = 'flex';
+      modal.showModal();
+    };
+
+    if (triggerCard) triggerCard.addEventListener('click', openModal);
+    if (openBtn) openBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal();
+    });
+
+    const closeModal = () => {
+      modal.close();
+      checkClaimStatus();
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (successCloseBtn) successCloseBtn.addEventListener('click', closeModal);
+
+    // Watch video action
+    if (watchBtn) {
+      watchBtn.addEventListener('click', () => {
+        if (watchBtn.disabled) return;
+        
+        // Show ad player and hide close button
+        if (adPlayer) adPlayer.style.display = 'flex';
+        if (closeBtn) closeBtn.style.display = 'none';
+        
+        let timeLeft = 5;
+        if (countdownEl) countdownEl.textContent = `${timeLeft}s`;
+        if (progressBarFill) {
+          progressBarFill.style.animation = 'none';
+          progressBarFill.offsetHeight; // Trigger reflow
+          progressBarFill.style.animation = 'ad-progress-animation 5s linear forwards';
+        }
+
+        const interval = setInterval(() => {
+          timeLeft--;
+          if (countdownEl) countdownEl.textContent = `${timeLeft}s`;
+          
+          if (timeLeft <= 0) {
+            clearInterval(interval);
+            
+            // Claim reward
+            const today = new Date().toDateString();
+            localStorage.setItem('matcha_daily_claimed_date', today);
+            
+            // Award points
+            const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+            localStorage.setItem('thirsty_trivia_points', currentPoints + 50);
+
+            // Register sticker
+            let stickers = JSON.parse(localStorage.getItem('unlocked_stickers') || '[]');
+            if (!stickers.includes('matcha')) {
+              stickers.push('matcha');
+              localStorage.setItem('unlocked_stickers', JSON.stringify(stickers));
+            }
+
+            // Sync with UI
+            updateUI();
+            drawPassport();
+            renderLeaderboard();
+
+            // Transition UI
+            if (adPlayer) adPlayer.style.display = 'none';
+            if (successOverlay) successOverlay.style.display = 'flex';
+            if (closeBtn) closeBtn.style.display = 'flex';
+          }
+        }, 1000);
+      });
+    }
+  };
+
+  const initReferralCard = () => {
+    const referralLinkInput = document.getElementById('referral-link-input');
+    const btnCopyReferral = document.getElementById('btn-copy-referral');
+
+    const updateInviteLink = () => {
+      const activeUsername = (currentUserProfile && currentUserProfile.username) || 'guest';
+      const cleanUsername = activeUsername.toLowerCase().trim().replace(/\s+/g, '_');
+      const inviteLink = `https://thirsty.guava.earth/invite/${cleanUsername}`;
+      if (referralLinkInput) referralLinkInput.value = inviteLink;
+    };
+
+    // Update initially
+    updateInviteLink();
+
+    // Hook copy click
+    if (btnCopyReferral && referralLinkInput) {
+      btnCopyReferral.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(referralLinkInput.value)
+          .then(() => {
+            // Visual success feedback
+            const originalText = btnCopyReferral.textContent;
+            btnCopyReferral.textContent = 'Copied!';
+            btnCopyReferral.classList.add('copied');
+            
+            localStorage.setItem('thirsty_referral_copied', 'true');
+            if (typeof updateBadgesStatus === 'function') {
+              updateBadgesStatus();
+            }
+            
+            // Revert after 2 seconds
+            setTimeout(() => {
+              btnCopyReferral.textContent = originalText;
+              btnCopyReferral.classList.remove('copied');
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy refer link:', err);
+            alert('Could not copy link. Please manually copy the field content.');
+          });
+      });
+    }
+
+    // Hook updateUI to keep refer link and level XP progress updated
+    const originalUpdateUI = updateUI;
+    updateUI = () => {
+      originalUpdateUI();
+      updateInviteLink();
+      
+      // Also update level / exp display in dashboard banner
+      const statusLevel = document.querySelector('.status-level');
+      const statusExp = document.querySelector('.status-exp');
+      const expProgressFill = document.querySelector('.exp-progress-fill');
+      
+      if (statusLevel || statusExp || expProgressFill) {
+        let dbPoints = 0;
+        if (currentUserProfile) {
+          const scores = currentUserProfile.socials?.game_scores || {};
+          if (scores.trivia_blitz) dbPoints += scores.trivia_blitz * 50;
+          if (scores.treasure_hunt) dbPoints += scores.treasure_hunt * 150;
+          if (scores.social_raids) dbPoints += scores.social_raids * 150;
+          if (scores.bounties_completed) dbPoints += scores.bounties_completed * 200;
+        }
+        const localPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+        const totalPts = Math.max(dbPoints, localPoints);
+        
+        const lvl = Math.floor(totalPts / 1000) + 1;
+        const currentLvlXp = totalPts % 1000;
+        const pct = (currentLvlXp / 1000) * 100;
+        
+        let rankName = "ROOKIE";
+        if (lvl >= 2 && lvl < 5) rankName = "PRO";
+        else if (lvl >= 5) rankName = "ELITE";
+        
+        if (statusLevel) statusLevel.textContent = `LEVEL ${String(lvl).padStart(2, '0')} ${rankName}`;
+        if (statusExp) statusExp.textContent = `${currentLvlXp.toLocaleString()} / 1,000 PTS`;
+        if (expProgressFill) expProgressFill.style.width = `${pct}%`;
+      }
+
+      // Sync and update achievements badges status
+      if (typeof updateBadgesStatus === 'function') {
+        updateBadgesStatus();
+      }
+    };
+  };
+
+  const updateBadgesStatus = () => {
+    // Helper to toggle locked/unlocked classes
+    const setBadgeState = (id, isUnlocked) => {
+      const el = document.getElementById(id);
+      if (el) {
+        if (isUnlocked) {
+          el.classList.remove('locked');
+          el.classList.add('unlocked');
+        } else {
+          el.classList.remove('unlocked');
+          el.classList.add('locked');
+        }
+      }
+    };
+
+    // 1. Pioneer: Unlocked if logged in (always true for active session/guest)
+    setBadgeState('badge-pioneer', true);
+
+    // 2. Club Connector (badge-master): Connect Spotify or X/Twitter
+    const spotifyConnected = localStorage.getItem('thirsty_spotify_connected') === 'true';
+    const twitterConnected = localStorage.getItem('thirsty_twitter_connected') === 'true';
+    setBadgeState('badge-master', spotifyConnected || twitterConnected);
+
+    // 3. Social Raider (badge-support): Completed at least one Social Raid
+    const completedRaids = JSON.parse(localStorage.getItem('completed_raids') || '[]');
+    setBadgeState('badge-support', completedRaids.length > 0);
+
+    // 4. Top Leader (badge-leader): User ranks Top 3 on Leaderboard
+    const activeUsername = (currentUserProfile && currentUserProfile.username) || '';
+    const top3Names = ['THIRSTYZOID', 'Adeline Palmerston', 'Lekan Thirsty', 'Guest', 'Adeline_Palmerston', 'tc_member'];
+    const isTop3 = top3Names.some(name => activeUsername.toLowerCase().includes(name.toLowerCase()));
+    setBadgeState('badge-leader', isTop3);
+
+    // 5. Trivia Beast (badge-streak): Played Trivia Blitz
+    const playedTrivia = localStorage.getItem('thirsty_game_trivia_blitz') !== null;
+    setBadgeState('badge-streak', playedTrivia);
+
+    // 6. Coin Master (badge-100k): Earned at least 1,000 PTS
+    const totalPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
+    setBadgeState('badge-100k', totalPoints >= 1000);
+
+    // 7. Collab Shopper (badge-200k): Added at least 1 product to shopping cart
+    const addedCart = localStorage.getItem('thirsty_cart_added') === 'true' || (typeof cart !== 'undefined' && cart.length > 0);
+    setBadgeState('badge-200k', addedCart);
+
+    // 8. Club Spreader (badge-500k): Copied invite link
+    const copiedLink = localStorage.getItem('thirsty_referral_copied') === 'true';
+    setBadgeState('badge-500k', copiedLink);
+
+    // Update profile badges count value dynamically
+    const badgeCountElement = document.querySelector('.profile-stats-row .stat-col:nth-child(3) .stat-val');
+    if (badgeCountElement) {
+      const unlockedCount = document.querySelectorAll('.badges-grid .badge-card.unlocked').length;
+      badgeCountElement.textContent = unlockedCount;
+    }
+  };
+
+  initSponsorModal();
+  initReferralCard();
 
   updateUI();
   drawPassport();
