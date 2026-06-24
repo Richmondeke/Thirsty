@@ -375,124 +375,453 @@
         </div>
       </div>
 
-      <!-- 2. Logged-In Dashboard State (Hidden by default) -->
-      <div class="dashboard-card" id="user-dashboard-card" style="display: none;">
-        <div class="dashboard-header">
-          <div class="dash-logo-title">
-            <span class="dash-logo">THIRSTYCLUB999</span>
-            <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
-          </div>
-          <button class="logout-btn" id="dash-logout-btn">Logout</button>
-        </div>
-
-        <!-- Tabs Navigation -->
-        <div class="dash-tabs">
-          <button class="tab-btn active" data-tab="tickets-tab">Tickets</button>
-          <button class="tab-btn" data-tab="leaderboard-tab">Leaderboard</button>
-          <button class="tab-btn" data-tab="profile-tab">Profile</button>
-        </div>
-
-        <!-- Tab 1: Tickets -->
-        <div class="tab-content active" id="tickets-tab">
-          <div class="vip-ticket">
-            <div class="ticket-stub-left">
-              <div class="ticket-logo">T999</div>
-              <div class="ticket-meta">
-                <div class="meta-row"><span class="meta-label">ID:</span> <span id="ticket-user-id" class="glow-id">T999-XXXX</span></div>
-                <div class="meta-row"><span class="meta-label">HOLDER:</span> <span id="ticket-user-name">Guest</span></div>
-                <div class="meta-row"><span class="meta-label">DATE:</span> JUNE 14TH 2026</div>
-                <div class="meta-row"><span class="meta-label">VENUE:</span> TBD</div>
-              </div>
-            </div>
-            <div class="ticket-stub-right">
-              <!-- Mock QR Code SVG -->
-              <svg class="qr-code-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="transparent"/>
-                <path d="M10 10h20v20H10zm5 5v10h10V15zM70 10h20v20H70zm5 5v10h10V15zM10 70h20v20H10zm5 5v10h10V75z" fill="var(--accent-color)"/>
-                <path d="M40 10h10v10H40zm15 15h10v10H55zm15 15h10v10H70zm-30 0h10v10H40zm0 15h10v10H40zm15 0h10v10H55zm15 15h10v10H70zm-15 0h10v10H55zm-15 15h10v10H40zm50-10h10v10H80zm0-30h10v10H80z" fill="var(--accent-color)"/>
-                <path d="M35 35h15v5H35zm0 15h5v15h-5zm15 0h15v5H50zm15-15h5v15h-5z" fill="var(--text-color)"/>
-              </svg>
-              <div class="barcode-number" id="ticket-barcode-id">T999-XXXX</div>
-            </div>
+      <!-- 2. Redesigned Logged-In Mobile Dashboard App -->
+      <div class="dashboard-card mobile-app-container" id="user-dashboard-card" style="display: none;">
+        
+        <!-- App Header (Dynamic title and icons) -->
+        <div class="app-header">
+          <button class="header-back-btn" id="app-header-back" style="visibility: hidden;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <div class="app-header-title" id="app-header-title">THIRSTYCLUB999</div>
+          <div class="header-right-actions">
+            <button class="header-icon-btn" id="header-notif-btn" title="Notifications">
+              <span class="notif-badge-dot"></span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
           </div>
         </div>
 
-        <!-- Tab 2: Leaderboard -->
-        <div class="tab-content" id="leaderboard-tab">
-          <div class="leaderboard-container">
-            <h4 class="tab-title">CLUB LEADERBOARD</h4>
-            <ul class="leaderboard-list">
-              <li class="leaderboard-item top-rank">
-                <span class="rank">#1</span>
-                <span class="name">Cruel Santino</span>
-                <span class="points">9,990 PTS</span>
-              </li>
-              <li class="leaderboard-item top-rank">
-                <span class="rank">#2</span>
-                <span class="name">Odumodublvck</span>
-                <span class="points">8,500 PTS</span>
-              </li>
-              <li class="leaderboard-item" id="user-leaderboard-row">
-                <span class="rank" id="user-rank">#3</span>
-                <span class="name" id="user-leaderboard-name">You</span>
-                <span class="points">1,200 PTS</span>
-              </li>
-              <li class="leaderboard-item">
-                <span class="rank">#4</span>
-                <span class="name">Lady Donli</span>
-                <span class="points">950 PTS</span>
-              </li>
-              <li class="leaderboard-item">
-                <span class="rank">#5</span>
-                <span class="name">Jeriq</span>
-                <span class="points">800 PTS</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <!-- Scrollable Views Container -->
+        <div class="app-views-viewport">
 
-        <!-- Tab 3: Profile -->
-        <div class="tab-content" id="profile-tab">
-          <div class="profile-container">
-            <h4 class="tab-title">EDIT PROFILE</h4>
-            <form id="profile-form">
-              <!-- Avatar Upload -->
-              <div class="avatar-upload-group">
-                <div class="avatar-preview-wrapper">
-                  <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
+          <!-- 01. HOMEPAGE VIEW -->
+          <div class="app-view active" id="view-homepage">
+            <div class="view-content">
+              <!-- Welcome Header Banner -->
+              <div class="profile-hero-banner">
+                <div class="banner-avatar-wrap">
+                  <img src="" alt="Avatar" class="banner-avatar-img user-avatar-placeholder">
                 </div>
-                <div class="avatar-input-wrapper">
-                  <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
-                  <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                  <span class="input-tip">Max size 2MB</span>
+                <div class="banner-info">
+                  <div class="banner-welcome">WELCOME BACK</div>
+                  <div class="banner-username user-display-name">Guest</div>
+                  <div class="banner-status-row">
+                    <span class="status-level">LEVEL 01 ROOKIE</span>
+                    <span class="status-exp">650 / 1,000 PTS</span>
+                  </div>
+                  <div class="exp-progress-bar">
+                    <div class="exp-progress-fill" style="width: 65%;"></div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Username Edit -->
-              <div class="input-group">
-                <label for="profile-username">Username</label>
-                <input type="text" id="profile-username" placeholder="Username" required>
+              <!-- Next Drop Countdown Card -->
+              <div class="drop-countdown-card">
+                <div class="card-subtitle">NEXT DROP</div>
+                <div class="countdown-clock" id="home-drop-timer">02 : 18 : 45 : 36</div>
+                <div class="countdown-labels">
+                  <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                </div>
+                <button class="cta-button mini-cta-btn" id="home-view-drop-btn">VIEW DROP</button>
               </div>
 
-              <!-- Social IDs -->
-              <div class="input-group">
-                <label for="profile-instagram">Instagram ID</label>
-                <input type="text" id="profile-instagram" placeholder="@instagram">
+              <!-- Latest Signal Preview Card -->
+              <div class="latest-signal-preview-card" id="home-signal-card">
+                <div class="signal-header">
+                  <span class="signal-label">LATEST SIGNAL</span>
+                  <span class="signal-time">2m ago</span>
+                </div>
+                <p class="signal-text">THE SYSTEM IS DRY. WE BRING THE THIRST.</p>
+                <div class="signal-footer">
+                  <span>READ SIGNAL</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
               </div>
-              <div class="input-group">
-                <label for="profile-twitter">Twitter ID</label>
-                <input type="text" id="profile-twitter" placeholder="@twitter">
-              </div>
-              <div class="input-group">
-                <label for="profile-discord">Discord Username</label>
-                <input type="text" id="profile-discord" placeholder="username#1234">
-              </div>
-
-              <button type="submit" class="submit-ticket-btn">Save Profile</button>
-            </form>
+            </div>
           </div>
+
+          <!-- 02. PASSPORT VIEW -->
+          <div class="app-view" id="view-passport">
+            <div class="view-content text-center">
+              <div class="view-intro-title">PASSPORT</div>
+              <div class="view-intro-desc">DIGITAL IDENTITY</div>
+              
+              <div class="passport-canvas-container">
+                <div class="passport-glow-border"></div>
+                <canvas id="passport-canvas" width="600" height="400"></canvas>
+              </div>
+              
+              <!-- Passport Details Custom Inputs -->
+              <div class="passport-config-box" style="display:none;">
+                <input type="text" id="passport-input-name" placeholder="Holder Name">
+                <input type="text" id="passport-input-id" placeholder="Holder Code">
+              </div>
+
+              <div class="passport-actions-group">
+                <button class="cta-button stroke-btn" id="download-passport-btn">DOWNLOAD PASSPORT</button>
+                <div class="dropzone-area" id="passport-dropzone">
+                  <input type="file" id="passport-file-input" accept="image/*" style="display:none;">
+                  <span id="passport-file-info">TAP TO CHANGE PHOTO</span>
+                </div>
+                <button class="cta-button fill-btn" id="btn-scan-view">SCAN OR NFC</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03. PROFILE VIEW -->
+          <div class="app-view" id="view-profile">
+            <div class="view-content">
+              <div class="profile-header-card text-center">
+                <div class="profile-avatar-wrapper">
+                  <img src="" alt="Avatar" class="profile-avatar-img user-avatar-placeholder">
+                  <span class="profile-level-badge">Lvl 1</span>
+                </div>
+                <h2 class="profile-user-title user-display-name">Guest</h2>
+                <p class="profile-user-id user-id-placeholder">T999-XXXX</p>
+                
+                <div class="profile-stats-row">
+                  <div class="stat-col">
+                    <span class="stat-val">12</span>
+                    <span class="stat-lbl">POSTS</span>
+                  </div>
+                  <div class="stat-divider"></div>
+                  <div class="stat-col">
+                    <span class="stat-val">5</span>
+                    <span class="stat-lbl">BADGES</span>
+                  </div>
+                  <div class="stat-divider"></div>
+                  <div class="stat-col">
+                    <span class="stat-val">3</span>
+                    <span class="stat-lbl">DROPS</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profile Options Menu -->
+              <div class="profile-menu-list">
+                <button class="profile-menu-item" id="menu-btn-wallet">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16M2 10h20"/></svg>
+                    <span>Wallet & Coins</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-badges">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx='12' cy='8' r='7'/><path d='M8.21 13.89L7 23l5-3 5 3-1.21-9.12'/></svg>
+                    <span>Badges</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-events">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Events Timeline</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-settings">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Settings & Experience</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 04. WEARTHIRSTY (SHOP) VIEW -->
+          <div class="app-view" id="view-wearthirsty">
+            <div class="view-content">
+              <div class="view-intro-title">WEARTHIRSTY</div>
+              <div class="view-intro-desc">UNDERGROUND GEAR. GLOBAL SIGNAL.</div>
+
+              <!-- Shop Filters -->
+              <div class="shop-filter-tabs">
+                <button class="shop-tab active" data-filter="all">ALL</button>
+                <button class="shop-tab" data-filter="apparel">APPAREL</button>
+                <button class="shop-tab" data-filter="accessories">ACCESSORIES</button>
+                <button class="shop-tab" data-filter="limited">LIMITED</button>
+              </div>
+
+              <!-- Products Grid -->
+              <div class="products-grid" id="shop-products-grid">
+                <!-- Will be dynamically generated in main.js -->
+              </div>
+              
+              <button class="cta-button stroke-btn" style="margin-top: 1.5rem;" onclick="alert('Checkout integration coming soon!')">VIEW ALL PRODUCTS</button>
+            </div>
+          </div>
+
+          <!-- 05. DROPS VIEW -->
+          <div class="app-view" id="view-drops">
+            <div class="view-content text-center">
+              <div class="view-intro-title">DROPS</div>
+              <div class="view-intro-desc">EXCLUSIVE. LIMITED. UNANNOUNCED.</div>
+
+              <div class="drops-subtabs">
+                <button class="subtab-btn active">UPCOMING</button>
+                <button class="subtab-btn">LIVE</button>
+                <button class="subtab-btn">PAST</button>
+              </div>
+
+              <!-- Locked Box Centerpiece -->
+              <div class="locked-crate-container">
+                <div class="crate-date-label">05.24.24</div>
+                <div class="crate-title">GLOBAL DROP</div>
+                
+                <div class="crate-box-visual">
+                  <div class="crate-glow"></div>
+                  <!-- Hologram Lock Box SVG -->
+                  <svg viewBox="0 0 200 200" width="180" height="180" class="crate-svg">
+                    <rect x="35" y="60" width="130" height="100" rx="6" fill="none" stroke="#ff3e3e" stroke-width="2"/>
+                    <path d="M35 85h130M35 110h130M35 135h130" stroke="#ff3e3e" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <!-- Core Glow Panel -->
+                    <rect x="80" y="90" width="40" height="40" rx="3" fill="rgba(255, 62, 62, 0.1)" stroke="#ff3e3e" stroke-width="2"/>
+                    <!-- Text 999 -->
+                    <text x="100" y="116" font-family="'Kyrilla', monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
+                  </svg>
+                </div>
+
+                <div class="countdown-clock mini-clock" id="drops-crate-timer">02 : 18 : 45 : 36</div>
+                <div class="countdown-labels mini-labels">
+                  <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                </div>
+
+                <button class="cta-button fill-btn" id="btn-crate-prepare">PREPARE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 06. SIGNALS (FEED) VIEW -->
+          <div class="app-view" id="view-signals">
+            <div class="view-content">
+              <div class="view-intro-title">SIGNALS</div>
+              <div class="view-intro-desc">REAL TIME. RAW. UNFILTERED.</div>
+
+              <!-- Signals Feed List -->
+              <div class="signals-feed-list" id="signals-feed-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 07. BADGES VIEW -->
+          <div class="app-view" id="view-badges">
+            <div class="view-content">
+              <div class="view-intro-title">BADGES</div>
+              <div class="view-intro-desc">EARNED. NOT GIVEN.</div>
+
+              <div class="badges-subtabs">
+                <button class="subtab-btn active">ALL</button>
+                <button class="subtab-btn">EARNED</button>
+                <button class="subtab-btn">LOCKED</button>
+              </div>
+
+              <div class="badges-grid" id="badges-grid-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 08. WALLET VIEW -->
+          <div class="app-view" id="view-wallet">
+            <div class="view-content">
+              <div class="view-intro-title">WALLET</div>
+              <div class="view-intro-desc">YOUR CLUB. YOUR ASSETS.</div>
+
+              <!-- Cyber Coin Card -->
+              <div class="wallet-coin-card">
+                <div class="card-glow"></div>
+                <div class="wallet-card-header">CLUB COINS</div>
+                <div class="wallet-balance-row">
+                  <div class="coin-symbol">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 9h6M9 15h6"/></svg>
+                  </div>
+                  <span class="wallet-balance-val">999</span>
+                </div>
+                <div class="wallet-balance-label">BALANCE = 999 CC</div>
+              </div>
+
+              <!-- Wallet Actions Menu -->
+              <div class="profile-menu-list">
+                <button class="profile-menu-item" onclick="alert('No transactions logged yet.')">
+                  <div class="menu-left"><span>Transactions</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="let code = prompt('Enter coupon or code:'); if (code) alert('Code activated successfully!')">
+                  <div class="menu-left"><span>Redeem Code</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Gift card purchases loading...')">
+                  <div class="menu-left"><span>Gift Card</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Payment systems initialized.')">
+                  <div class="menu-left"><span>Payment Methods</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 09. EVENTS VIEW -->
+          <div class="app-view" id="view-events">
+            <div class="view-content">
+              <div class="view-intro-title">EVENTS</div>
+              <div class="view-intro-desc">PRIVATE EVENTS. GLOBAL TAKEOVER.</div>
+
+              <div class="events-subtabs">
+                <button class="subtab-btn active">UPCOMING</button>
+                <button class="subtab-btn">PAST</button>
+              </div>
+
+              <div class="events-timeline" id="events-timeline-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 10. SCAN VIEW -->
+          <div class="app-view" id="view-scan">
+            <div class="view-content text-center">
+              <div class="view-intro-title">SCAN</div>
+              <div class="view-intro-desc">UNLOCK. VERIFY. CONNECT.</div>
+
+              <!-- Scanning Targeting Frame HUD -->
+              <div class="scan-camera-mock">
+                <div class="scanner-laser-line"></div>
+                <!-- HUD corner brackets inside frame -->
+                <div class="hud-bracket tl"></div>
+                <div class="hud-bracket tr"></div>
+                <div class="hud-bracket bl"></div>
+                <div class="hud-bracket br"></div>
+                
+                <div class="scanner-logo-overlay">
+                  <span class="scan-digit">999</span>
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="rgba(255, 62, 62, 0.2)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10zM2 12h20"/></svg>
+                </div>
+              </div>
+
+              <p class="scan-align-prompt">ALIGN QR / NFC / CODE</p>
+
+              <div class="scan-toggles-bar">
+                <button class="scan-toggle-btn active" id="scan-mode-qr">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h4v4H7zm6 0h4v4h-4zm0 6h4v4h-4zm-6 0h4v4H7z"/></svg>
+                  <span>QR SCAN</span>
+                </button>
+                <button class="scan-toggle-btn" id="scan-mode-nfc">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 4a6 6 0 0 0-6 6c0 3.31 2.69 6 6 6s6-2.69 6-6-2.69-6-6-6zm0 4a2 2 0 0 0-2 2c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2z"/></svg>
+                  <span>NFC</span>
+                </button>
+                <button class="scan-toggle-btn" id="scan-mode-code">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg>
+                  <span>CODE</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 11. NOTIFICATIONS VIEW -->
+          <div class="app-view" id="view-notifications">
+            <div class="view-content">
+              <div class="view-intro-title">NOTIFICATIONS</div>
+              <div class="view-intro-desc">STAY ALERT. STAY THIRSTY.</div>
+
+              <!-- Notifications History List -->
+              <div class="notifications-history-list" id="notif-history-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 12. SETTINGS VIEW -->
+          <div class="app-view" id="view-settings">
+            <div class="view-content">
+              <div class="view-intro-title">SETTINGS</div>
+              <div class="view-intro-desc">CONTROL YOUR EXPERIENCE.</div>
+
+              <!-- Settings Option Toggles -->
+              <div class="settings-list-group">
+                <div class="setting-toggle-row">
+                  <span>DARK MODE</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" checked id="toggle-dark-mode">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-toggle-row">
+                  <span>PUSH NOTIFICATIONS</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" checked id="toggle-push-notif">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-toggle-row">
+                  <span>EMAIL NOTIFICATIONS</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="toggle-email-notif">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                
+                <div class="profile-menu-item" style="border-top: 1px solid rgba(255, 62, 62, 0.08); margin-top: 1rem;" onclick="alert('Language selection initialized')">
+                  <span>LANGUAGE</span>
+                  <span style="color: var(--accent-color); font-weight: 700;">ENGLISH &gt;</span>
+                </div>
+              </div>
+
+              <!-- Settings Options Menu -->
+              <div class="profile-menu-list" style="margin-top: 1.5rem;">
+                <button class="profile-menu-item" onclick="alert('ThirstyClub999 V1.0 Deployed.')">
+                  <span>About ThirstyClub999</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Terms and conditions.')">
+                  <span>Terms &amp; Conditions</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Privacy Policy.')">
+                  <span>Privacy Policy</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+
+              <!-- Large Logout Button -->
+              <button class="cta-button fill-btn logout-accent-btn" id="app-settings-logout-btn" style="margin-top: 2rem;">LOG OUT</button>
+            </div>
+          </div>
+
         </div>
+
+        <!-- App Bottom Navigation Bar (5 Primary Tabs) -->
+        <div class="app-bottom-nav">
+          <button class="nav-tab-item active" data-target-view="view-homepage">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+            <span>HOME</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-passport">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
+            <span>PASSPORT</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-wearthirsty">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>WEARTHIRSTY</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-signals">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
+            <span>SIGNALS</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-profile">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>PROFILE</span>
+          </button>
+        </div>
+
       </div>
+
     </section>
   </main>
 
