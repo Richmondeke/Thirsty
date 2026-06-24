@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ThirstyClub999 | Join Our Community</title>
   <meta name="description" content="ThirstyClub999 - Join our community, create your passport and become a member.">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function() {
+      if (localStorage.getItem('thirsty_logged_in') === 'true') {
+        document.documentElement.classList.add('user-logged-in');
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -68,25 +75,21 @@
           </div>
 
           <div class="passport-inputs">
-            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
-              <div class="input-group" style="flex: 1;">
-                <label for="passport-input-name">Full Name</label>
-                <input type="text" id="passport-input-name" placeholder="Enter username..." value="ADELINE PALMERSTON" maxlength="30">
-              </div>
-              <div class="input-group" style="flex: 1;">
-                <label for="passport-input-pob">Place of Thirst</label>
-                <input type="text" id="passport-input-pob" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20">
-              </div>
+            <div class="input-group">
+              <label for="passport-input-name">Full Name</label>
+              <input type="text" id="passport-input-name" placeholder="Enter username..." value="ADELINE PALMERSTON" maxlength="30">
             </div>
-            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
-              <div class="input-group" style="flex: 1;">
-                <label for="passport-input-gender">Gender</label>
-                <input type="text" id="passport-input-gender" placeholder="M/F..." value="F" maxlength="5">
-              </div>
-              <div class="input-group" style="flex: 1;">
-                <label for="passport-input-sig">Signature Text</label>
-                <input type="text" id="passport-input-sig" placeholder="Signature name..." value="A. Palmerston" maxlength="20">
-              </div>
+            <div class="input-group">
+              <label for="passport-input-pob">Place of Thirst</label>
+              <input type="text" id="passport-input-pob" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20">
+            </div>
+            <div class="input-group">
+              <label for="passport-input-gender">Gender</label>
+              <input type="text" id="passport-input-gender" placeholder="M/F..." value="F" maxlength="5">
+            </div>
+            <div class="input-group">
+              <label for="passport-input-sig">Signature Text</label>
+              <input type="text" id="passport-input-sig" placeholder="Signature name..." value="A. Palmerston" maxlength="20">
             </div>
           </div>
 
@@ -132,30 +135,36 @@
         <!-- Sidebar Navigation (Desktop/Web only) -->
         <div class="app-sidebar-nav">
           <div class="sidebar-logo">THIRSTYCLUB999</div>
-          <button class="nav-tab-item active" data-target-view="view-homepage">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
-            <span>HOME</span>
-          </button>
-          <button class="nav-tab-item" data-target-view="view-passport">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
-            <span>PASSPORT</span>
-          </button>
-          <button class="nav-tab-item" data-target-view="view-wearthirsty">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-            <span>WEARTHIRSTY</span>
-          </button>
-          <button class="nav-tab-item" data-target-view="view-signals">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
-            <span>SIGNALS</span>
-          </button>
-          <button class="nav-tab-item" data-target-view="view-profile">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>PROFILE</span>
-          </button>
-          <button class="nav-tab-item" id="admin-sidebar-btn" data-target-view="view-admin" style="display: none;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>ADMIN</span>
-          </button>
+          <div class="sidebar-menu-items" style="display: flex; flex-direction: column; gap: 0.6rem; flex: 1;">
+            <button class="nav-tab-item active" data-target-view="view-homepage">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+              <span>HOME</span>
+            </button>
+
+            <button class="nav-tab-item" data-target-view="view-wearthirsty">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>WEARTHIRSTY</span>
+            </button>
+            <button class="nav-tab-item" data-target-view="view-community">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>COMMUNITY</span>
+            </button>
+            <button class="nav-tab-item" data-target-view="view-profile">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>PROFILE</span>
+            </button>
+            <button class="nav-tab-item" id="admin-sidebar-btn" data-target-view="view-admin" style="display: none;">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>ADMIN</span>
+            </button>
+          </div>
+          <div class="sidebar-user-profile" style="display: flex; align-items: center; gap: 12px; padding: 1rem 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: auto;">
+             <img src="" class="user-avatar-placeholder" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--accent-color); object-fit: cover;">
+             <div class="user-details" style="display: flex; flex-direction: column; overflow: hidden; text-align: left;">
+                <span class="user-display-name" style="font-size: 0.85rem; font-weight: 700; color: #fff; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Guest</span>
+                <span style="font-size: 0.7rem; color: var(--text-dim);">LEVEL 01 ROOKIE</span>
+             </div>
+          </div>
         </div>
 
         <!-- Main Content (Header, Viewport, Bottom Nav) -->
@@ -166,7 +175,15 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
           <div class="app-header-title" id="app-header-title">THIRSTYCLUB999</div>
-          <div class="header-right-actions">
+          <div class="header-right-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+            <button class="header-icon-btn" id="header-cart-btn" title="Shopping Cart" style="position: relative;">
+              <span class="cart-badge-count" id="header-cart-count" style="display: none; position: absolute; top: -5px; right: -5px; background: var(--accent-color); color: #fff; font-size: 0.65rem; font-weight: 900; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">0</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+            </button>
             <button class="header-icon-btn" id="header-notif-btn" title="Notifications">
               <span class="notif-badge-dot"></span>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -235,26 +252,22 @@
               </div>
               
               <!-- Passport Details Custom Inputs (Visible on dashboard!) -->
-              <div class="passport-inputs" style="margin-top: 1rem; margin-bottom: 1.5rem; text-align: left;">
-                <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
-                  <div class="input-group" style="flex: 1;">
-                    <label for="dash-passport-input-name" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Full Name</label>
-                    <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Full name..." value="ADELINE PALMERSTON" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
-                  </div>
-                  <div class="input-group" style="flex: 1;">
-                    <label for="dash-passport-input-pob" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Place of Thirst</label>
-                    <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
-                  </div>
+              <div class="passport-inputs" style="margin-top: 1rem; margin-bottom: 1.5rem; text-align: left; display: flex; flex-direction: column; gap: 1rem;">
+                <div class="input-group">
+                  <label for="dash-passport-input-name" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Full Name</label>
+                  <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Full name..." value="ADELINE PALMERSTON" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
-                <div class="input-row split-2" style="display: flex; gap: 1.5rem;">
-                  <div class="input-group" style="flex: 1;">
-                    <label for="dash-passport-input-gender" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Gender</label>
-                    <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="F" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
-                  </div>
-                  <div class="input-group" style="flex: 1;">
-                    <label for="dash-passport-input-sig" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Signature Text</label>
-                    <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="A. Palmerston" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
-                  </div>
+                <div class="input-group">
+                  <label for="dash-passport-input-pob" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Place of Thirst</label>
+                  <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                </div>
+                <div class="input-group">
+                  <label for="dash-passport-input-gender" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Gender</label>
+                  <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="F" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                </div>
+                <div class="input-group">
+                  <label for="dash-passport-input-sig" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Signature Text</label>
+                  <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="A. Palmerston" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
               </div>
 
@@ -300,6 +313,16 @@
 
               <!-- Profile Options Menu -->
               <div class="profile-menu-list">
+                <button class="profile-menu-item" id="menu-btn-passport">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span>My Digital Passport</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
                 <button class="profile-menu-item" id="menu-btn-wallet">
                   <div class="menu-left">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16M2 10h20"/></svg>
@@ -332,11 +355,20 @@
             </div>
           </div>
 
-          <!-- 04. WEARTHIRSTY (SHOP) VIEW -->
           <div class="app-view" id="view-wearthirsty">
             <div class="view-content">
               <div class="view-intro-title">WEARTHIRSTY</div>
               <div class="view-intro-desc">UNDERGROUND GEAR. GLOBAL SIGNAL.</div>
+
+              <!-- Promotional Banner Ad -->
+              <div class="shop-promo-banner">
+                <div class="promo-content">
+                  <span class="promo-tag">LIMITED RELEASE</span>
+                  <h4 class="promo-title">THIRSTY X HF COLLAB OUT NOW</h4>
+                  <p class="promo-text">Get 20% off high fashion canvas denim. Use code <span class="promo-code">THIRSTY999</span> at checkout.</p>
+                </div>
+                <a href="https://wearthirsty.com" target="_blank" class="promo-action-btn">SHOP NOW</a>
+              </div>
 
               <!-- Shop Filters -->
               <div class="shop-filter-tabs">
@@ -352,6 +384,13 @@
               </div>
               
               <button class="cta-button stroke-btn" style="margin-top: 1.5rem;" onclick="alert('Checkout integration coming soon!')">VIEW ALL PRODUCTS</button>
+            </div>
+          </div>
+
+          <!-- 04b. PRODUCT DETAILS VIEW -->
+          <div class="app-view" id="view-product-details">
+            <div class="view-content" id="product-details-container">
+              <!-- Dynamically populated in main.js -->
             </div>
           </div>
 
@@ -381,7 +420,7 @@
                     <!-- Core Glow Panel -->
                     <rect x="80" y="90" width="40" height="40" rx="3" fill="rgba(255, 62, 62, 0.1)" stroke="#ff3e3e" stroke-width="2"/>
                     <!-- Text 999 -->
-                    <text x="100" y="116" font-family="'Kyrilla', monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
+                    <text x="100" y="116" font-family="'Satoshi', monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
                   </svg>
                 </div>
 
@@ -395,33 +434,185 @@
             </div>
           </div>
 
-          <!-- 06. SIGNALS (FEED) VIEW -->
-          <div class="app-view" id="view-signals">
+          <!-- 06. COMMUNITY VIEW (incorporates Signals & Events) -->
+          <div class="app-view" id="view-community">
             <div class="view-content">
-              <div class="view-intro-title">SIGNALS</div>
-              <div class="view-intro-desc">REAL TIME. RAW. UNFILTERED.</div>
+              <div class="view-intro-title">COMMUNITY</div>
+              <div class="view-intro-desc">REAL TIME SIGNALS & PRIVATE EVENTS</div>
 
-              <!-- Signals Feed List -->
-              <div class="signals-feed-list" id="signals-feed-container">
-                <!-- Dynamically populated in main.js -->
-              </div>
-            </div>
-          </div>
-
-          <!-- 07. BADGES VIEW -->
-          <div class="app-view" id="view-badges">
-            <div class="view-content">
-              <div class="view-intro-title">BADGES</div>
-              <div class="view-intro-desc">EARNED. NOT GIVEN.</div>
-
-              <div class="badges-subtabs">
-                <button class="subtab-btn active">ALL</button>
-                <button class="subtab-btn">EARNED</button>
-                <button class="subtab-btn">LOCKED</button>
+              <!-- Community Sub-tabs -->
+              <div class="community-subtabs" style="display: flex; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem; width: 100%;">
+                <button class="subtab-btn active" id="community-tab-signals" style="background: none; border: none; border-bottom: 2px solid var(--accent-color); color: #fff; padding: 0.75rem 1.25rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease;">SIGNALS</button>
+                <button class="subtab-btn" id="community-tab-events" style="background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim); padding: 0.75rem 1.25rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease;">EVENTS</button>
+                <button class="subtab-btn" id="community-tab-leaderboard" style="background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim); padding: 0.75rem 1.25rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease;">LEADERBOARD</button>
+                <button class="subtab-btn" id="community-tab-games" style="background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim); padding: 0.75rem 1.25rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.25s ease;">GAMES</button>
               </div>
 
-              <div class="badges-grid" id="badges-grid-container">
-                <!-- Dynamically populated in main.js -->
+              <!-- Content Area 1: Signals Feed -->
+              <div id="community-signals-section">
+                <div class="signals-feed-list" id="signals-feed-container">
+                  <!-- Dynamically populated in main.js -->
+                </div>
+              </div>
+
+              <!-- Content Area 2: Events Timeline -->
+              <div id="community-events-section" style="display: none;">
+                <div class="events-timeline" id="events-timeline-container">
+                  <!-- Dynamically populated in main.js -->
+                </div>
+              </div>
+
+              <!-- Content Area 3: Leaderboard & Badges -->
+              <div id="community-leaderboard-section" style="display: none;">
+                <!-- Badges Showcase -->
+                <div class="badges-showcase-container" style="margin-bottom: 2.5rem; text-align: left;">
+                  <div class="tab-title" style="margin-bottom: 1rem;">UNLOCKED BADGES</div>
+                  <div class="badges-row" style="display: flex; gap: 1rem; overflow-x: auto; padding: 1rem 0; scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 62, 62, 0.05); border: 1px solid rgba(255, 62, 62, 0.25); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
+                      <div style="font-size: 2rem; filter: drop-shadow(0 0 8px rgba(255, 62, 62, 0.45));">🏆</div>
+                      <span style="font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">FOUNDER</span>
+                    </div>
+                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
+                      <div style="font-size: 2rem; opacity: 0.4;">🎫</div>
+                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">RSVP CHAMP</span>
+                    </div>
+                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
+                      <div style="font-size: 2rem; opacity: 0.4;">👕</div>
+                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">COLLECTOR</span>
+                    </div>
+                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 62, 62, 0.05); border: 1px solid rgba(255, 62, 62, 0.25); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
+                      <div style="font-size: 2rem; filter: drop-shadow(0 0 8px rgba(255, 62, 62, 0.45));">🔥</div>
+                      <span style="font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">OG MEMBER</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Leaderboard rankings -->
+                <div class="leaderboard-container">
+                  <div class="tab-title">MEMBER RANKINGS</div>
+                  <ul class="leaderboard-list">
+                    <li class="leaderboard-item top-rank" id="user-leaderboard-row">
+                      <span class="rank">#1</span>
+                      <span class="name" id="user-leaderboard-name">THIRSTYZOID</span>
+                      <span class="points">1,420 PTS</span>
+                    </li>
+                    <li class="leaderboard-item top-rank">
+                      <span class="rank">#2</span>
+                      <span class="name">Adeline Palmerston</span>
+                      <span class="points">1,250 PTS</span>
+                    </li>
+                    <li class="leaderboard-item top-rank">
+                      <span class="rank">#3</span>
+                      <span class="name">Lekan Thirsty</span>
+                      <span class="points">1,100 PTS</span>
+                    </li>
+                    <li class="leaderboard-item">
+                      <span class="rank">#4</span>
+                      <span class="name">Tunde Gold</span>
+                      <span class="points">950 PTS</span>
+                    </li>
+                    <li class="leaderboard-item">
+                      <span class="rank">#5</span>
+                      <span class="name">Evelyn Drinker</span>
+                      <span class="points">800 PTS</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Content Area 4: Games Hub -->
+              <div id="community-games-section" style="display: none;">
+                
+                <!-- Games Hub Select Panel -->
+                <div id="games-hub-select" class="games-hub-grid">
+                  <div class="game-select-card" id="btn-select-trivia">
+                    <div class="game-card-icon">🧠</div>
+                    <h3 class="game-card-title">TRIVIA CHALLENGE</h3>
+                    <p class="game-card-desc">Test your ThirstyClub knowledge. Prove your membership status and earn reward points.</p>
+                    <button class="cta-button game-action-btn">PLAY NOW</button>
+                  </div>
+                  
+                  <div class="game-select-card" id="btn-select-treasure">
+                    <div class="game-card-icon">🗺️</div>
+                    <h3 class="game-card-title">TREASURE HUNT</h3>
+                    <p class="game-card-desc">Follow cryptic clues to find mystery boxes scattered around the city. Enter box codes to unlock.</p>
+                    <button class="cta-button game-action-btn">EXPLORE HUNTS</button>
+                  </div>
+                </div>
+
+                <!-- Trivia Game Screen -->
+                <div id="trivia-game-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="trivia-back-btn">← BACK TO GAMES</button>
+                    <div id="trivia-points-display" style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">POINTS: <span id="trivia-current-points">0</span></div>
+                  </div>
+
+                  <!-- Category Selection Screen -->
+                  <div id="trivia-category-select">
+                    <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">SELECT CATEGORY</h4>
+                    <div class="category-grid">
+                      <div class="category-card" data-category="thirstynalia">
+                        <div class="category-icon">🎟️</div>
+                        <h5>ThirstyNalia Quiz</h5>
+                        <p>ThirstyClub events, drops, and secret lore.</p>
+                      </div>
+                      <div class="category-card" data-category="songs">
+                        <div class="category-icon">🎵</div>
+                        <h5>Songs Quiz</h5>
+                        <p>How well do you know the music we play?</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Active Question Screen -->
+                  <div id="trivia-question-screen" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                      <span id="trivia-progress-text">Question 1 of 5</span>
+                      <span id="trivia-category-label">ThirstyNalia</span>
+                    </div>
+                    <div class="progress-bar-outer" style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden;">
+                      <div id="trivia-progress-bar" style="width: 20%; height: 100%; background: var(--accent-color); transition: width 0.3s ease;"></div>
+                    </div>
+                    
+                    <h4 id="trivia-question-text" style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 1.5rem; font-weight: 700; color: #fff;">Question text goes here?</h4>
+                    
+                    <div class="quiz-options-list" id="trivia-options-container">
+                      <!-- Populated in JS -->
+                    </div>
+
+                    <div id="trivia-feedback-container" style="margin-top: 1.25rem; display: none; padding: 1rem; border-radius: 8px; font-size: 0.8rem; line-height: 1.4;">
+                      <!-- Populated in JS -->
+                    </div>
+
+                    <button class="cta-button" id="trivia-next-btn" style="width: 100%; margin-top: 1.5rem; display: none;">NEXT QUESTION</button>
+                  </div>
+
+                  <!-- Results Screen -->
+                  <div id="trivia-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
+                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
+                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">QUIZ COMPLETE</h4>
+                    <p id="trivia-score-text" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 700; margin-bottom: 0.5rem;">Score: 4 / 5</p>
+                    <p id="trivia-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS added to your wallet balance</p>
+                    <button class="cta-button" id="trivia-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">PLAY AGAIN</button>
+                    <button class="back-to-games-btn" id="trivia-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
+                  </div>
+                </div>
+
+                <!-- Treasure Hunt Screen -->
+                <div id="treasure-hunt-view" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-to-games-btn" id="treasure-back-btn">← BACK TO GAMES</button>
+                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">COMPLETED: <span id="treasure-completed-count">0/3</span></div>
+                  </div>
+
+                  <h4 class="game-view-title" style="font-size: 0.85rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">CITY MYSTERY BOXES</h4>
+                  <p class="game-view-subtitle" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; line-height: 1.4;">Locate physical hidden boxes and enter the secret code written inside to unlock exclusive rewards.</p>
+
+                  <div class="hunts-list" id="treasure-hunts-container">
+                    <!-- Populated in JS -->
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -467,22 +658,7 @@
             </div>
           </div>
 
-          <!-- 09. EVENTS VIEW -->
-          <div class="app-view" id="view-events">
-            <div class="view-content">
-              <div class="view-intro-title">EVENTS</div>
-              <div class="view-intro-desc">PRIVATE EVENTS. GLOBAL TAKEOVER.</div>
 
-              <div class="events-subtabs">
-                <button class="subtab-btn active">UPCOMING</button>
-                <button class="subtab-btn">PAST</button>
-              </div>
-
-              <div class="events-timeline" id="events-timeline-container">
-                <!-- Dynamically populated in main.js -->
-              </div>
-            </div>
-          </div>
 
           <!-- 10. SCAN VIEW -->
           <div class="app-view" id="view-scan">
@@ -601,7 +777,7 @@
                 <!-- Dashboard Header -->
                 <div class="admin-header-bar" style="border-bottom: 1px solid rgba(255, 62, 62, 0.15); display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                   <div>
-                    <h4 class="admin-dashboard-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.8rem; font-weight: 950; color: var(--accent-color); letter-spacing: -0.02em; margin: 0 0 0.25rem 0;">ADMIN PORTAL</h4>
+                    <h4 class="admin-dashboard-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.8rem; font-weight: 950; color: var(--accent-color); letter-spacing: -0.02em; margin: 0 0 0.25rem 0;">ADMIN PORTAL</h4>
                     <p class="admin-dashboard-sub" style="font-size: 0.9rem; color: var(--admin-text-dim); margin: 0; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 600;">ThirstyClub999 Guestlist Management</p>
                   </div>
                   <div class="admin-header-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
@@ -613,19 +789,19 @@
                 <!-- Summary Stats -->
                 <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
                   <div class="admin-stat-card stat-card-total" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-total" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-total" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Total Signups</span>
                   </div>
                   <div class="admin-stat-card stat-card-male" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-male" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-male" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Male (M)</span>
                   </div>
                   <div class="admin-stat-card stat-card-female" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-female" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-female" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Female (F)</span>
                   </div>
                   <div class="admin-stat-card stat-card-other" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-other" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-other" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Other / N/A</span>
                   </div>
                 </div>
@@ -634,7 +810,7 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🎟 GUESTLIST</h5>
+                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🎟 GUESTLIST</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">View and manage all registered guests. Change access level or view their passport.</p>
                     </div>
                     <div class="admin-table-search-wrapper" style="min-width: 260px;">
@@ -703,7 +879,7 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">✉️ WELCOME EMAIL TEMPLATE</h5>
+                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">✉️ WELCOME EMAIL TEMPLATE</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Customise the automatic welcome email sent to guests on RSVP. Supports placeholders: <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{username}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{thirstyclub_id}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{place_of_thirst}</span>. Passport image auto-attached.</p>
                     </div>
                     <span class="admin-badge-pill auto-badge" style="background: #e6f6ec; color: #128a3f; border: 1px solid #c8eacc; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">AUTO</span>
@@ -722,7 +898,7 @@
                     </div>
                   </div>
                   <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                    <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Kyrilla', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;">SAVE TEMPLATE</button>
+                    <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Satoshi', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;">SAVE TEMPLATE</button>
                   </div>
                 </div>
 
@@ -730,7 +906,7 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
+                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
                     </div>
                     <span class="admin-badge-pill manual-badge" style="background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">MANUAL</span>
@@ -758,7 +934,7 @@
                   </div>
 
                   <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                    <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn" style="background: transparent; border: 1px solid var(--accent-color); color: #fff; padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Kyrilla', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease;">📨 SEND BLAST TO ALL USERS</button>
+                    <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn" style="background: transparent; border: 1px solid var(--accent-color); color: #fff; padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Satoshi', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease;">📨 SEND BLAST TO ALL USERS</button>
                   </div>
                 </div>
 
@@ -768,30 +944,27 @@
 
         </div>
 
-        <!-- App Bottom Navigation Bar (5 Primary Tabs) -->
+        <!-- App Bottom Navigation Bar (6 Primary Tabs) -->
         <div class="app-bottom-nav">
           <button class="nav-tab-item active" data-target-view="view-homepage">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
             <span>HOME</span>
           </button>
-          <button class="nav-tab-item" data-target-view="view-passport">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
-            <span>PASSPORT</span>
-          </button>
+
           <button class="nav-tab-item" data-target-view="view-wearthirsty">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-            <span>WEARTHIRSTY</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>SHOP</span>
           </button>
-          <button class="nav-tab-item" data-target-view="view-signals">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
-            <span>SIGNALS</span>
+          <button class="nav-tab-item" data-target-view="view-community">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>COMMUNITY</span>
           </button>
           <button class="nav-tab-item" data-target-view="view-profile">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span>PROFILE</span>
           </button>
           <button class="nav-tab-item" id="admin-bottom-btn" data-target-view="view-admin" style="display: none;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span>ADMIN</span>
           </button>
         </div> <!-- Close .app-bottom-nav -->
@@ -858,6 +1031,96 @@
         </div>
         <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
       </form>
+    </div>
+  </dialog>
+
+  <!-- Shopping Cart Sidebar Drawer -->
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+      <h3 style="margin: 0; font-family: 'Kyrilla', sans-serif; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color);">YOUR CART</h3>
+      <button class="close-cart-btn" id="close-cart-btn" style="background: none; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1; transition: color 0.2s ease;">&times;</button>
+    </div>
+    <div class="cart-items-container" id="cart-items-container" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+      <!-- Dynamic cart items will go here -->
+      <div class="cart-empty-msg" style="text-align: center; color: var(--text-dim); padding-top: 3rem; font-size: 0.9rem;">YOUR CART IS EMPTY</div>
+    </div>
+    <div class="cart-footer" style="padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(5px);">
+      <div class="cart-subtotal-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; font-weight: 700; font-size: 1rem; letter-spacing: 0.05em;">
+        <span>SUBTOTAL</span>
+        <span id="cart-subtotal-val" style="color: var(--accent-color); font-family: 'Satoshi', monospace;">$0.00</span>
+      </div>
+      <button class="cta-button fill-btn" id="checkout-btn" style="width: 100%; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.05em; padding: 0.9rem;">PROCEED TO CHECKOUT</button>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay"></div>
+
+  <!-- Checkout Dialog Modal -->
+  <dialog class="checkout-modal" id="checkout-dialog" style="max-width: 480px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none;">
+    <div class="modal-content" style="position: relative; display: flex; flex-direction: column;">
+      <button class="close-modal" id="close-checkout-btn" style="position: absolute; top: -1rem; right: -1rem; background: transparent; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1;">&times;</button>
+      <div class="view-intro-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); text-align: center; margin-bottom: 0.2rem;">CHECKOUT</div>
+      <div class="view-intro-desc" style="font-size: 0.8rem; text-align: center; margin-bottom: 1.5rem;">SECURE CREDIT CARD TRANSACTION</div>
+      
+      <form id="checkout-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Shipping Details -->
+        <div style="font-weight: 800; color: var(--accent-color); font-size: 0.8rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding-bottom: 0.3rem;">SHIPPING INFORMATION</div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">FULL NAME</label>
+          <input type="text" id="checkout-name" required placeholder="John Doe" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">EMAIL ADDRESS</label>
+          <input type="email" id="checkout-email" required placeholder="name@domain.com" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">SHIPPING ADDRESS</label>
+          <input type="text" id="checkout-address" required placeholder="123 Street Name" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CITY</label>
+            <input type="text" id="checkout-city" required placeholder="New York" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">POSTAL CODE</label>
+            <input type="text" id="checkout-zip" required placeholder="10001" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          </div>
+        </div>
+        
+        <!-- Payment Details -->
+        <div style="font-weight: 800; color: var(--accent-color); font-size: 0.8rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding-bottom: 0.3rem; margin-top: 0.5rem;">PAYMENT DETAILS</div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CARDHOLDER NAME</label>
+          <input type="text" id="checkout-cardname" required placeholder="JOHN DOE" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CARD NUMBER</label>
+          <input type="text" id="checkout-cardnumber" placeholder="4111 2222 3333 4444" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">EXPIRY DATE</label>
+            <input type="text" id="checkout-expiry" placeholder="MM/YY" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CVV</label>
+            <input type="text" id="checkout-cvv" placeholder="321" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          </div>
+        </div>
+        
+        <button type="submit" class="cta-button fill-btn" style="padding: 0.9rem; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.05em; width: 100%;">PLACE ORDER (<span id="checkout-total-val">$0.00</span>)</button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Order Success Dialog Modal -->
+  <dialog class="checkout-modal" id="order-success-dialog" style="max-width: 400px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none; text-align: center;">
+    <div class="modal-content" style="align-items: center; justify-content: center; gap: 1rem; padding: 1rem 0;">
+      <div style="font-size: 3.5rem; filter: drop-shadow(0 0 12px rgba(255, 62, 62, 0.55));">🛒</div>
+      <div class="view-intro-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); margin: 0;">ORDER PLACED</div>
+      <div class="view-intro-desc" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.5rem;">YOUR TRANSACTIONS ARE RECORDED ON THE LEDGER.</div>
+      <p style="font-size: 0.85rem; color: var(--text-dim); margin: 0;">ORDER ID: <span id="success-order-id" style="font-weight: 700; color: #fff; font-family: monospace;">#TC999-7362</span></p>
+      <button class="cta-button stroke-btn" id="success-close-btn" style="margin-top: 1.5rem; width: 100%; padding: 0.75rem;">RETURN TO SHOP</button>
     </div>
   </dialog>
 

@@ -61,7 +61,7 @@ server.listen(3052, async () => {
     const page = await context.newPage();
     
     // Set up network mocking for Supabase API endpoints
-    await page.route('**/auth/v1/token**', route => {
+    await context.route('**/auth/v1/token**', route => {
       console.log('MOCKING: Supabase /auth/v1/token password sign-in');
       route.fulfill({
         status: 200,
@@ -84,7 +84,7 @@ server.listen(3052, async () => {
       });
     });
 
-    await page.route('**/auth/v1/user**', route => {
+    await context.route('**/auth/v1/user**', route => {
       console.log('MOCKING: Supabase /auth/v1/user call');
       route.fulfill({
         status: 200,
@@ -97,7 +97,7 @@ server.listen(3052, async () => {
       });
     });
 
-    await page.route('**/rest/v1/profiles**', route => {
+    await context.route('**/rest/v1/profiles**', route => {
       console.log('MOCKING: Supabase /rest/v1/profiles DB query');
       route.fulfill({
         status: 200,
@@ -121,7 +121,7 @@ server.listen(3052, async () => {
       });
     });
 
-    await page.route('**/rest/v1/tickets**', route => {
+    await context.route('**/rest/v1/tickets**', route => {
       console.log('MOCKING: Supabase /rest/v1/tickets DB query');
       route.fulfill({
         status: 200,
@@ -163,17 +163,30 @@ server.listen(3052, async () => {
     console.log('Submitting login form...');
     await page.click('button[type="submit"]');
 
-    // Wait for redirection
-    console.log('Waiting for redirection...');
-    await page.waitForTimeout(4000);
-
-    const currentUrl = page.url();
-    console.log('Final URL after redirection check:', currentUrl);
+    // Wait for redirection and dashboard card to become visible
+    console.log('Waiting for dashboard card to become visible...');
     
-    if (currentUrl.includes('index.html#passport-viewer')) {
+    // Print page URL every 2 seconds
+    for (let i = 0; i < 4; i++) {
+      await page.waitForTimeout(2000);
+      console.log(`Current URL at ${2*(i+1)}s:`, page.url());
+    }
+
+    try {
+      await page.waitForSelector('#user-dashboard-card', { state: 'visible', timeout: 2000 });
       console.log('Login form redirect test passed! 🎉');
-    } else {
-      throw new Error(`Expected redirection to index.html#passport-viewer, but got: ${currentUrl}`);
+    } catch (err) {
+      // Evaluate manual query to diagnose
+      const evalResult = await page.evaluate(async () => {
+        try {
+          const res = await window.supabase.from('profiles').select('*').limit(1);
+          return { success: true, res };
+        } catch (e) {
+          return { success: false, error: e.message };
+        }
+      }).catch(e => ({ success: false, error: 'Eval crashed: ' + e.message }));
+      console.log("Manual query evaluation result in browser:", evalResult);
+      throw new Error(`Expected dashboard card to be visible, but it failed to show up: ${err.message}`);
     }
 
     await browser.close();
