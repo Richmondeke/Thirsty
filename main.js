@@ -838,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 1,
       title: "ARABIAN JERSEY",
-      category: "apparel",
+      category: "men",
       price: "$199.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/jerseysep9.webp?v=1729298996",
       url: "https://wearthirsty.com/products/thirsty-arabian-jersey-religion-summer-24",
@@ -848,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 2,
       title: "BABY BUM SHORT RED",
-      category: "accessories",
+      category: "ladies",
       price: "$49.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/prod3.webp?v=1726874351",
       url: "https://wearthirsty.com/products/thir-ty-ladie-24-bottom-red-1",
@@ -868,7 +868,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 4,
       title: "THIRSTY X HF CANVAS DENIM PANTS",
-      category: "limited",
+      category: "thirsty-x-hf",
       price: "$499.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/HFCOLLAB3.png?v=1763902723",
       url: "https://wearthirsty.com/products/thirsty-x-hf-canvas-denim-pants",
@@ -878,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 5,
       title: "THIRSTY X HF CANVAS DENIM TOP",
-      category: "limited",
+      category: "thirsty-x-hf",
       price: "$499.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/HFCOLLAB1.png?v=1763902722",
       url: "https://wearthirsty.com/products/thirsty-x-hf-canvas-denim-top",
@@ -888,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 6,
       title: "THIRSTY WILDBEAST TEE",
-      category: "apparel",
+      category: "men",
       price: "$199.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/beigebeast1.png?v=1760219301",
       url: "https://wearthirsty.com/products/thirsty-wildbeast-tee-biege",
@@ -898,7 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 7,
       title: "HOCKEY SLEEVE",
-      category: "apparel",
+      category: "men",
       price: "$199.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/hockey_res-1.webp?v=1749012210",
       url: "https://wearthirsty.com/products/hockey-sleeve",
@@ -908,7 +908,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 8,
       title: "LOGO TEE",
-      category: "apparel",
+      category: "999",
       price: "$199.99",
       image: "https://cdn.shopify.com/s/files/1/0877/8668/4699/files/stay_thirtsy_forever_1.webp?v=1722343674",
       url: "https://wearthirsty.com/products/stay-thirsty-forever-logo-tee",
@@ -916,6 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sizes: ["S", "M", "L", "XL", "2XL"]
     }
   ];
+
 
   const renderShop = (filter = 'all') => {
     const grid = document.getElementById('shop-products-grid');

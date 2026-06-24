@@ -48,10 +48,21 @@ server.listen(3060, async () => {
     console.log('Loading shop page...');
     await page.goto('http://localhost:3060', { waitUntil: 'networkidle' });
 
+    // Setup mock logged-in state so dashboard is shown and nav elements are visible
+    console.log('Simulating login state...');
+    await page.evaluate(() => {
+      localStorage.setItem('thirsty_logged_in', 'true');
+      document.documentElement.classList.add('user-logged-in');
+      const card = document.getElementById('user-dashboard-card');
+      if (card) card.style.display = 'flex';
+    });
+    await page.waitForTimeout(500);
+
     // Navigate to shop view
     console.log('Switching to SHOP view...');
     await page.click('button[data-target-view="view-wearthirsty"]');
     await page.waitForTimeout(500);
+
 
     // Assert shop products grid loaded
     const productCardsCount = await page.evaluate(() => {
