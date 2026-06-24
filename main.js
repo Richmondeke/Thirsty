@@ -42,7 +42,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const SUPABASE_URL = "https://qnzszxukvugigprimlwi.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_syk64tdKksD56BZDt7FmZA_0KgZ581e";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storageKey: 'thirstyclub-auth',
+      storage: window.localStorage
+    }
+  });
 
   // Global Session State
   let currentSession = null;
@@ -272,12 +280,66 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   };
 
+  // Track whether logout was intentional (user clicked logout button)
+  let isIntentionalLogout = false;
+
   // Listen to auth changes
   supabase.auth.onAuthStateChange((event, session) => {
     console.log(`onAuthStateChange event: ${event}. Session email:`, session ? session.user.email : "null");
-    setTimeout(async () => {
-      await syncSessionAndProfile(session);
-    }, 0);
+    
+    if (event === 'SIGNED_OUT') {
+      // Only process sign-out if user explicitly clicked logout
+      if (isIntentionalLogout) {
+        isIntentionalLogout = false;
+        setTimeout(async () => {
+          await syncSessionAndProfile(null);
+        }, 0);
+      } else {
+        // Token refresh failed or session expired - try to recover silently
+        console.log('Session ended unexpectedly. Attempting recovery...');
+        setTimeout(async () => {
+          try {
+            const { data: { session: recoveredSession } } = await supabase.auth.getSession();
+            if (recoveredSession) {
+              console.log('Session recovered successfully.');
+              await syncSessionAndProfile(recoveredSession);
+            } else if (localStorage.getItem('thirsty_logged_in') === 'true') {
+              // Session truly gone but user expects to be logged in
+              // Keep the UI in logged-in state with cached profile if available
+              console.log('Could not recover session but keeping logged-in UI state.');
+            } else {
+              await syncSessionAndProfile(null);
+            }
+          } catch (err) {
+            console.warn('Session recovery failed:', err);
+            // Don't force logout - keep existing UI state
+          }
+        }, 500);
+      }
+      return;
+    }
+    
+    if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
+      setTimeout(async () => {
+        if (session) {
+          await syncSessionAndProfile(session);
+        } else if (event === 'INITIAL_SESSION') {
+          // No session on initial load - try getSession() as fallback
+          try {
+            const { data: { session: storedSession } } = await supabase.auth.getSession();
+            if (storedSession) {
+              console.log('Recovered session from storage on initial load.');
+              await syncSessionAndProfile(storedSession);
+            } else {
+              await syncSessionAndProfile(null);
+            }
+          } catch (err) {
+            console.warn('Failed to recover session on initial load:', err);
+            await syncSessionAndProfile(null);
+          }
+        }
+      }, 0);
+    }
   });
 
   // ==========================================
@@ -449,18 +511,25 @@ document.addEventListener('DOMContentLoaded', () => {
           let profile = null;
           let profileErr = null;
 
-          if (loginId.toUpperCase().startsWith("T999-")) {
+          const cleanedInput = loginId.replace(/\s+/g, '');
+          const thirstIdMatch = cleanedInput.match(/^t(?:-)?999(?:-)?(\d{4})$/i);
+
+          if (thirstIdMatch) {
+            const resolvedThirstyId = `T999-${thirstIdMatch[1]}`;
             // Resolve ThirstyID to Email
             const { data, error } = await supabase
               .from('profiles')
               .select('email')
-              .eq('thirstyclub_id', loginId.toUpperCase())
+              .eq('thirstyclub_id', resolvedThirstyId)
               .single();
             profile = data;
             profileErr = error;
             if (profileErr || !profile || !profile.email) {
               throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
             }
+          } else if (cleanedInput.toUpperCase().startsWith("T999")) {
+            // Entered prefix but format was wrong
+            throw new Error("Invalid ThirstyID format. It must be in the format T999-XXXX (with 4 numbers).");
           } else {
             // Resolve Username to Email
             const { data, error } = await supabase
@@ -510,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Logout actions
   const handleLogout = async () => {
+    isIntentionalLogout = true;
     await supabase.auth.signOut();
     window.location.hash = ''; // Clear hash navigation
   };
@@ -737,6 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const appSettingsLogoutBtn = document.getElementById('app-settings-logout-btn');
   if (appSettingsLogoutBtn) {
     appSettingsLogoutBtn.addEventListener('click', async () => {
+      isIntentionalLogout = true;
       await supabase.auth.signOut();
       window.location.hash = ''; // Clear navigation hash
     });
@@ -1027,6 +1098,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Bind Double Tap Like
         const mediaFrame = post.querySelector(`#media-frame-${s.id}`);
         let lastTap = 0;
+        let lastTouchTap = 0;
         mediaFrame.addEventListener('click', (e) => {
           const currentTime = new Date().getTime();
           const tapLength = currentTime - lastTap;
@@ -1035,6 +1107,17 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
           }
           lastTap = currentTime;
+        });
+
+        // Mobile touch double-tap
+        mediaFrame.addEventListener('touchend', (e) => {
+          const currentTime = new Date().getTime();
+          const tapLength = currentTime - lastTouchTap;
+          if (tapLength < 300 && tapLength > 0) {
+            e.preventDefault();
+            triggerLike(s, post);
+          }
+          lastTouchTap = currentTime;
         });
 
         mediaFrame.addEventListener('dblclick', () => {
