@@ -171,10 +171,13 @@
         <div class="app-main-content">
           <!-- App Header (Dynamic title and icons) -->
           <div class="app-header">
-          <button class="header-back-btn" id="app-header-back" style="visibility: hidden;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          </button>
-          <div class="app-header-title" id="app-header-title">THIRSTYCLUB999</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button class="header-back-btn" id="app-header-back" style="visibility: hidden;">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              </button>
+              <img src="https://wearthirsty.com/cdn/shop/files/ThirstyLOGO_2026.png?height=32&width=32" alt="Thirsty Logo" style="width: 26px; height: 26px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(255, 62, 62, 0.45));">
+            </div>
+            <div class="app-header-title" id="app-header-title">THIRSTYCLUB999</div>
           <div class="header-right-actions" style="display: flex; gap: 0.5rem; align-items: center;">
             <button class="header-icon-btn" id="header-cart-btn" title="Shopping Cart" style="position: relative;">
               <span class="cart-badge-count" id="header-cart-count" style="display: none; position: absolute; top: -5px; right: -5px; background: var(--accent-color); color: #fff; font-size: 0.65rem; font-weight: 900; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">0</span>
