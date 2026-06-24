@@ -567,7 +567,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         loginForm.reset();
       } catch (err) {
-        alert("Login Error: " + err.message);
+        if (err.code === 'email_not_confirmed' || err.message?.includes('Email not confirmed')) {
+          alert("Your email has not been confirmed yet.\n\nPlease check your inbox (and spam folder) for a confirmation email from ThirstyClub999, then try logging in again.");
+        } else if (err.code === 'invalid_credentials' || err.message?.includes('Invalid login credentials')) {
+          alert("Invalid login credentials.\n\nPlease check your email/username and password are correct. If you forgot your password, use the 'Forgot Password' link.");
+        } else {
+          alert("Login Error: " + err.message);
+        }
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
