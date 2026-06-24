@@ -714,11 +714,16 @@ document.addEventListener('DOMContentLoaded', () => {
       viewHistory.push(targetViewId);
     }
 
-    // Toggle back button visibility
+    // Toggle back button and logo visibility
+    const headerLogo = document.getElementById('app-header-logo');
     if (viewHistory.length > 1) {
       backBtn.style.visibility = 'visible';
+      backBtn.style.display = 'block';
+      if (headerLogo) headerLogo.style.display = 'none';
     } else {
       backBtn.style.visibility = 'hidden';
+      backBtn.style.display = 'none';
+      if (headerLogo) headerLogo.style.display = 'block';
     }
 
     // Highlight bottom nav tabs if they match the primary target
