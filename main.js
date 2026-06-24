@@ -615,12 +615,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!tabEl) return;
       if (active) {
         tabEl.classList.add('active');
-        tabEl.style.borderBottomColor = 'var(--accent-color)';
-        tabEl.style.color = '#fff';
       } else {
         tabEl.classList.remove('active');
-        tabEl.style.borderBottomColor = 'transparent';
-        tabEl.style.color = 'var(--text-dim)';
       }
     };
 

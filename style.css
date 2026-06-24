@@ -3343,30 +3343,60 @@ header .logout-btn {
   gap: 2rem;
 }
 
+.community-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  padding: 5px;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+:root.light-mode .community-subtabs {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
 .subtab-btn {
-  background: none;
+  background: transparent;
   border: none;
+  border-radius: 25px;
   color: var(--text-dim);
-  font-size: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding-bottom: 0.6rem;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  position: relative;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  text-transform: uppercase;
+  outline: none;
+}
+
+.subtab-btn:hover {
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:root.light-mode .subtab-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .subtab-btn.active {
-  color: var(--accent-color);
+  background: #ffffff;
+  color: #000000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.subtab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1.5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--accent-color);
-  box-shadow: 0 0 8px var(--accent-color);
+:root.light-mode .subtab-btn.active {
+  background: #000000;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Locked Crate Visuals */
