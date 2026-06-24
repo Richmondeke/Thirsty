@@ -1535,22 +1535,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let triviaTimeLeft = 60;
   let triviaTimerInterval = null;
 
-  let speedTapTaps = 0;
-  let speedTapTimeLeft = 10.0;
-  let speedTapTimerInterval = null;
-
-  let reactionState = 'idle'; // idle, waiting, ready, results
-  let reactionStartTime = 0;
-  let reactionTimerId = null;
-
   // Generic Game Switcher
   const switchGameView = (viewId) => {
     const views = [
       'games-hub-select',
       'trivia-game-view',
       'treasure-hunt-view',
-      'speedtap-game-view',
-      'reaction-game-view',
       'raids-game-view',
       'bounties-game-view'
     ];
@@ -1968,104 +1958,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('treasure-completed-count').textContent = `${completedCount}/${treasureHunts.length}`;
   };
 
-  // --- SPEED TAP CHALLENGE ---
-  const startSpeedTap = () => {
-    speedTapTaps = 0;
-    speedTapTimeLeft = 10.0;
-    
-    document.getElementById('speedtap-start-screen').style.display = 'none';
-    document.getElementById('speedtap-play-screen').style.display = 'block';
-    document.getElementById('speedtap-results-screen').style.display = 'none';
-    
-    document.getElementById('speedtap-tap-count').textContent = speedTapTaps;
-    document.getElementById('speedtap-timer-count').textContent = speedTapTimeLeft.toFixed(1);
-
-    if (speedTapTimerInterval) clearInterval(speedTapTimerInterval);
-    speedTapTimerInterval = setInterval(() => {
-      speedTapTimeLeft -= 0.1;
-      if (speedTapTimeLeft <= 0) {
-        speedTapTimeLeft = 0;
-        clearInterval(speedTapTimerInterval);
-        endSpeedTap();
-      }
-      document.getElementById('speedtap-timer-count').textContent = speedTapTimeLeft.toFixed(1);
-    }, 1000 / 10);
-  };
-
-  const clickSpeedTap = () => {
-    if (speedTapTimeLeft <= 0) return;
-    speedTapTaps += 1;
-    document.getElementById('speedtap-tap-count').textContent = speedTapTaps;
-  };
-
-  const endSpeedTap = () => {
-    document.getElementById('speedtap-play-screen').style.display = 'none';
-    document.getElementById('speedtap-results-screen').style.display = 'block';
-    document.getElementById('speedtap-result-text').textContent = `Total Taps: ${speedTapTaps}`;
-    
-    const earnedPoints = speedTapTaps * 10;
-    document.getElementById('speedtap-xp-awarded').textContent = `+${earnedPoints} PTS awarded`;
-
-    const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
-    localStorage.setItem('thirsty_trivia_points', currentPoints + earnedPoints);
-
-    updateUserGameScore('speed_tap', speedTapTaps, 'max');
-    fetchGameLeaderboard('speed_tap', 'leaderboard-speedtap-container');
-  };
-
-  // --- REACTION TIME TEST ---
-  const startReactionTime = () => {
-    reactionState = 'waiting';
-    
-    document.getElementById('reaction-start-screen').style.display = 'none';
-    document.getElementById('reaction-play-screen').style.display = 'block';
-    document.getElementById('reaction-results-screen').style.display = 'none';
-
-    const tapArea = document.getElementById('reaction-tap-area');
-    tapArea.className = 'reaction-tap-area waiting';
-    tapArea.querySelector('span').textContent = 'WAIT FOR GREEN';
-
-    if (reactionTimerId) clearTimeout(reactionTimerId);
-    reactionTimerId = setTimeout(() => {
-      reactionState = 'ready';
-      tapArea.className = 'reaction-tap-area ready';
-      tapArea.querySelector('span').textContent = 'TAP NOW!';
-      reactionStartTime = Date.now();
-    }, 1500 + Math.random() * 3000);
-  };
-
-  const tapReactionTime = () => {
-    const tapArea = document.getElementById('reaction-tap-area');
-    if (reactionState === 'waiting') {
-      // Clicked too early
-      clearTimeout(reactionTimerId);
-      reactionState = 'early';
-      tapArea.className = 'reaction-tap-area early';
-      tapArea.querySelector('span').textContent = 'TOO EARLY! TAP TO RETRY';
-    } else if (reactionState === 'ready') {
-      const delta = Date.now() - reactionStartTime;
-      reactionState = 'results';
-      endReactionTime(delta);
-    } else if (reactionState === 'early') {
-      startReactionTime();
-    }
-  };
-
-  const endReactionTime = (time) => {
-    document.getElementById('reaction-play-screen').style.display = 'none';
-    document.getElementById('reaction-results-screen').style.display = 'block';
-    document.getElementById('reaction-result-text').textContent = `${time} ms`;
-
-    // Lower time yields higher rewards
-    const earnedPoints = time < 200 ? 300 : (time < 300 ? 150 : (time < 450 ? 80 : 20));
-    document.getElementById('reaction-xp-awarded').textContent = `+${earnedPoints} PTS awarded`;
-
-    const currentPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
-    localStorage.setItem('thirsty_trivia_points', currentPoints + earnedPoints);
-
-    updateUserGameScore('reaction_time', time, 'min');
-    fetchGameLeaderboard('reaction_time', 'leaderboard-reaction-container');
-  };
 
   // --- SOCIAL RAIDS ---
   const renderSocialRaids = () => {
@@ -2180,30 +2072,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const initGamesListeners = () => {
     const btnSelectTrivia = document.getElementById('btn-select-trivia');
     const btnSelectTreasure = document.getElementById('btn-select-treasure');
-    const btnSelectSpeedTap = document.getElementById('btn-select-speedtap');
-    const btnSelectReaction = document.getElementById('btn-select-reaction');
     const btnSelectRaids = document.getElementById('btn-select-raids');
     const btnSelectBounties = document.getElementById('btn-select-bounties');
 
     const triviaBackBtn = document.getElementById('trivia-back-btn');
     const treasureBackBtn = document.getElementById('treasure-back-btn');
-    const speedtapBackBtn = document.getElementById('speedtap-back-btn');
-    const reactionBackBtn = document.getElementById('reaction-back-btn');
     const raidsBackBtn = document.getElementById('raids-back-btn');
     const bountiesBackBtn = document.getElementById('bounties-back-btn');
 
     const triviaRestartBtn = document.getElementById('trivia-restart-btn');
     const triviaFinishBtn = document.getElementById('trivia-finish-btn');
-
-    const speedtapStartBtn = document.getElementById('speedtap-start-btn');
-    const speedtapClickBtn = document.getElementById('speedtap-click-btn');
-    const speedtapRestartBtn = document.getElementById('speedtap-restart-btn');
-    const speedtapFinishBtn = document.getElementById('speedtap-finish-btn');
-
-    const reactionStartBtn = document.getElementById('reaction-start-btn');
-    const reactionTapArea = document.getElementById('reaction-tap-area');
-    const reactionRestartBtn = document.getElementById('reaction-restart-btn');
-    const reactionFinishBtn = document.getElementById('reaction-finish-btn');
 
     // Selection Grid
     if (btnSelectTrivia) {
@@ -2221,26 +2099,6 @@ document.addEventListener('DOMContentLoaded', () => {
         switchGameView('treasure-hunt-view');
         renderTreasureHunts();
         fetchGameLeaderboard('treasure_hunt', 'leaderboard-treasure-container');
-      };
-    }
-
-    if (btnSelectSpeedTap) {
-      btnSelectSpeedTap.onclick = () => {
-        switchGameView('speedtap-game-view');
-        document.getElementById('speedtap-start-screen').style.display = 'block';
-        document.getElementById('speedtap-play-screen').style.display = 'none';
-        document.getElementById('speedtap-results-screen').style.display = 'none';
-        fetchGameLeaderboard('speed_tap', 'leaderboard-speedtap-container');
-      };
-    }
-
-    if (btnSelectReaction) {
-      btnSelectReaction.onclick = () => {
-        switchGameView('reaction-game-view');
-        document.getElementById('reaction-start-screen').style.display = 'block';
-        document.getElementById('reaction-play-screen').style.display = 'none';
-        document.getElementById('reaction-results-screen').style.display = 'none';
-        fetchGameLeaderboard('reaction_time', 'leaderboard-reaction-container');
       };
     }
 
@@ -2263,8 +2121,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Back Buttons
     if (triviaBackBtn) triviaBackBtn.onclick = () => { if (triviaTimerInterval) clearInterval(triviaTimerInterval); renderGames(); };
     if (treasureBackBtn) treasureBackBtn.onclick = () => renderGames();
-    if (speedtapBackBtn) speedtapBackBtn.onclick = () => { if (speedTapTimerInterval) clearInterval(speedTapTimerInterval); renderGames(); };
-    if (reactionBackBtn) reactionBackBtn.onclick = () => { if (reactionTimerId) clearTimeout(reactionTimerId); renderGames(); };
     if (raidsBackBtn) raidsBackBtn.onclick = () => renderGames();
     if (bountiesBackBtn) bountiesBackBtn.onclick = () => renderGames();
 
@@ -2277,18 +2133,6 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
     if (triviaFinishBtn) triviaFinishBtn.onclick = () => renderGames();
-
-    // Speed Tap Actions
-    if (speedtapStartBtn) speedtapStartBtn.onclick = startSpeedTap;
-    if (speedtapClickBtn) speedtapClickBtn.onclick = clickSpeedTap;
-    if (speedtapRestartBtn) speedtapRestartBtn.onclick = startSpeedTap;
-    if (speedtapFinishBtn) speedtapFinishBtn.onclick = renderGames();
-
-    // Reaction Actions
-    if (reactionStartBtn) reactionStartBtn.onclick = startReactionTime;
-    if (reactionTapArea) reactionTapArea.onclick = tapReactionTime;
-    if (reactionRestartBtn) reactionRestartBtn.onclick = startReactionTime;
-    if (reactionFinishBtn) reactionFinishBtn.onclick = renderGames();
   };
 
   initGamesListeners();
@@ -3318,11 +3162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
 
     const mockPlayers = [
-      { username: 'THIRSTYZOID', thirstyclub_id: 'T999-1337', socials: { game_scores: { trivia_blitz: 12, treasure_hunt: 3, speed_tap: 87, reaction_time: 180, social_raids: 3, bounties_completed: 4 } } },
-      { username: 'Adeline Palmerston', thirstyclub_id: 'T999-2468', socials: { game_scores: { trivia_blitz: 10, treasure_hunt: 2, speed_tap: 78, reaction_time: 210, social_raids: 2, bounties_completed: 3 } } },
-      { username: 'Lekan Thirsty', thirstyclub_id: 'T999-1122', socials: { game_scores: { trivia_blitz: 8, treasure_hunt: 2, speed_tap: 72, reaction_time: 245, socials_raids: 2, bounties_completed: 2 } } },
-      { username: 'Tunde Gold', thirstyclub_id: 'T999-9081', socials: { game_scores: { trivia_blitz: 7, treasure_hunt: 1, speed_tap: 65, reaction_time: 280, socials_raids: 1, bounties_completed: 2 } } },
-      { username: 'Evelyn Drinker', thirstyclub_id: 'T999-5566', socials: { game_scores: { trivia_blitz: 5, treasure_hunt: 1, speed_tap: 58, reaction_time: 320, socials_raids: 0, bounties_completed: 1 } } }
+      { username: 'THIRSTYZOID', thirstyclub_id: 'T999-1337', created_at: '2026-01-01T08:00:00.000Z', avatar_url: 'images/THIRSTY_1.JPG', socials: { game_scores: { trivia_blitz: 12, treasure_hunt: 3, social_raids: 3, bounties_completed: 4 } } },
+      { username: 'Adeline Palmerston', thirstyclub_id: 'T999-2468', created_at: '2026-01-02T12:30:00.000Z', avatar_url: 'images/THIRSTY_69.JPG', socials: { game_scores: { trivia_blitz: 10, treasure_hunt: 2, social_raids: 2, bounties_completed: 3 } } },
+      { username: 'Lekan Thirsty', thirstyclub_id: 'T999-1122', created_at: '2026-01-03T15:45:00.000Z', avatar_url: 'images/THIRSTY_75.JPG', socials: { game_scores: { trivia_blitz: 8, treasure_hunt: 2, socials_raids: 2, bounties_completed: 2 } } },
+      { username: 'Tunde Gold', thirstyclub_id: 'T999-9081', created_at: '2026-01-04T10:15:00.000Z', avatar_url: 'images/THIRSTY_77.JPG', socials: { game_scores: { trivia_blitz: 7, treasure_hunt: 1, socials_raids: 1, bounties_completed: 2 } } },
+      { username: 'Evelyn Drinker', thirstyclub_id: 'T999-5566', created_at: '2026-01-05T09:00:00.000Z', avatar_url: 'images/THIRSTY_37.JPG', socials: { game_scores: { trivia_blitz: 5, treasure_hunt: 1, socials_raids: 0, bounties_completed: 1 } } }
     ];
 
     const calculatePoints = (p) => {
@@ -3330,11 +3174,6 @@ document.addEventListener('DOMContentLoaded', () => {
       let pts = 0;
       if (scores.trivia_blitz) pts += scores.trivia_blitz * 50;
       if (scores.treasure_hunt) pts += scores.treasure_hunt * 150;
-      if (scores.speed_tap) pts += scores.speed_tap * 10;
-      if (scores.reaction_time) {
-        const rt = scores.reaction_time;
-        pts += rt < 200 ? 300 : (rt < 300 ? 150 : (rt < 450 ? 80 : 20));
-      }
       if (scores.social_raids) pts += scores.social_raids * 150;
       if (scores.bounties_completed) pts += scores.bounties_completed * 200;
       return pts;
@@ -3346,13 +3185,15 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('username, thirstyclub_id, socials');
+        .select('username, thirstyclub_id, socials, created_at, avatar_url');
       
       if (profiles && !error) {
         profiles.forEach(p => {
           const idx = entries.findIndex(e => e.thirstyclub_id === p.thirstyclub_id || e.username === p.username);
           if (idx !== -1) {
             entries[idx].username = p.username || entries[idx].username;
+            entries[idx].created_at = p.created_at || entries[idx].created_at;
+            entries[idx].avatar_url = p.avatar_url || entries[idx].avatar_url;
             entries[idx].socials = {
               ...entries[idx].socials,
               ...p.socials
@@ -3369,6 +3210,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mappedEntries = entries.map(e => ({
       username: e.username || 'Anonymous',
       thirstyclub_id: e.thirstyclub_id || 'T999-XXXX',
+      created_at: e.created_at || new Date().toISOString(),
+      avatar_url: e.avatar_url || '',
       points: calculatePoints(e)
     }));
 
@@ -3380,6 +3223,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mappedEntries.push({
           username: currentUserProfile.username || 'Guest',
           thirstyclub_id: currentUserProfile.thirstyclub_id || 'T999-XXXX',
+          created_at: currentUserProfile.created_at || new Date().toISOString(),
+          avatar_url: currentUserProfile.avatar_url || '',
           points: Math.max(dbPoints, localPoints)
         });
       } else {
@@ -3389,17 +3234,90 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    mappedEntries.sort((a, b) => b.points - a.points);
+    // Sort chronologically by date of signup (earliest first)
+    mappedEntries.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     const elapsed = Date.now() - fetchStart;
     const remainingDelay = Math.max(0, 400 - elapsed);
     await new Promise(resolve => setTimeout(resolve, remainingDelay));
 
+    // Render podium for top 3
+    const podiumContainer = document.getElementById('leaderboard-podium-container');
+    if (podiumContainer) {
+      const top3 = mappedEntries.slice(0, 3);
+      const podiumItems = [];
+      
+      // Rank 2 (index 1)
+      if (top3[1]) {
+        podiumItems.push({
+          rank: 2,
+          player: top3[1],
+          avatar: top3[1].avatar_url || defaultAvatar,
+          borderColor: 'rgba(192, 192, 192, 0.3)',
+          gradient: 'linear-gradient(135deg, rgba(192, 192, 192, 0.08) 0%, rgba(255,255,255,0.01) 100%)',
+          icon: '🥈'
+        });
+      }
+      
+      // Rank 1 (index 0)
+      if (top3[0]) {
+        podiumItems.push({
+          rank: 1,
+          player: top3[0],
+          avatar: top3[0].avatar_url || defaultAvatar,
+          borderColor: 'rgba(255, 215, 0, 0.45)',
+          gradient: 'linear-gradient(135deg, rgba(255, 215, 0, 0.12) 0%, rgba(255, 62, 62, 0.04) 100%)',
+          icon: '👑'
+        });
+      }
+      
+      // Rank 3 (index 2)
+      if (top3[2]) {
+        podiumItems.push({
+          rank: 3,
+          player: top3[2],
+          avatar: top3[2].avatar_url || defaultAvatar,
+          borderColor: 'rgba(205, 127, 50, 0.3)',
+          gradient: 'linear-gradient(135deg, rgba(205, 127, 50, 0.08) 0%, rgba(255,255,255,0.01) 100%)',
+          icon: '🥉'
+        });
+      }
+
+      podiumItems.sort((a, b) => {
+        const order = { 2: 0, 1: 1, 3: 2 };
+        return order[a.rank] - order[b.rank];
+      });
+
+      podiumContainer.innerHTML = `
+        <div class="tab-title" style="margin-bottom: 1rem;">TOP MEMBERS</div>
+        <div class="top-members-podium" style="display: flex; justify-content: center; align-items: flex-end; gap: 0.75rem; margin-bottom: 2rem; width: 100%;">
+          ${podiumItems.map(item => {
+            const isCurrentUser = currentUserProfile && item.player.thirstyclub_id === currentUserProfile.thirstyclub_id;
+            return `
+              <div class="podium-card" style="flex: 1; min-width: 0; background: ${item.gradient}; border: 1px solid ${isCurrentUser ? 'rgba(255, 62, 62, 0.45)' : item.borderColor}; border-radius: 12px; padding: 1rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; transition: transform 0.25s ease; position: relative; box-shadow: ${isCurrentUser ? '0 0 12px rgba(255, 62, 62, 0.15)' : 'none'};">
+                <div style="font-size: 1.5rem; line-height: 1; margin-bottom: 0.25rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));">${item.icon}</div>
+                <div style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; margin-bottom: 0.5rem; border: 2px solid ${item.borderColor}; box-shadow: 0 3px 6px rgba(0,0,0,0.3); background: #111;">
+                  <img src="${item.avatar}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: #fff; letter-spacing: 0.05em; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; text-transform: uppercase; font-family: 'Kyrilla', sans-serif;">${item.player.username}</span>
+                <span style="font-size: 0.55rem; color: var(--accent-color); font-weight: 700; margin-top: 0.15rem; display: block;">${item.player.points.toLocaleString()} PTS</span>
+                <span style="font-size: 0.5rem; color: var(--text-dim); margin-top: 0.1rem; display: block; font-size: 0.45rem;">RANK #${item.rank}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    // Render list for rank 4 and below
     container.innerHTML = '';
-    mappedEntries.forEach((e, idx) => {
+    const remainingPlayers = mappedEntries.slice(3);
+    
+    remainingPlayers.forEach((e, idx) => {
+      const realRank = idx + 4;
       const isCurrentUser = currentUserProfile && e.thirstyclub_id === currentUserProfile.thirstyclub_id;
       const li = document.createElement('li');
-      li.className = `leaderboard-item ${idx < 3 ? 'top-rank' : ''}`;
+      li.className = `leaderboard-item`;
       if (isCurrentUser) {
         li.id = 'user-leaderboard-row';
         li.style.border = '1px solid rgba(255, 62, 62, 0.35)';
@@ -3407,13 +3325,86 @@ document.addEventListener('DOMContentLoaded', () => {
         li.style.boxShadow = '0 0 10px rgba(255, 62, 62, 0.05)';
       }
       li.innerHTML = `
-        <span class="rank">#${idx + 1}</span>
+        <span class="rank" style="color: var(--text-dim); width: 25px;">#${realRank}</span>
+        <div class="leaderboard-avatar-wrap" style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; margin-right: 0.75rem; border: 1px solid rgba(255,255,255,0.08); background: #111; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <img src="${e.avatar_url || defaultAvatar}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
         <span class="name">${e.username}</span>
-        <span class="points">${e.points.toLocaleString()} PTS</span>
+        <span class="points" style="margin-left: auto;">${e.points.toLocaleString()} PTS</span>
       `;
       container.appendChild(li);
     });
   };
+
+  // --- Composio Spotify and Twitter Integrations ---
+  const initComposioIntegrations = () => {
+    const spotifyBtn = document.getElementById('btn-connect-spotify');
+    const twitterBtn = document.getElementById('btn-connect-twitter');
+    const spotifyDesc = document.getElementById('spotify-integration-desc');
+    const twitterDesc = document.getElementById('twitter-integration-desc');
+
+    const updateSpotifyUI = (connected) => {
+      if (!spotifyBtn || !spotifyDesc) return;
+      if (connected) {
+        spotifyBtn.textContent = 'DISCONNECT';
+        spotifyBtn.style.background = 'rgba(255, 255, 255, 0.05)';
+        spotifyBtn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+        spotifyDesc.textContent = 'Connected (Username: LekanTC999)';
+        spotifyDesc.style.color = '#39b54a';
+      } else {
+        spotifyBtn.textContent = 'CONNECT';
+        spotifyBtn.style.background = 'var(--accent-color)';
+        spotifyBtn.style.border = 'none';
+        spotifyDesc.textContent = 'Verify your stream counts';
+        spotifyDesc.style.color = 'var(--text-dim)';
+      }
+    };
+
+    const updateTwitterUI = (connected) => {
+      if (!twitterBtn || !twitterDesc) return;
+      if (connected) {
+        twitterBtn.textContent = 'DISCONNECT';
+        twitterBtn.style.background = 'rgba(255, 255, 255, 0.05)';
+        twitterBtn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+        twitterDesc.textContent = 'Connected (Handle: @lekan_thirsty)';
+        twitterDesc.style.color = '#39b54a';
+      } else {
+        twitterBtn.textContent = 'CONNECT';
+        twitterBtn.style.background = 'var(--accent-color)';
+        twitterBtn.style.border = 'none';
+        twitterDesc.textContent = 'Verify retweets & follows';
+        twitterDesc.style.color = 'var(--text-dim)';
+      }
+    };
+
+    if (spotifyBtn) {
+      const isConnected = localStorage.getItem('composio_spotify_connected') === 'true';
+      updateSpotifyUI(isConnected);
+      spotifyBtn.onclick = () => {
+        const nextState = localStorage.getItem('composio_spotify_connected') !== 'true';
+        if (nextState) {
+          alert('Connecting to Spotify via Composio OAuth integrations...');
+        }
+        localStorage.setItem('composio_spotify_connected', nextState ? 'true' : 'false');
+        updateSpotifyUI(nextState);
+      };
+    }
+
+    if (twitterBtn) {
+      const isConnected = localStorage.getItem('composio_twitter_connected') === 'true';
+      updateTwitterUI(isConnected);
+      twitterBtn.onclick = () => {
+        const nextState = localStorage.getItem('composio_twitter_connected') !== 'true';
+        if (nextState) {
+          alert('Connecting to X / Twitter via Composio OAuth integrations...');
+        }
+        localStorage.setItem('composio_twitter_connected', nextState ? 'true' : 'false');
+        updateTwitterUI(nextState);
+      };
+    }
+  };
+
+  initComposioIntegrations();
 
   // ==========================================
   // Admin Portal Functionalities

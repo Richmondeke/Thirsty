@@ -143,46 +143,7 @@ server.listen(3062, async () => {
     await page.click('#treasure-back-btn');
     await page.waitForTimeout(300);
 
-    // --- TEST SPEED TAP ---
-    console.log('Testing Speed Tap Challenge...');
-    await page.click('#btn-select-speedtap');
-    await page.waitForTimeout(300);
 
-    // Click Start
-    await page.click('#speedtap-start-btn');
-    await page.waitForTimeout(300);
-
-    // Tap 3 times
-    await page.click('#speedtap-click-btn');
-    await page.click('#speedtap-click-btn');
-    await page.click('#speedtap-click-btn');
-    await page.waitForTimeout(100);
-
-    // Go back
-    await page.click('#speedtap-back-btn');
-    await page.waitForTimeout(300);
-
-    // --- TEST REACTION TEST ---
-    console.log('Testing Reaction Test...');
-    await page.click('#btn-select-reaction');
-    await page.waitForTimeout(300);
-
-    // Click Start
-    await page.click('#reaction-start-btn');
-    await page.waitForTimeout(300);
-
-    // Click while waiting (Too early)
-    await page.click('#reaction-tap-area');
-    await page.waitForTimeout(300);
-
-    const isEarly = await page.evaluate(() => {
-      return document.getElementById('reaction-tap-area').classList.contains('early');
-    });
-    console.log('Reaction registered Too Early:', isEarly);
-
-    // Go back
-    await page.click('#reaction-back-btn');
-    await page.waitForTimeout(300);
 
     // --- TEST SOCIAL RAIDS ---
     console.log('Testing Social Raids...');

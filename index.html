@@ -368,6 +368,37 @@
                 </div>
               </div>
 
+              <!-- Connected Apps (Composio) -->
+              <div class="connected-apps-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; text-align: left;">
+                <div style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block; margin-bottom: 0.75rem;">POWERED BY COMPOSIO</div>
+                <h4 style="font-family: 'Kyrilla', sans-serif; font-size: 0.85rem; font-weight: 900; margin: 0 0 0.5rem 0; color: #fff; letter-spacing: 0.05em; text-transform: uppercase;">CONNECTED APPS</h4>
+                <p style="font-size: 0.65rem; color: var(--text-dim); margin: 0 0 1.25rem 0; line-height: 1.4;">Verify streaming achievements on Spotify and raiding interactions on social platforms automatically.</p>
+                
+                <!-- Spotify app row -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="font-size: 1.25rem;">🎵</div>
+                    <div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">SPOTIFY</div>
+                      <div style="font-size: 0.6rem; color: var(--text-dim);" id="spotify-integration-desc">Verify your stream counts</div>
+                    </div>
+                  </div>
+                  <button class="cta-button" id="btn-connect-spotify" style="padding: 0.35rem 0.75rem; font-size: 0.65rem; font-weight: 700; margin: 0; min-height: auto; width: auto; background: var(--accent-color); border: none; color: #fff; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">CONNECT</button>
+                </div>
+
+                <!-- Twitter / X app row -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0 0.25rem 0;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="font-size: 1.25rem;">🐦</div>
+                    <div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">X / TWITTER</div>
+                      <div style="font-size: 0.6rem; color: var(--text-dim);" id="twitter-integration-desc">Verify retweets & follows</div>
+                    </div>
+                  </div>
+                  <button class="cta-button" id="btn-connect-twitter" style="padding: 0.35rem 0.75rem; font-size: 0.65rem; font-weight: 700; margin: 0; min-height: auto; width: auto; background: var(--accent-color); border: none; color: #fff; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">CONNECT</button>
+                </div>
+              </div>
+
               <!-- Profile Options Menu -->
               <div class="profile-menu-list">
                 <button class="profile-menu-item" id="menu-btn-passport">
@@ -570,28 +601,11 @@
 
               <!-- Content Area 3: Leaderboard & Badges -->
               <div id="community-leaderboard-section" style="display: none;">
-                <!-- Badges Showcase -->
-                <div class="badges-showcase-container" style="margin-bottom: 2.5rem; text-align: left;">
-                  <div class="tab-title" style="margin-bottom: 1rem;">UNLOCKED BADGES</div>
-                  <div class="badges-row" style="display: flex; gap: 1rem; overflow-x: auto; padding: 1rem 0; scrollbar-width: none; -ms-overflow-style: none;">
-                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 62, 62, 0.05); border: 1px solid rgba(255, 62, 62, 0.25); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
-                      <div style="font-size: 2rem; filter: drop-shadow(0 0 8px rgba(255, 62, 62, 0.45));">🏆</div>
-                      <span style="font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">FOUNDER</span>
-                    </div>
-                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
-                      <div style="font-size: 2rem; opacity: 0.4;">🎫</div>
-                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">RSVP CHAMP</span>
-                    </div>
-                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
-                      <div style="font-size: 2rem; opacity: 0.4;">👕</div>
-                      <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">COLLECTOR</span>
-                    </div>
-                    <div class="badge-card" style="min-width: 100px; background: rgba(255, 62, 62, 0.05); border: 1px solid rgba(255, 62, 62, 0.25); border-radius: 8px; padding: 1.25rem 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: transform 0.25s ease;">
-                      <div style="font-size: 2rem; filter: drop-shadow(0 0 8px rgba(255, 62, 62, 0.45));">🔥</div>
-                      <span style="font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: 0.05em;">OG MEMBER</span>
-                    </div>
-                  </div>
+                <!-- Top 3 Podium Showcase -->
+                <div id="leaderboard-podium-container">
+                  <!-- Dynamically populated in main.js with top 3 members -->
                 </div>
+
 
                 <!-- Leaderboard rankings -->
                 <div class="leaderboard-container">
@@ -621,26 +635,13 @@
                     <button class="cta-button game-action-btn">EXPLORE HUNTS</button>
                   </div>
 
-                  <div class="game-select-card" id="btn-select-speedtap">
-                    <div class="game-card-icon">🚀</div>
-                    <h3 class="game-card-title">SPEED TAP</h3>
-                    <p class="game-card-desc">How fast can you tap? Tap the button as many times as possible in 10 seconds.</p>
-                    <button class="cta-button game-action-btn">START TAPPING</button>
-                  </div>
-
-                  <div class="game-select-card" id="btn-select-reaction">
-                    <div class="game-card-icon">⏱️</div>
-                    <h3 class="game-card-title">REACTION TIME</h3>
-                    <p class="game-card-desc">Test your reflexes. Tap the target the millisecond it flashes green.</p>
-                    <button class="cta-button game-action-btn">TEST REFLEXES</button>
-                  </div>
-
                   <div class="game-select-card" id="btn-select-raids">
                     <div class="game-card-icon">📣</div>
                     <h3 class="game-card-title">SOCIAL RAIDS</h3>
                     <p class="game-card-desc">Help boost the club on social media! Raiding posts directly expands the ThirstyClub universe.</p>
                     <button class="cta-button game-action-btn">OPEN RAIDS</button>
                   </div>
+
 
                   <div class="game-select-card" id="btn-select-bounties">
                     <div class="game-card-icon">🏆</div>
@@ -728,77 +729,7 @@
                   <div class="game-leaderboard-container" id="leaderboard-treasure-container"></div>
                 </div>
 
-                <!-- Speed Tap View -->
-                <div id="speedtap-game-view" style="display: none;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <button class="back-to-games-btn" id="speedtap-back-btn">← BACK TO GAMES</button>
-                    <div style="font-size: 0.75rem; color: var(--accent-color); font-weight: 700; letter-spacing: 0.1em;">TIME LEFT: <span id="speedtap-timer-count">10.0</span>s</div>
-                  </div>
 
-                  <!-- Start screen -->
-                  <div id="speedtap-start-screen" style="text-align: center; padding: 2rem 1rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-                    <h4 class="game-view-title" style="font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">SPEED TAP CHALLENGE</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; line-height: 1.5;">Tap the button as fast as you can. You have exactly 10 seconds. Rank high on the leaderboard!</p>
-                    <button class="cta-button" id="speedtap-start-btn" style="width: 100%;">START CHALLENGE</button>
-                  </div>
-
-                  <!-- Game screen -->
-                  <div id="speedtap-play-screen" style="display: none; text-align: center; padding: 1.5rem 1rem;">
-                    <div id="speedtap-tap-count" style="font-size: 3.5rem; font-weight: 900; color: var(--accent-color); margin-bottom: 1.5rem; font-family: monospace;">0</div>
-                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
-                      <button class="speedtap-button" id="speedtap-click-btn">TAP!</button>
-                    </div>
-                  </div>
-
-                  <!-- Results screen -->
-                  <div id="speedtap-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚡</div>
-                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">CHALLENGE COMPLETE</h4>
-                    <p id="speedtap-result-text" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 700; margin-bottom: 0.5rem;">Total Taps: 0</p>
-                    <p id="speedtap-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS awarded</p>
-                    <button class="cta-button" id="speedtap-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">PLAY AGAIN</button>
-                    <button class="back-to-games-btn" id="speedtap-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
-                  </div>
-
-                  <!-- Leaderboard -->
-                  <div class="game-leaderboard-container" id="leaderboard-speedtap-container"></div>
-                </div>
-
-                <!-- Reaction Time View -->
-                <div id="reaction-game-view" style="display: none;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <button class="back-to-games-btn" id="reaction-back-btn">← BACK TO GAMES</button>
-                  </div>
-
-                  <!-- Start screen -->
-                  <div id="reaction-start-screen" style="text-align: center; padding: 2rem 1rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
-                    <h4 class="game-view-title" style="font-size: 1.25rem; font-weight: 900; color: #fff; margin-bottom: 0.5rem;">REACTION TEST</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; line-height: 1.5;">When the red box turns green, tap it as fast as you can. Tap too early and you fail!</p>
-                    <button class="cta-button" id="reaction-start-btn" style="width: 100%;">START TEST</button>
-                  </div>
-
-                  <!-- Active click area screen -->
-                  <div id="reaction-play-screen" style="display: none; padding: 1rem 0;">
-                    <div id="reaction-tap-area" class="reaction-tap-area waiting">
-                      <span id="reaction-tap-label">WAIT FOR GREEN</span>
-                    </div>
-                  </div>
-
-                  <!-- Results screen -->
-                  <div id="reaction-results-screen" style="display: none; text-align: center; padding: 2rem 1rem;">
-                    <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚡</div>
-                    <h4 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: #fff; letter-spacing: 0.05em;">YOUR TIME</h4>
-                    <p id="reaction-result-text" style="font-size: 1.5rem; color: var(--accent-color); font-weight: 900; margin-bottom: 0.5rem; font-family: monospace;">240 ms</p>
-                    <p id="reaction-xp-awarded" style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;">+0 PTS awarded</p>
-                    <button class="cta-button" id="reaction-restart-btn" style="width: 100%; margin-bottom: 0.75rem;">TEST AGAIN</button>
-                    <button class="back-to-games-btn" id="reaction-finish-btn" style="width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.08); padding: 0.8rem; border-radius: 8px;">RETURN TO GAMES HUB</button>
-                  </div>
-
-                  <!-- Leaderboard -->
-                  <div class="game-leaderboard-container" id="leaderboard-reaction-container"></div>
-                </div>
 
                 <!-- Social Raids View -->
                 <div id="raids-game-view" style="display: none;">
