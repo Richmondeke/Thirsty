@@ -1509,7 +1509,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const raidsData = [
     { id: 1, title: "DRY SYSTEM ENDS", link: "https://x.com/ThirstyClub999/status/1782256247823", body: "Like, retweet & comment: 'The system is dry. We bring the thirst.'", points: 100 },
-    { id: 2, title: "WET VIBES VOL 1 OUT NOW", link: "https://x.com/ThirstyClub999/status/1782256375743", body: "Raid this post on Twitter. Share the alté afrobeats vibes.", points: 150 },
+    { id: 2, title: "WET VIBES VOL 1 OUT NOW", link: "https://x.com/ThirstyClub999/status/1782256375743", body: "Raid this post on X. Share the alté afrobeats vibes.", points: 150 },
     { id: 3, title: "PASSPORT MINT NOTICE", link: "https://x.com/ThirstyClub999/status/1782267093731", body: "Help amplify our gasless passport announcement on X.", points: 200 }
   ];
 
@@ -3440,7 +3440,7 @@ document.addEventListener('DOMContentLoaded', () => {
       twitterBtn.onclick = () => {
         const nextState = localStorage.getItem('composio_twitter_connected') !== 'true';
         if (nextState) {
-          alert('Connecting to X / Twitter via Composio OAuth integrations...');
+          alert('Connecting to X via Composio OAuth integrations...');
         }
         localStorage.setItem('composio_twitter_connected', nextState ? 'true' : 'false');
         updateTwitterUI(nextState);
@@ -4696,7 +4696,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Pioneer: Unlocked if logged in (always true for active session/guest)
     setBadgeState('badge-pioneer', true);
 
-    // 2. Club Connector (badge-master): Connect Spotify or X/Twitter
+    // 2. Club Connector (badge-master): Connect Spotify or X
     const spotifyConnected = localStorage.getItem('thirsty_spotify_connected') === 'true';
     const twitterConnected = localStorage.getItem('thirsty_twitter_connected') === 'true';
     setBadgeState('badge-master', spotifyConnected || twitterConnected);
