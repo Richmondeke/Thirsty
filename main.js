@@ -1568,6 +1568,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let entries = [...mockLeaderboards[gameKey]];
 
+    // Render skeleton loading state
+    const gameTitle = gameKey.toUpperCase().replace('_', ' ');
+    container.innerHTML = `
+      <div class="game-leaderboard-header">
+        <div class="game-leaderboard-title">🏆 ${gameTitle} LEADERBOARD</div>
+        <div class="game-leaderboard-subtitle">SYNCING RANKS...</div>
+      </div>
+      <ul class="game-leaderboard-list">
+        ${[1, 2, 3, 4, 5].map(() => `
+          <li class="game-leaderboard-item skeleton-card" style="height: 38px; display: flex; align-items: center; padding: 0.75rem 1rem; border-radius: 8px;">
+            <div class="skeleton" style="width: 20px; height: 14px; margin-right: 1.5rem;"></div>
+            <div class="skeleton" style="width: 120px; height: 14px;"></div>
+            <div class="skeleton" style="width: 50px; height: 14px; margin-left: auto;"></div>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+
+    // Brief delay to allow skeleton shimmer to resolve gracefully
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     try {
       const { data: profiles, error } = await supabase
         .from('profiles')
@@ -1613,8 +1634,6 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (gameKey === 'reaction_time') metricSuffix = ' ms';
     else if (gameKey === 'social_raids') metricSuffix = ' raids';
     else if (gameKey === 'bounties_completed') metricSuffix = ' bounties';
-
-    const gameTitle = gameKey.toUpperCase().replace('_', ' ');
 
     container.innerHTML = `
       <div class="game-leaderboard-header">
