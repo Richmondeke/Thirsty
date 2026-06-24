@@ -71,8 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (session && profile) {
       // User is Logged In
       if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
-      if (userDashboardCard) userDashboardCard.style.display = 'block';
+      if (userDashboardCard) userDashboardCard.style.display = 'flex';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'inline-block';
+      
+      // Hide landing page components when logged in
+      const heroSec = document.getElementById('home');
+      if (heroSec) heroSec.style.display = 'none';
+      const passportSec = document.getElementById('passport');
+      if (passportSec) passportSec.style.display = 'none';
       
       if (navDashLink) {
         navDashLink.textContent = 'Dashboard';
@@ -95,22 +101,38 @@ document.addEventListener('DOMContentLoaded', () => {
         profileAvatarPreview.src = profile.avatar_url || defaultAvatar;
       }
 
+      // Bind dynamic session strings to layout placeholders
+      const displayNames = document.querySelectorAll('.user-display-name');
+      displayNames.forEach(el => { el.textContent = profile.username; });
+
+      const avatars = document.querySelectorAll('.user-avatar-placeholder');
+      avatars.forEach(el => { el.src = profile.avatar_url || defaultAvatar; });
+
+      const ids = document.querySelectorAll('.user-id-placeholder');
+      ids.forEach(el => { el.textContent = profile.thirstyclub_id || 'T999-XXXX'; });
+
       // Update Passport Generator Inputs
       const passportInputName = document.getElementById('passport-input-name');
       const passportInputId = document.getElementById('passport-input-id');
-      if (passportInputName && !passportInputName.value) {
+      if (passportInputName) {
         passportInputName.value = profile.username;
       }
-      if (passportInputId && !passportInputId.value) {
+      if (passportInputId) {
         passportInputId.value = profile.thirstyclub_id || 'T999-XXXX';
       }
       drawPassport();
     } else {
       // User is Logged Out
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'block';
+      if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
       if (userDashboardCard) userDashboardCard.style.display = 'none';
       if (headerLogoutBtn) headerLogoutBtn.style.display = 'none';
       
+      // Show landing page components when logged out
+      const heroSec = document.getElementById('home');
+      if (heroSec) heroSec.style.display = 'flex';
+      const passportSec = document.getElementById('passport');
+      if (passportSec) passportSec.style.display = 'block';
+
       if (navDashLink) {
         navDashLink.textContent = 'Sign In';
         navDashLink.href = '#tickets';
@@ -191,6 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   if (openAuthBtn) openAuthBtn.addEventListener('click', openAuthModal);
+  const heroLoginBtn = document.getElementById('hero-login-btn');
+  if (heroLoginBtn) heroLoginBtn.addEventListener('click', openAuthModal);
   if (navDashLinkClick) {
     navDashLinkClick.addEventListener('click', (e) => {
       if (!currentSession) {
@@ -762,299 +786,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderEvents();
   renderNotifications();
 
-  // ==========================================
-  // 8. Supabase Session State Binding Connector
-  // ==========================================
-  const SUPABASE_URL = "https://fftfnikbulfayrrjktuo.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmdGZuaWtidWxmYXlycmprdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNjgxNzgsImV4cCI6MjA5Mjc0NDE3OH0.L8U8_f19ZeMSdqvMgk3h7MHqnm6a_X2wukEPoAgz7qA";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  let currentSession = null;
-  let currentUserProfile = null;
-
-  // DOM bindings
-  const rsvpPromoCard = document.getElementById('rsvp-promo-card');
-  const userDashboardCard = document.getElementById('user-dashboard-card');
-  const navDashLink = document.getElementById('nav-dash-link');
-
-  const defaultAvatar = "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>";
-
-  const updateUI = () => {
-    const session = currentSession;
-    const profile = currentUserProfile;
-
-    if (session && profile) {
-      // User is Logged In
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'none';
-      if (userDashboardCard) userDashboardCard.style.display = 'flex';
-      
-      if (navDashLink) {
-        navDashLink.textContent = 'Dashboard';
-        navDashLink.href = '#tickets';
-      }
-
-      // Bind dynamic session strings to layout placeholders
-      const displayNames = document.querySelectorAll('.user-display-name');
-      displayNames.forEach(el => { el.textContent = profile.username; });
-
-      const avatars = document.querySelectorAll('.user-avatar-placeholder');
-      avatars.forEach(el => { el.src = profile.avatar_url || defaultAvatar; });
-
-      const ids = document.querySelectorAll('.user-id-placeholder');
-      ids.forEach(el => { el.textContent = profile.thirstyclub_id || 'T999-XXXX'; });
-
-      // Update Passport Generator fields
-      const passportInputName = document.getElementById('passport-input-name');
-      const passportInputId = document.getElementById('passport-input-id');
-      if (passportInputName) {
-        passportInputName.value = profile.username;
-      }
-      if (passportInputId) {
-        passportInputId.value = profile.thirstyclub_id || 'T999-XXXX';
-      }
-      drawPassport();
-    } else {
-      // User is Logged Out
-      if (rsvpPromoCard) rsvpPromoCard.style.display = 'block';
-      if (userDashboardCard) userDashboardCard.style.display = 'none';
-      
-      if (navDashLink) {
-        navDashLink.textContent = 'Sign In';
-        navDashLink.href = '#tickets';
-      }
-
-      const passportInputName = document.getElementById('passport-input-name');
-      const passportInputId = document.getElementById('passport-input-id');
-      if (passportInputName) passportInputName.value = '';
-      if (passportInputId) passportInputId.value = '';
-      
-      drawPassport();
-    }
-  };
-
-  const syncSessionAndProfile = async (session) => {
-    currentSession = session;
-    if (session) {
-      try {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-        } else {
-          currentUserProfile = profile;
-        }
-      } catch (err) {
-        console.error("Error syncing profile:", err);
-      }
-    } else {
-      currentUserProfile = null;
-    }
-    updateUI();
-  };
-
-  // Auth event listeners
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    await syncSessionAndProfile(session);
-  });
-
-  // ==========================================
-  // 9. Auth Dialog & Modal Controls
-  // ==========================================
-  const modal = document.getElementById('ticket-modal');
-  const openAuthBtn = document.getElementById('open-auth-btn');
-  const closeModalBtn = document.querySelector('.close-modal');
-
-  const openAuthModal = () => {
-    if (currentSession) {
-      const ticketsSection = document.getElementById('tickets');
-      if (ticketsSection) ticketsSection.scrollIntoView({ behavior: 'smooth' });
-    } else if (modal) {
-      modal.showModal();
-    }
-  };
-
-  if (openAuthBtn) openAuthBtn.addEventListener('click', openAuthModal);
-  if (navDashLink) {
-    navDashLink.addEventListener('click', (e) => {
-      if (!currentSession) {
-        e.preventDefault();
-        openAuthModal();
-      }
-    });
-  }
-
-  if (closeModalBtn && modal) {
-    closeModalBtn.addEventListener('click', () => modal.close());
-  }
-
-  if (modal) {
-    modal.addEventListener('click', (e) => {
-      const rect = modal.getBoundingClientRect();
-      if (
-        e.clientX < rect.left ||
-        e.clientX > rect.right ||
-        e.clientY < rect.top ||
-        e.clientY > rect.bottom
-      ) {
-        modal.close();
-      }
-    });
-  }
-
-  // Auth Form Tabs switching
-  const tabLoginBtn = document.getElementById('auth-login-tab-btn');
-  const tabSignupBtn = document.getElementById('auth-signup-tab-btn');
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  const switchToSignup = document.getElementById('switch-to-signup');
-  const switchToLogin = document.getElementById('switch-to-login');
-
-  const showLoginForm = () => {
-    if (tabLoginBtn) tabLoginBtn.classList.add('active');
-    if (tabSignupBtn) tabSignupBtn.classList.remove('active');
-    if (loginForm) loginForm.style.display = 'block';
-    if (signupForm) signupForm.style.display = 'none';
-  };
-
-  const showSignupForm = () => {
-    if (tabSignupBtn) tabSignupBtn.classList.add('active');
-    if (tabLoginBtn) tabLoginBtn.classList.remove('active');
-    if (signupForm) signupForm.style.display = 'block';
-    if (loginForm) loginForm.style.display = 'none';
-  };
-
-  if (tabLoginBtn) tabLoginBtn.addEventListener('click', showLoginForm);
-  if (tabSignupBtn) tabSignupBtn.addEventListener('click', showSignupForm);
-  if (switchToSignup) switchToSignup.addEventListener('click', showSignupForm);
-  if (switchToLogin) switchToLogin.addEventListener('click', showLoginForm);
-
-  // ==========================================
-  // 10. Supabase Authentication Handlers
-  // ==========================================
-
-  // Signup Submit
-  if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const submitBtn = signupForm.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Processing...";
-      }
-      
-      const username = document.getElementById('signup-username').value.trim();
-      const email = document.getElementById('signup-email').value.trim().toLowerCase();
-      const password = document.getElementById('signup-password').value;
-
-      try {
-        const { data: existingProfiles, error: profileCheckError } = await supabase
-          .from('profiles')
-          .select('id')
-          .ilike('username', username);
-
-        if (profileCheckError) {
-          throw new Error("Could not check username availability.");
-        }
-
-        if (existingProfiles && existingProfiles.length > 0) {
-          alert("This username is already taken.");
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Get ThirstyID & Passport";
-          }
-          return;
-        }
-
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username: username
-            }
-          }
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        if (data.session) {
-          alert("Registration Successful!\n\nYour account is active.");
-          modal.close();
-          signupForm.reset();
-        } else {
-          alert("Registration Successful!\n\nPlease check your email inbox to verify your account.");
-          modal.close();
-          signupForm.reset();
-        }
-      } catch (err) {
-        alert("Sign Up Error: " + err.message);
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Get ThirstyID & Passport";
-        }
-      }
-    });
-  }
-
-  // Login Submit
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Logging in...";
-      }
-
-      const loginId = document.getElementById('login-id').value.trim();
-      const password = document.getElementById('login-password').value;
-
-      try {
-        let email = loginId.toLowerCase();
-
-        if (loginId.toUpperCase().startsWith("T999-")) {
-          const { data: profile, error: profileErr } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('thirstyclub_id', loginId.toUpperCase())
-            .single();
-
-          if (profileErr || !profile || !profile.email) {
-            throw new Error("Invalid ThirstyID.");
-          }
-          email = profile.email;
-        }
-
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        modal.close();
-        loginForm.reset();
-      } catch (err) {
-        alert("Login Error: " + err.message);
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Login";
-        }
-      }
-    });
-  }
+  // [Section 8, 9, 10 duplicate handlers removed to resolve SyntaxError and prevent dual event listeners]
 
   // ==========================================
   // 11. Venue Map & Radar HUD Animation
