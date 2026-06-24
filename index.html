@@ -2,26 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ThirstyClub999 | RSVP</title>
-  <meta name="description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://thirstynalia.com">
-  <meta property="og:title" content="ThirstyClub999 | RSVP">
-  <meta property="og:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  <meta property="og:image" content="https://thirstynalia.com/images/999social.png">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://thirstynalia.com">
-  <meta property="twitter:title" content="ThirstyClub999 | RSVP">
-  <meta property="twitter:description" content="ThirstyClub999 - An immersive concert experience on June 14th, 2026. Featuring Zlatan Ibile, Odumodublvck, and more.">
-  <meta property="twitter:image" content="https://thirstynalia.com/images/999social.png">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThirstyClub999 | Join Our Community</title>
+  <meta name="description" content="ThirstyClub999 - Join our community, create your passport and become a member.">
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260610.1601">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -31,23 +16,11 @@
 
   <!-- Header Navigation -->
   <header>
-    <a href="#home" class="logo">THIRSTYCLUB<span id="logo-counter">999</span></a>
-    <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </button>
-    <nav id="nav-menu">
-      <a href="#lineup">Lineup</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#venue">Venue</a>
-      <a href="https://tix.africa/discover/thir-ty-club-999" class="nav-btn rsvp-red" id="nav-rsvp-btn" target="_blank" rel="noopener noreferrer">Get Tickets</a>
-      <button class="nav-btn members-white" id="nav-members-btn" type="button">Members Only</button>
-      <!-- Logout in nav — shown only when logged in, hidden when not -->
-      <button class="nav-logout-btn" id="header-logout-btn" style="display: none;" aria-label="Sign out">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span class="nav-logout-label">Sign Out</span>
-      </button>
+    <div class="logo">THIRSTYCLUB<span id="logo-counter">999</span></div>
+    <nav>
+      <a href="#passport">Passport Maker</a>
+      <button class="nav-btn" id="open-auth-btn">Login</button>
+      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
     </nav>
   </header>
 
@@ -55,33 +28,14 @@
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
-      <!-- Background Video — single shared instance, JS controls play/pause -->
-      <video class="hero-bg-video" id="hero-bg-video" autoplay loop muted playsinline>
-        <source src="images/Tiger2.mp4" type="video/mp4">
-      </video>
-      <div class="hero-video-overlay" id="hero-video-overlay"></div>
-      <div class="hero-corner-vignette" id="hero-corner-vignette"></div>
       <!-- Scroll dimming layer -->
       <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
       <div class="hero-overlay"></div>
-      
-      <!-- Default Hero Content (Logged Out) -->
-      <div class="hero-content" id="hero-logged-out-content">
+      <div class="hero-content">
         <h1 class="glitch-text">THIRSTYCLUB<span id="hero-counter">999</span></h1>
-        <p class="hero-subtitle">MEMBERS ONLY</p>
-        <div class="hero-details">
-          <span>JUNE 14TH 2026</span>
-          <span class="divider">|</span>
-          <span>6PM</span>
-        </div>
-        <a href="https://tix.africa/discover/thir-ty-club-999" class="cta-button" id="hero-cta-btn" target="_blank" rel="noopener noreferrer">GET TICKETS</a>
+        <p class="hero-subtitle">JOIN OUR COMMUNITY</p>
+        <button class="cta-button" id="hero-login-btn">BECOME A MEMBER</button>
       </div>
-
-      <!-- Floating Logo Badge in Bottom Right -->
-      <div class="hero-logo-badge">
-        <img src="images/ThirstyLOGO_2026.png" alt="Thirsty Logo 2026">
-      </div>
-
       <div class="scroll-indicator">
         <div class="mouse">
           <div class="wheel"></div>
@@ -90,854 +44,758 @@
       </div>
     </section>
 
-    <!-- Logged In Passport & QR Viewer Section -->
-    <section class="hero passport-viewer-section" id="passport-viewer" style="display: none;">
-      <!-- No duplicate video here — the single #hero-bg-video above covers both sections -->
-      <div class="hero-video-overlay"></div>
-      
-      <!-- Vignette at both top and bottom -->
-      <div class="vignette-top-bottom"></div>
+    <!-- Passport Generator Section -->
+    <section class="passport-section" id="passport">
+      <div class="section-title-wrap reveal-on-scroll">
+        <h2 class="section-title">PASSPORT</h2>
+        <p class="section-subtitle-desc">GENERATE YOUR EXCLUSIVE ACCESS PASSPORT</p>
+      </div>
 
-      <!-- Passport Grid View -->
-      <div class="hero-logged-in-container" style="display: block;">
+      <div class="passport-container reveal-on-scroll">
+        <div class="passport-controls-card">
+          <div class="control-header">
+            <h3>PASSPORT CREATOR</h3>
+            <p>Upload a photo to generate your custom Thirsty Passport. If you are logged in, your details will be linked automatically.</p>
+          </div>
+
+          <div class="upload-dropzone" id="passport-dropzone">
+            <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
+            <div class="dropzone-content">
+              <span class="upload-icon">📷</span>
+              <p class="dropzone-text">Drag & drop your picture or <span class="browse-link">browse</span></p>
+              <span class="file-info" id="passport-file-info">JPG, PNG or WEBP (Max 5MB)</span>
+            </div>
+          </div>
+
+          <div class="passport-inputs">
+            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-name">Full Name</label>
+                <input type="text" id="passport-input-name" placeholder="Enter username..." value="ADELINE PALMERSTON" maxlength="30">
+              </div>
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-pob">Place of Thirst</label>
+                <input type="text" id="passport-input-pob" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20">
+              </div>
+            </div>
+            <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-gender">Gender</label>
+                <input type="text" id="passport-input-gender" placeholder="M/F..." value="F" maxlength="5">
+              </div>
+              <div class="input-group" style="flex: 1;">
+                <label for="passport-input-sig">Signature Text</label>
+                <input type="text" id="passport-input-sig" placeholder="Signature name..." value="A. Palmerston" maxlength="20">
+              </div>
+            </div>
+          </div>
+
+          <button class="buy-button" id="download-passport-btn" disabled>DOWNLOAD PASSPORT</button>
+        </div>
+
+        <div class="passport-preview-card">
+          <div class="canvas-wrapper">
+            <div class="passport-glow-border"></div>
+            <canvas id="passport-canvas" class="passport-canvas" width="600" height="800"></canvas>
+          </div>
+          <p class="canvas-tip">Preview of your ThirstyClub999 Passport. Click Download to save.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Ticket/RSVP & Dashboard Section -->
+    <section class="tickets-section" id="tickets">
+      <!-- 1. Logged-Out Promo State (Hidden per request) -->
+      <div class="ticket-card reveal-on-scroll" id="rsvp-promo-card" style="display: none;">
+        <div class="card-glow"></div>
+        <div class="ticket-card-content">
+          <div class="ticket-header">
+            <h4>GET TICKETS & ACCESS</h4>
+            <span class="badge">FREE ENTRY</span>
+          </div>
+          <div class="ticket-body">
+            <p>To secure your guestlist spot, register on Tix Africa. After registering, you will receive details to access the event.</p>
+            <p class="rsvp-link-display">Book online or visit <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="accent-link">tix.africa</a></p>
+          </div>
+          <div class="ticket-buttons-group">
+            <a href="https://tix.africa/discover/thir-ty-club-999" target="_blank" class="buy-button tix-btn">BOOK ON TIX AFRICA</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Redesigned Logged-In Mobile Dashboard App -->
+      <div class="dashboard-card mobile-app-container" id="user-dashboard-card" style="display: none;">
         
-        <!-- Admin Welcome Banner -->
-        <div class="admin-welcome-banner" id="admin-welcome-banner" style="display: none;">
-          <video class="banner-video-bg" autoplay loop muted playsinline>
-            <source src="images/Tiger2.mp4" type="video/mp4">
-          </video>
-          <div class="banner-overlay"></div>
-          <div class="banner-content">
-            <div class="banner-text-side">
-              <span class="banner-badge">ADMIN PORTAL</span>
-              <h2 class="banner-title">Welcome To ThirstyClub999</h2>
-              <p class="banner-desc">You are now a verified member. Climb the leaderboard, win prizes.</p>
-            </div>
-            <div class="banner-action-side">
-              <button class="banner-cta-btn" id="banner-play-games-btn">PLAY CLUB GAMES</button>
-            </div>
+        <!-- Sidebar Navigation (Desktop/Web only) -->
+        <div class="app-sidebar-nav">
+          <div class="sidebar-logo">THIRSTYCLUB999</div>
+          <button class="nav-tab-item active" data-target-view="view-homepage">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+            <span>HOME</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-passport">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
+            <span>PASSPORT</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-wearthirsty">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>WEARTHIRSTY</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-signals">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
+            <span>SIGNALS</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-profile">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>PROFILE</span>
+          </button>
+          <button class="nav-tab-item" id="admin-sidebar-btn" data-target-view="view-admin" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>ADMIN</span>
+          </button>
+        </div>
+
+        <!-- Main Content (Header, Viewport, Bottom Nav) -->
+        <div class="app-main-content">
+          <!-- App Header (Dynamic title and icons) -->
+          <div class="app-header">
+          <button class="header-back-btn" id="app-header-back" style="visibility: hidden;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <div class="app-header-title" id="app-header-title">THIRSTYCLUB999</div>
+          <div class="header-right-actions">
+            <button class="header-icon-btn" id="header-notif-btn" title="Notifications">
+              <span class="notif-badge-dot"></span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
           </div>
         </div>
 
-        <!-- 2. Logged-In Dashboard State (Moved here from home section) -->
-        <div class="dashboard-card" id="user-dashboard-card" style="display: none; margin-bottom: 3rem; width: 100%;">
-          <div class="dashboard-header">
-            <div class="dash-logo-title">
-              <span class="dash-logo">THIRSTYCLUB999</span>
-              <span class="dash-welcome" id="dash-welcome-text">Welcome, User</span>
+        <!-- Scrollable Views Container -->
+        <div class="app-views-viewport">
+
+          <!-- 01. HOMEPAGE VIEW -->
+          <div class="app-view active" id="view-homepage">
+            <div class="view-content">
+              <!-- Welcome Header Banner -->
+              <div class="profile-hero-banner">
+                <div class="banner-avatar-wrap">
+                  <img src="" alt="Avatar" class="banner-avatar-img user-avatar-placeholder">
+                </div>
+                <div class="banner-info">
+                  <div class="banner-welcome">WELCOME BACK</div>
+                  <div class="banner-username user-display-name">Guest</div>
+                  <div class="banner-status-row">
+                    <span class="status-level">LEVEL 01 ROOKIE</span>
+                    <span class="status-exp">650 / 1,000 PTS</span>
+                  </div>
+                  <div class="exp-progress-bar">
+                    <div class="exp-progress-fill" style="width: 65%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Next Drop Countdown Card -->
+              <div class="drop-countdown-card">
+                <div class="card-subtitle">NEXT DROP</div>
+                <div class="countdown-clock" id="home-drop-timer">02 : 18 : 45 : 36</div>
+                <div class="countdown-labels">
+                  <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                </div>
+                <button class="cta-button mini-cta-btn" id="home-view-drop-btn">VIEW DROP</button>
+              </div>
+
+              <!-- Latest Signal Preview Card -->
+              <div class="latest-signal-preview-card" id="home-signal-card">
+                <div class="signal-header">
+                  <span class="signal-label">LATEST SIGNAL</span>
+                  <span class="signal-time">2m ago</span>
+                </div>
+                <p class="signal-text">THE SYSTEM IS DRY. WE BRING THE THIRST.</p>
+                <div class="signal-footer">
+                  <span>READ SIGNAL</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Back to Hub Navigation -->
-          <div class="back-to-hub-wrapper" id="back-to-hub-wrapper" style="display: none;">
-            <button class="back-to-hub-btn" id="back-to-hub-btn">
-              <span class="back-arrow">←</span> BACK TO CLUBHOUSE DIRECTORY
-            </button>
-          </div>
-
-          <!-- Tabs Navigation (Hidden by default, shown when inside a section) -->
-          <div class="dash-tabs" style="display: none;">
-            <button class="tab-btn" data-tab="dashboard-tab">Dashboard</button>
-            <button class="tab-btn" data-tab="events-tab">Events</button>
-            <button class="tab-btn" id="games-tab-btn" data-tab="games-tab" style="display: none;">Games</button>
-            <button class="tab-btn" data-tab="profile-tab">Profile</button>
-            <button class="tab-btn" id="admin-tab-btn" data-tab="admin-tab" style="display: none;">Admin</button>
-          </div>
-
-          <!-- Clubhouse Hub (Directory Grid - Shown by default) -->
-          <div class="clubhouse-hub" id="clubhouse-hub" style="display: none;">
-            <h3 class="hub-title">CLUBHOUSE DIRECTORY</h3>
-            <div class="hub-grid">
+          <!-- 02. PASSPORT VIEW -->
+          <div class="app-view" id="view-passport">
+            <div class="view-content text-center">
+              <div class="view-intro-title">PASSPORT</div>
+              <div class="view-intro-desc">DIGITAL IDENTITY</div>
               
-              <!-- Passports Card (Red Theme) -->
-              <div class="hub-card card-red" id="hub-card-passports">
-                <div class="hub-card-content">
-                  <h4 class="hub-card-title">PASSPORTS</h4>
-                  <p class="hub-card-desc">View your verified Pass ID, signature, and entry QR code.</p>
-                </div>
-                <div class="hub-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
-                </div>
+              <div class="passport-canvas-container">
+                <div class="passport-glow-border"></div>
+                <canvas id="dash-passport-canvas" class="passport-canvas" width="600" height="800"></canvas>
               </div>
-
-              <!-- Events Card (White Theme) -->
-              <div class="hub-card card-white" id="hub-card-events">
-                <div class="hub-card-content">
-                  <h4 class="hub-card-title">EVENTS</h4>
-                  <p class="hub-card-desc">Access confirmed RSVPs, date/time info, and venue location map.</p>
-                </div>
-                <div class="hub-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
-                </div>
-              </div>
-
-              <!-- Profile Card (Blue Theme) -->
-              <div class="hub-card card-blue" id="hub-card-profile">
-                <div class="hub-card-content">
-                  <h4 class="hub-card-title">PROFILE</h4>
-                  <p class="hub-card-desc">Customize user details, social handles, and upload your avatar.</p>
-                </div>
-                <div class="hub-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-              </div>
-
-              <!-- Admin Card (Dark/Red, Admin Only) -->
-              <div class="hub-card card-dark" id="hub-card-admin" style="display: none;">
-                <div class="hub-card-content">
-                  <h4 class="hub-card-title">ADMIN CONTROL</h4>
-                  <p class="hub-card-desc">Manage guests list, check-in statuses, and review system stats.</p>
-                </div>
-                <div class="hub-card-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- Tab 1: Dashboard -->
-          <div class="tab-content" id="dashboard-tab">
-            <!-- Verification Banner -->
-            <div id="email-verification-banner" class="verification-banner" style="display: none;">
-              <div class="verification-content">
-                <span class="warning-icon">⚠️</span>
-                <div>
-                  <p class="verification-text">Your email is not verified.</p>
-                  <p class="verification-sub">Please verify your email to secure your ticket and access all features. Check your spam if you don't see it.</p>
-                </div>
-              </div>
-              <button id="resend-verification-btn" class="resend-btn" type="button">Resend Verification Email</button>
-            </div>
-
-            <div class="dashboard-ticket-info">
-              <span class="dashboard-ticket-label">YOUR THIRSTY PASS ID</span>
-              <h2 class="glow-id" id="ticket-user-id">T999-XXXX</h2>
-            </div>
-
-            <div class="dashboard-grid">
-              <!-- Left Column: Passport -->
-              <div class="dashboard-passport-col">
-                <div class="canvas-wrapper vertical-passport-wrapper" style="margin-bottom: 1.5rem;">
-                  <div class="passport-glow-border"></div>
-                  <canvas id="hero-passport-canvas" width="600" height="800"></canvas>
-                </div>
-                <div class="hero-passport-actions">
-                  <button class="buy-button" id="hero-download-passport-btn">DOWNLOAD PASSPORT</button>
-                </div>
-              </div>
-
-              <!-- Right Column: QR Code -->
-              <div class="dashboard-qr-col">
-                <div class="qr-card">
-                  <div class="qr-header">
-                    <h3>ENTRY PASS QR</h3>
-                    <p>Scan at the gate to check-in</p>
-                  </div>
-                  <div class="qr-code-wrapper">
-                    <div id="hero-qr-code" class="qr-code-img"></div>
-                  </div>
-                  <p class="qr-tip">Admin will scan this to verify your ticket</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab 2: Events -->
-          <div class="tab-content" id="events-tab">
-            <div class="events-tab-container">
-              <div class="event-tab-card">
-                <div class="event-tab-details">
-                  <div class="event-status-badge">CONFIRMED RSVP</div>
-                  <h3>THIRSTYCLUB999</h3>
-                  <p>Immersive concert experience and guest party.</p>
-                  
-                  <div class="event-tab-meta-grid">
-                    <div class="meta-item">
-                      <span class="meta-item-label">DATE</span>
-                      <span class="meta-item-val">Sunday, June 14, 2026</span>
-                    </div>
-                    <div class="meta-item">
-                      <span class="meta-item-label">TIME</span>
-                      <span class="meta-item-val">Doors open at 9:00 PM</span>
-                    </div>
-                    <div class="meta-item">
-                      <span class="meta-item-label">VENUE</span>
-                      <span class="meta-item-val">Lekki, Lagos, Nigeria</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="event-tab-action">
-                  <a href="event.html" class="buy-button">VIEW EVENT PAGE</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tab 3: Games -->
-          <div class="tab-content" id="games-tab">
-            <div class="games-tab-container">
-              <h4 class="tab-title">CLUB CHALLENGES</h4>
               
-              <div class="games-split-layout">
-                <!-- Left: Quiz -->
-                <div class="quiz-section-card">
-                  <div id="quiz-intro">
-                    <h3 class="quiz-title">ThirstyClub999 History Quiz</h3>
-                    <p class="quiz-desc">Do you know the history of ThirstyClub999? Complete this 5-question trivia challenge. Your speed and accuracy determine your rank on the Leaderboard.</p>
-                    
-                    <div class="quiz-rules">
-                      <div class="rule-item"><span>⚡</span> 5 Questions about past editions, sound systems, and lore.</div>
-                      <div class="rule-item"><span>⏱️</span> Time taken is recorded to break score ties.</div>
-                      <div class="rule-item"><span>🏆</span> Only Admin accounts can participate and be ranked.</div>
-                    </div>
-                    
-                    <button class="buy-button" id="start-quiz-btn" style="margin-top: 1.5rem;">START CHALLENGE</button>
+              <!-- Passport Details Custom Inputs (Visible on dashboard!) -->
+              <div class="passport-inputs" style="margin-top: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                <div class="input-row split-2" style="display: flex; gap: 1.5rem; margin-bottom: 1rem;">
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-name" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Full Name</label>
+                    <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Full name..." value="ADELINE PALMERSTON" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                   </div>
-                  
-                  <!-- Quiz Play State -->
-                  <div id="quiz-play-state" style="display: none;">
-                    <div class="quiz-play-header">
-                      <span class="quiz-progress" id="quiz-question-counter">Question 1 of 5</span>
-                      <span class="quiz-timer" id="quiz-timer-display">Time: 0s</span>
-                    </div>
-                    <div class="quiz-progress-track">
-                      <div class="quiz-progress-fill" id="quiz-progress-bar" style="width: 20%;"></div>
-                    </div>
-                    
-                    <h3 class="quiz-question" id="quiz-question-text">When was the first Thirstynalia Party?</h3>
-                    
-                    <div class="quiz-options-list" id="quiz-options-container">
-                      <!-- Dynamic options buttons -->
-                    </div>
-                  </div>
-                  
-                  <!-- Quiz Results State -->
-                  <div id="quiz-results-state" style="display: none; text-align: center;">
-                    <div class="results-badge">🎉 CHALLENGE COMPLETE</div>
-                    <h3 style="font-family: 'Kyrilla', sans-serif; font-size: 2.2rem; margin: 1.5rem 0 0.5rem 0; color: var(--accent-color);" id="results-score-text">Score: 4/5</h3>
-                    <p style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem;" id="results-time-text">Completed in 14 seconds.</p>
-                    
-                    <div class="results-feedback-box" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 6px; margin-bottom: 2rem;">
-                      <p id="results-feedback-msg" style="margin: 0; line-height: 1.5;">Outstanding! Your score has been submitted to the Leaderboard.</p>
-                    </div>
-                    
-                    <button class="buy-button outline-btn" id="restart-quiz-btn">PLAY AGAIN</button>
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-pob" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Place of Thirst</label>
+                    <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                   </div>
                 </div>
+                <div class="input-row split-2" style="display: flex; gap: 1.5rem;">
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-gender" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Gender</label>
+                    <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="F" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                  <div class="input-group" style="flex: 1;">
+                    <label for="dash-passport-input-sig" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Signature Text</label>
+                    <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="A. Palmerston" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="passport-actions-group">
+                <button class="cta-button stroke-btn" id="download-passport-btn">DOWNLOAD PASSPORT</button>
+                <div class="dropzone-area" id="passport-dropzone" style="cursor: pointer; border: 1px dashed rgba(255, 62, 62, 0.3); padding: 1rem; border-radius: 4px; background: rgba(255, 62, 62, 0.02); transition: 0.25s;">
+                  <input type="file" id="passport-file-input" accept="image/*" style="display:none;">
+                  <span id="passport-file-info" style="font-size: 0.85rem; font-weight: 700; color: var(--text-dim);">TAP TO UPLOAD PHOTO</span>
+                </div>
+                <button class="cta-button fill-btn" id="btn-scan-view">SCAN OR NFC</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03. PROFILE VIEW -->
+          <div class="app-view" id="view-profile">
+            <div class="view-content">
+              <div class="profile-header-card text-center">
+                <div class="profile-avatar-wrapper">
+                  <img src="" alt="Avatar" class="profile-avatar-img user-avatar-placeholder">
+                  <span class="profile-level-badge">Lvl 1</span>
+                </div>
+                <h2 class="profile-user-title user-display-name">Guest</h2>
+                <p class="profile-user-id user-id-placeholder">T999-XXXX</p>
                 
-                <!-- Right: Leaderboard -->
-                <div class="leaderboard-section-card">
-                  <h3 class="quiz-title">Club Leaderboard</h3>
-                  <p class="quiz-desc" style="margin-bottom: 1.5rem;">Rankings of the top-performing club members.</p>
-                  
-                  <div class="leaderboard-container">
-                    <ul class="leaderboard-list" id="games-leaderboard-list">
-                      <!-- Dynamic leaderboard rows go here -->
-                      <li style="text-align: center; color: var(--text-dim); padding: 2rem;">Loading leaderboard...</li>
-                    </ul>
+                <div class="profile-stats-row">
+                  <div class="stat-col">
+                    <span class="stat-val">12</span>
+                    <span class="stat-lbl">POSTS</span>
+                  </div>
+                  <div class="stat-divider"></div>
+                  <div class="stat-col">
+                    <span class="stat-val">5</span>
+                    <span class="stat-lbl">BADGES</span>
+                  </div>
+                  <div class="stat-divider"></div>
+                  <div class="stat-col">
+                    <span class="stat-val">3</span>
+                    <span class="stat-lbl">DROPS</span>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-
-
-          <!-- Tab 3: Profile -->
-          <div class="tab-content" id="profile-tab">
-            <div class="profile-container">
-              <h4 class="tab-title">EDIT PROFILE</h4>
-              <form id="profile-form">
-                <!-- Avatar Upload -->
-                <div class="avatar-upload-group">
-                  <div class="avatar-preview-wrapper">
-                    <img src="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23222'/><path d='M50 30a15 15 0 100 30 15 15 0 000-30zM25 80c0-15 15-20 25-20s25 5 25 20' stroke='%23888' stroke-width='4'/></svg>" alt="Avatar" class="profile-avatar-img" id="profile-avatar-preview">
+              <!-- Profile Options Menu -->
+              <div class="profile-menu-list">
+                <button class="profile-menu-item" id="menu-btn-wallet">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16M2 10h20"/></svg>
+                    <span>Wallet & Coins</span>
                   </div>
-                  <div class="avatar-input-wrapper">
-                    <label for="avatar-file-input" class="avatar-upload-btn">Upload Picture</label>
-                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                    <span class="input-tip">Max size 2MB</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-badges">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx='12' cy='8' r='7'/><path d='M8.21 13.89L7 23l5-3 5 3-1.21-9.12'/></svg>
+                    <span>Badges</span>
                   </div>
-                </div>
-
-                <!-- Username Edit -->
-                <div class="input-group">
-                  <label for="profile-username">Username</label>
-                  <input type="text" id="profile-username" placeholder="Username" required>
-                </div>
-
-                <!-- Social IDs -->
-                <div class="input-group">
-                  <label for="profile-instagram">Instagram ID</label>
-                  <input type="text" id="profile-instagram" placeholder="@instagram">
-                </div>
-                <div class="input-group">
-                  <label for="profile-twitter">Twitter ID</label>
-                  <input type="text" id="profile-twitter" placeholder="@twitter">
-                </div>
-                <div class="input-group">
-                  <label for="profile-discord">Discord Username</label>
-                  <input type="text" id="profile-discord" placeholder="username#1234">
-                </div>
-
-                <button type="submit" class="submit-ticket-btn">Save Profile</button>
-              </form>
-
-              <!-- Logout Section -->
-              <div class="profile-logout-section">
-                <div class="profile-logout-divider"></div>
-                <button class="profile-logout-btn" id="dash-logout-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                  Sign Out
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-events">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Events Timeline</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" id="menu-btn-settings">
+                  <div class="menu-left">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Settings & Experience</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Tab 4: Admin Dashboard (Hidden by default, visible only to admin users) -->
-          <div class="tab-content" id="admin-tab">
-            <div class="admin-container">
+          <!-- 04. WEARTHIRSTY (SHOP) VIEW -->
+          <div class="app-view" id="view-wearthirsty">
+            <div class="view-content">
+              <div class="view-intro-title">WEARTHIRSTY</div>
+              <div class="view-intro-desc">UNDERGROUND GEAR. GLOBAL SIGNAL.</div>
 
-              <!-- Dashboard Header -->
-              <div class="admin-header-bar">
-                <div>
-                  <h4 class="admin-dashboard-title">ADMIN DASHBOARD</h4>
-                  <p class="admin-dashboard-sub">ThirstyClub999 Guestlist Management</p>
+              <!-- Shop Filters -->
+              <div class="shop-filter-tabs">
+                <button class="shop-tab active" data-filter="all">ALL</button>
+                <button class="shop-tab" data-filter="apparel">APPAREL</button>
+                <button class="shop-tab" data-filter="accessories">ACCESSORIES</button>
+                <button class="shop-tab" data-filter="limited">LIMITED</button>
+              </div>
+
+              <!-- Products Grid -->
+              <div class="products-grid" id="shop-products-grid">
+                <!-- Will be dynamically generated in main.js -->
+              </div>
+              
+              <button class="cta-button stroke-btn" style="margin-top: 1.5rem;" onclick="alert('Checkout integration coming soon!')">VIEW ALL PRODUCTS</button>
+            </div>
+          </div>
+
+          <!-- 05. DROPS VIEW -->
+          <div class="app-view" id="view-drops">
+            <div class="view-content text-center">
+              <div class="view-intro-title">DROPS</div>
+              <div class="view-intro-desc">EXCLUSIVE. LIMITED. UNANNOUNCED.</div>
+
+              <div class="drops-subtabs">
+                <button class="subtab-btn active">UPCOMING</button>
+                <button class="subtab-btn">LIVE</button>
+                <button class="subtab-btn">PAST</button>
+              </div>
+
+              <!-- Locked Box Centerpiece -->
+              <div class="locked-crate-container">
+                <div class="crate-date-label">05.24.24</div>
+                <div class="crate-title">GLOBAL DROP</div>
+                
+                <div class="crate-box-visual">
+                  <div class="crate-glow"></div>
+                  <!-- Hologram Lock Box SVG -->
+                  <svg viewBox="0 0 200 200" width="180" height="180" class="crate-svg">
+                    <rect x="35" y="60" width="130" height="100" rx="6" fill="none" stroke="#ff3e3e" stroke-width="2"/>
+                    <path d="M35 85h130M35 110h130M35 135h130" stroke="#ff3e3e" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <!-- Core Glow Panel -->
+                    <rect x="80" y="90" width="40" height="40" rx="3" fill="rgba(255, 62, 62, 0.1)" stroke="#ff3e3e" stroke-width="2"/>
+                    <!-- Text 999 -->
+                    <text x="100" y="116" font-family="'Kyrilla', monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
+                  </svg>
                 </div>
-                <div class="admin-header-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                  <button id="admin-sync-mailchimp-btn" class="admin-refresh-btn" style="background: rgba(255, 62, 62, 0.08); border-color: rgba(255, 62, 62, 0.3); color: var(--accent-color);">🐒 Sync Mailchimp</button>
-                  <button id="admin-refresh-btn" class="admin-refresh-btn">↻ Refresh</button>
+
+                <div class="countdown-clock mini-clock" id="drops-crate-timer">02 : 18 : 45 : 36</div>
+                <div class="countdown-labels mini-labels">
+                  <span>DAYS</span><span>HRS</span><span>MINS</span><span>SECS</span>
+                </div>
+
+                <button class="cta-button fill-btn" id="btn-crate-prepare">PREPARE</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 06. SIGNALS (FEED) VIEW -->
+          <div class="app-view" id="view-signals">
+            <div class="view-content">
+              <div class="view-intro-title">SIGNALS</div>
+              <div class="view-intro-desc">REAL TIME. RAW. UNFILTERED.</div>
+
+              <!-- Signals Feed List -->
+              <div class="signals-feed-list" id="signals-feed-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 07. BADGES VIEW -->
+          <div class="app-view" id="view-badges">
+            <div class="view-content">
+              <div class="view-intro-title">BADGES</div>
+              <div class="view-intro-desc">EARNED. NOT GIVEN.</div>
+
+              <div class="badges-subtabs">
+                <button class="subtab-btn active">ALL</button>
+                <button class="subtab-btn">EARNED</button>
+                <button class="subtab-btn">LOCKED</button>
+              </div>
+
+              <div class="badges-grid" id="badges-grid-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 08. WALLET VIEW -->
+          <div class="app-view" id="view-wallet">
+            <div class="view-content">
+              <div class="view-intro-title">WALLET</div>
+              <div class="view-intro-desc">YOUR CLUB. YOUR ASSETS.</div>
+
+              <!-- Cyber Coin Card -->
+              <div class="wallet-coin-card">
+                <div class="card-glow"></div>
+                <div class="wallet-card-header">CLUB COINS</div>
+                <div class="wallet-balance-row">
+                  <div class="coin-symbol">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M9 9h6M9 15h6"/></svg>
+                  </div>
+                  <span class="wallet-balance-val">999</span>
+                </div>
+                <div class="wallet-balance-label">BALANCE = 999 CC</div>
+              </div>
+
+              <!-- Wallet Actions Menu -->
+              <div class="profile-menu-list">
+                <button class="profile-menu-item" onclick="alert('No transactions logged yet.')">
+                  <div class="menu-left"><span>Transactions</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="let code = prompt('Enter coupon or code:'); if (code) alert('Code activated successfully!')">
+                  <div class="menu-left"><span>Redeem Code</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Gift card purchases loading...')">
+                  <div class="menu-left"><span>Gift Card</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Payment systems initialized.')">
+                  <div class="menu-left"><span>Payment Methods</span></div>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 09. EVENTS VIEW -->
+          <div class="app-view" id="view-events">
+            <div class="view-content">
+              <div class="view-intro-title">EVENTS</div>
+              <div class="view-intro-desc">PRIVATE EVENTS. GLOBAL TAKEOVER.</div>
+
+              <div class="events-subtabs">
+                <button class="subtab-btn active">UPCOMING</button>
+                <button class="subtab-btn">PAST</button>
+              </div>
+
+              <div class="events-timeline" id="events-timeline-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 10. SCAN VIEW -->
+          <div class="app-view" id="view-scan">
+            <div class="view-content text-center">
+              <div class="view-intro-title">SCAN</div>
+              <div class="view-intro-desc">UNLOCK. VERIFY. CONNECT.</div>
+
+              <!-- Scanning Targeting Frame HUD -->
+              <div class="scan-camera-mock">
+                <div class="scanner-laser-line"></div>
+                <!-- HUD corner brackets inside frame -->
+                <div class="hud-bracket tl"></div>
+                <div class="hud-bracket tr"></div>
+                <div class="hud-bracket bl"></div>
+                <div class="hud-bracket br"></div>
+                
+                <div class="scanner-logo-overlay">
+                  <span class="scan-digit">999</span>
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="rgba(255, 62, 62, 0.2)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10zM2 12h20"/></svg>
                 </div>
               </div>
 
-              <!-- Summary Stats -->
-              <div class="admin-stats-grid">
-                <div class="admin-stat-card stat-card-total">
-                  <span class="stat-value" id="admin-stat-total">0</span>
-                  <span class="stat-label">Total Signups</span>
+              <p class="scan-align-prompt">ALIGN QR / NFC / CODE</p>
+
+              <div class="scan-toggles-bar">
+                <button class="scan-toggle-btn active" id="scan-mode-qr">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h4v4H7zm6 0h4v4h-4zm0 6h4v4h-4zm-6 0h4v4H7z"/></svg>
+                  <span>QR SCAN</span>
+                </button>
+                <button class="scan-toggle-btn" id="scan-mode-nfc">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 4a6 6 0 0 0-6 6c0 3.31 2.69 6 6 6s6-2.69 6-6-2.69-6-6-6zm0 4a2 2 0 0 0-2 2c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2z"/></svg>
+                  <span>NFC</span>
+                </button>
+                <button class="scan-toggle-btn" id="scan-mode-code">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg>
+                  <span>CODE</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 11. NOTIFICATIONS VIEW -->
+          <div class="app-view" id="view-notifications">
+            <div class="view-content">
+              <div class="view-intro-title">NOTIFICATIONS</div>
+              <div class="view-intro-desc">STAY ALERT. STAY THIRSTY.</div>
+
+              <!-- Notifications History List -->
+              <div class="notifications-history-list" id="notif-history-container">
+                <!-- Dynamically populated in main.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 12. SETTINGS VIEW -->
+          <div class="app-view" id="view-settings">
+            <div class="view-content">
+              <div class="view-intro-title">SETTINGS</div>
+              <div class="view-intro-desc">CONTROL YOUR EXPERIENCE.</div>
+
+              <!-- Settings Option Toggles -->
+              <div class="settings-list-group">
+                <div class="setting-toggle-row">
+                  <span>DARK MODE</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" checked id="toggle-dark-mode">
+                    <span class="slider"></span>
+                  </label>
                 </div>
-                <div class="admin-stat-card stat-card-male">
-                  <span class="stat-value" id="admin-stat-male">0</span>
-                  <span class="stat-label">Male (M)</span>
+                <div class="setting-toggle-row">
+                  <span>PUSH NOTIFICATIONS</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" checked id="toggle-push-notif">
+                    <span class="slider"></span>
+                  </label>
                 </div>
-                <div class="admin-stat-card stat-card-female">
-                  <span class="stat-value" id="admin-stat-female">0</span>
-                  <span class="stat-label">Female (F)</span>
+                <div class="setting-toggle-row">
+                  <span>EMAIL NOTIFICATIONS</span>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="toggle-email-notif">
+                    <span class="slider"></span>
+                  </label>
                 </div>
-                <div class="admin-stat-card stat-card-other">
-                  <span class="stat-value" id="admin-stat-other">0</span>
-                  <span class="stat-label">Other / N/A</span>
+                
+                <div class="profile-menu-item" style="border-top: 1px solid rgba(255, 62, 62, 0.08); margin-top: 1rem;" onclick="alert('Language selection initialized')">
+                  <span>LANGUAGE</span>
+                  <span style="color: var(--accent-color); font-weight: 700;">ENGLISH &gt;</span>
                 </div>
               </div>
 
-              <!-- Section: Guestlist -->
-              <div class="admin-section-card">
-                <div class="admin-section-header">
+              <!-- Settings Options Menu -->
+              <div class="profile-menu-list" style="margin-top: 1.5rem;">
+                <button class="profile-menu-item" onclick="alert('ThirstyClub999 V1.0 Deployed.')">
+                  <span>About ThirstyClub999</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Terms and conditions.')">
+                  <span>Terms &amp; Conditions</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button class="profile-menu-item" onclick="alert('Privacy Policy.')">
+                  <span>Privacy Policy</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+
+              <!-- Large Logout Button -->
+              <button class="cta-button fill-btn logout-accent-btn" id="app-settings-logout-btn" style="margin-top: 2rem;">LOG OUT</button>
+            </div>
+          </div>
+
+          <!-- 13. ADMIN VIEW -->
+          <div class="app-view" id="view-admin">
+            <div class="view-content">
+              <div class="admin-container" style="background: none; border: none; margin: 0; padding: 0; box-shadow: none;">
+                <!-- Dashboard Header -->
+                <div class="admin-header-bar" style="border-bottom: 1px solid rgba(255, 62, 62, 0.15); display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                   <div>
-                    <h5 class="admin-section-title">🎟 GUESTLIST</h5>
-                    <p class="admin-section-desc">View and manage all registered guests. Change access level or view their passport.</p>
+                    <h4 class="admin-dashboard-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.8rem; font-weight: 950; color: var(--accent-color); letter-spacing: -0.02em; margin: 0 0 0.25rem 0;">ADMIN PORTAL</h4>
+                    <p class="admin-dashboard-sub" style="font-size: 0.9rem; color: var(--admin-text-dim); margin: 0; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 600;">ThirstyClub999 Guestlist Management</p>
                   </div>
-                  <div class="admin-table-search-wrapper">
-                    <input type="text" id="admin-table-search" class="admin-table-search" placeholder="Search by name, email or ID...">
+                  <div class="admin-header-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <button id="admin-sync-mailchimp-btn" class="admin-refresh-btn" style="background: rgba(255, 62, 62, 0.08); border-color: rgba(255, 62, 62, 0.3); color: var(--accent-color); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em;">🐒 Sync Mailchimp</button>
+                    <button id="admin-refresh-btn" class="admin-refresh-btn" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); color: var(--admin-text); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em;">↻ Refresh</button>
                   </div>
                 </div>
 
-                <div class="admin-controls-bar" style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--admin-card-bg); border: 1px solid var(--admin-border); border-radius: 8px;">
-                  <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                    <div class="admin-control-group">
-                      <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">FILTER</label>
-                      <select id="admin-filter-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid var(--admin-border);">
-                        <option value="all">All Users</option>
-                        <option value="checked-in">Checked In</option>
-                        <option value="pending">Pending Check-In</option>
-                        <option value="vip">VIP Only</option>
-                        <option value="regular">Regular Only</option>
-                        <option value="male">Male (M)</option>
-                        <option value="female">Female (F)</option>
-                      </select>
+                <!-- Summary Stats -->
+                <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                  <div class="admin-stat-card stat-card-total" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                    <span class="stat-value" id="admin-stat-total" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Total Signups</span>
+                  </div>
+                  <div class="admin-stat-card stat-card-male" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                    <span class="stat-value" id="admin-stat-male" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Male (M)</span>
+                  </div>
+                  <div class="admin-stat-card stat-card-female" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                    <span class="stat-value" id="admin-stat-female" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Female (F)</span>
+                  </div>
+                  <div class="admin-stat-card stat-card-other" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                    <span class="stat-value" id="admin-stat-other" style="font-family: 'Kyrilla', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Other / N/A</span>
+                  </div>
+                </div>
+
+                <!-- Section: Guestlist -->
+                <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+                  <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
+                    <div>
+                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🎟 GUESTLIST</h5>
+                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">View and manage all registered guests. Change access level or view their passport.</p>
                     </div>
-                    <div class="admin-control-group">
-                      <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">SORT</label>
-                      <select id="admin-sort-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid var(--admin-border);">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="name-asc">Name (A-Z)</option>
-                        <option value="name-desc">Name (Z-A)</option>
-                      </select>
+                    <div class="admin-table-search-wrapper" style="min-width: 260px;">
+                      <input type="text" id="admin-table-search" class="admin-table-search" placeholder="Search by name, email or ID..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.6rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s ease;">
                     </div>
                   </div>
-                  <div class="admin-view-toggles" style="display: flex; gap: 0.5rem;">
-                    <button id="admin-view-table-btn" class="admin-view-btn" style="padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--accent-color); background: var(--accent-color); color: #fff; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: all 0.2s;">☰ Table</button>
-                    <button id="admin-view-grid-btn" class="admin-view-btn" style="padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--admin-border); background: #fff; color: var(--admin-text-dim); cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: all 0.2s;">▦ Grid</button>
+
+                  <div class="admin-controls-bar" style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1rem; padding: 0.75rem 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px;">
+                    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                      <div class="admin-control-group">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">FILTER</label>
+                        <select id="admin-filter-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-family: inherit; font-size: 0.85rem; font-weight: 600; outline: none;">
+                          <option value="all">All Users</option>
+                          <option value="checked-in">Checked In</option>
+                          <option value="pending">Pending Check-In</option>
+                          <option value="vip">VIP Only</option>
+                          <option value="regular">Regular Only</option>
+                          <option value="male">Male (M)</option>
+                          <option value="female">Female (F)</option>
+                        </select>
+                      </div>
+                      <div class="admin-control-group">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">SORT</label>
+                        <select id="admin-sort-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-family: inherit; font-size: 0.85rem; font-weight: 600; outline: none;">
+                          <option value="newest">Newest First</option>
+                          <option value="oldest">Oldest First</option>
+                          <option value="name-asc">Name (A-Z)</option>
+                          <option value="name-desc">Name (Z-A)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="admin-view-toggles" style="display: flex; gap: 0.5rem;">
+                      <button id="admin-view-table-btn" class="admin-view-btn" style="padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--accent-color); background: var(--accent-color); color: #fff; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: all 0.2s;">☰ Table</button>
+                      <button id="admin-view-grid-btn" class="admin-view-btn" style="padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid rgba(255, 62, 62, 0.2); background: rgba(15, 15, 15, 0.6); color: var(--admin-text-dim); cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: all 0.2s;">▦ Grid</button>
+                    </div>
+                  </div>
+
+                  <div id="admin-views-container">
+                    <div class="admin-users-table-wrapper" id="admin-table-view" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 62, 62, 0.12); width: 100%; overflow-x: auto; overflow-y: auto; max-height: 480px; border-radius: 8px;">
+                      <table class="admin-users-table" id="admin-users-table-el" style="width: 100%; min-width: 760px; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+                        <thead>
+                          <tr style="border-bottom: 1px solid rgba(255, 62, 62, 0.15);">
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">ThirstyID</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Username</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Email</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Gender</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Access Level</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Registered</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody id="admin-users-list">
+                          <!-- Dynamic rows go here -->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div class="admin-users-grid-wrapper" id="admin-grid-view" style="display: none; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                      <!-- Dynamic passport cards go here -->
+                    </div>
+                  </div>
+                  <p class="admin-table-hint" style="color: var(--text-dim); font-size: 0.75rem; margin: 0.8rem 0 0;">Scroll horizontally if columns are cut off on smaller screens. Sticky headers keep column names visible as you scroll down.</p>
+                </div>
+
+                <!-- Section: Welcome Email Template -->
+                <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+                  <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
+                    <div>
+                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">✉️ WELCOME EMAIL TEMPLATE</h5>
+                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Customise the automatic welcome email sent to guests on RSVP. Supports placeholders: <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{username}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{thirstyclub_id}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{place_of_thirst}</span>. Passport image auto-attached.</p>
+                    </div>
+                    <span class="admin-badge-pill auto-badge" style="background: #e6f6ec; color: #128a3f; border: 1px solid #c8eacc; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">AUTO</span>
+                  </div>
+
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-email-subject" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Email Subject</label>
+                      <input type="text" id="admin-email-subject" class="admin-input" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                    </div>
+                  </div>
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-email-message" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Welcome Message Body</label>
+                      <textarea id="admin-email-message" rows="5" class="admin-textarea" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
+                    </div>
+                  </div>
+                  <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Kyrilla', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;">SAVE TEMPLATE</button>
                   </div>
                 </div>
 
-                <div id="admin-views-container">
-                  <div class="admin-users-table-wrapper" id="admin-table-view">
-                    <table class="admin-users-table" id="admin-users-table-el">
-                      <thead>
-                        <tr>
-                          <th>ThirstyID</th>
-                          <th>Username</th>
-                          <th>Email</th>
-                          <th>Gender</th>
-                          <th>Access Level</th>
-                          <th>Registered</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody id="admin-users-list">
-                        <!-- Dynamic rows go here -->
-                      </tbody>
-                    </table>
+                <!-- Section: Broadcast Blast -->
+                <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+                  <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
+                    <div>
+                      <h5 class="admin-section-title" style="font-family: 'Kyrilla', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
+                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
+                    </div>
+                    <span class="admin-badge-pill manual-badge" style="background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">MANUAL</span>
                   </div>
 
-                  <div class="admin-users-grid-wrapper" id="admin-grid-view" style="display: none; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
-                    <!-- Dynamic passport cards go here -->
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-broadcast-subject" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Subject Line</label>
+                      <input type="text" id="admin-broadcast-subject" class="admin-input" placeholder="ThirstyClub999 — Event Updates & Info" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                    </div>
+                  </div>
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-broadcast-message" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Message Body</label>
+                      <textarea id="admin-broadcast-message" rows="6" class="admin-textarea" placeholder="Hi {username}, we have exciting updates for the event on June 14th! Doors open at 9PM..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Progress Bar -->
+                  <div id="broadcast-status-container" class="broadcast-status-box" style="display:none; background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 62, 62, 0.15); margin-bottom: 1.25rem; padding: 1.2rem; border-radius: 8px;">
+                    <div class="broadcast-progress-bar-track" style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; margin-bottom: 0.8rem;">
+                      <div id="broadcast-progress-bar" class="broadcast-progress-bar-fill" style="width: 0%; height: 100%; background: var(--accent-color); border-radius: 3px; transition: width 0.35s ease;"></div>
+                    </div>
+                    <div id="broadcast-status-text" class="broadcast-status-text" style="font-size: 0.85rem; color: var(--admin-text-dim); font-weight: 600;">Preparing to blast...</div>
+                  </div>
+
+                  <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn" style="background: transparent; border: 1px solid var(--accent-color); color: #fff; padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Kyrilla', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease;">📨 SEND BLAST TO ALL USERS</button>
                   </div>
                 </div>
-                <p class="admin-table-hint">Scroll horizontally if columns are cut off on smaller screens. Sticky headers keep column names visible as you scroll down.</p>
+
               </div>
-
-              <!-- Section: Welcome Email Template -->
-              <div class="admin-section-card">
-                <div class="admin-section-header">
-                  <div>
-                    <h5 class="admin-section-title">✉️ WELCOME EMAIL TEMPLATE</h5>
-                    <p class="admin-section-desc">Customise the automatic welcome email sent to guests on RSVP. Supports placeholders: <span class="admin-placeholder-tag">{username}</span> <span class="admin-placeholder-tag">{thirstyclub_id}</span> <span class="admin-placeholder-tag">{place_of_thirst}</span>. Passport image auto-attached.</p>
-                  </div>
-                  <span class="admin-badge-pill auto-badge">AUTO</span>
-                </div>
-
-                <div class="admin-form-row">
-                  <div class="admin-form-group">
-                    <label for="admin-email-subject" class="admin-label">Email Subject</label>
-                    <input type="text" id="admin-email-subject" class="admin-input" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999">
-                  </div>
-                </div>
-                <div class="admin-form-row">
-                  <div class="admin-form-group">
-                    <label for="admin-email-message" class="admin-label">Welcome Message Body</label>
-                    <textarea id="admin-email-message" rows="5" class="admin-textarea" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club."></textarea>
-                  </div>
-                </div>
-                <div class="admin-form-actions">
-                  <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn">SAVE TEMPLATE</button>
-                </div>
-              </div>
-
-              <!-- Section: Broadcast Blast -->
-              <div class="admin-section-card">
-                <div class="admin-section-header">
-                  <div>
-                    <h5 class="admin-section-title">📣 BROADCAST EMAIL BLAST</h5>
-                    <p class="admin-section-desc">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
-                  </div>
-                  <span class="admin-badge-pill manual-badge">MANUAL</span>
-                </div>
-
-                <div class="admin-form-row">
-                  <div class="admin-form-group">
-                    <label for="admin-broadcast-subject" class="admin-label">Subject Line</label>
-                    <input type="text" id="admin-broadcast-subject" class="admin-input" placeholder="ThirstyClub999 — Event Updates & Info">
-                  </div>
-                </div>
-                <div class="admin-form-row">
-                  <div class="admin-form-group">
-                    <label for="admin-broadcast-message" class="admin-label">Message Body</label>
-                    <textarea id="admin-broadcast-message" rows="6" class="admin-textarea" placeholder="Hi {username}, we have exciting updates for the event on June 14th! Doors open at 9PM..."></textarea>
-                  </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div id="broadcast-status-container" class="broadcast-status-box" style="display:none;">
-                  <div class="broadcast-progress-bar-track">
-                    <div id="broadcast-progress-bar" class="broadcast-progress-bar-fill"></div>
-                  </div>
-                  <div id="broadcast-status-text" class="broadcast-status-text">Preparing to blast...</div>
-                </div>
-
-                <div class="admin-form-actions">
-                  <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn">📨 SEND BLAST TO ALL USERS</button>
-                </div>
-              </div>
-
             </div>
           </div>
+
         </div>
-        <!-- Integrated passport and QR inside the dashboard tab above -->
-      </div>
+
+        <!-- App Bottom Navigation Bar (5 Primary Tabs) -->
+        <div class="app-bottom-nav">
+          <button class="nav-tab-item active" data-target-view="view-homepage">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+            <span>HOME</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-passport">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M7 16h4M15 8h2M15 12h2M15 16h2"/></svg>
+            <span>PASSPORT</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-wearthirsty">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>WEARTHIRSTY</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-signals">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm4 15V6l8 6-8 6z"/></svg>
+            <span>SIGNALS</span>
+          </button>
+          <button class="nav-tab-item" data-target-view="view-profile">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>PROFILE</span>
+          </button>
+          <button class="nav-tab-item" id="admin-bottom-btn" data-target-view="view-admin" style="display: none;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>ADMIN</span>
+          </button>
+        </div> <!-- Close .app-bottom-nav -->
+      </div> <!-- Close .app-main-content -->
+    </div> <!-- Close #user-dashboard-card -->
+
     </section>
-
-    <!-- Scrolling Artist Lineup Section -->
-    <section class="lineup-section" id="lineup">
-      <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">THE LINEUP</h2>
-      </div>
-
-      <!-- Marquee 1 (Left Scrolling) -->
-      <div class="marquee-wrapper reveal-on-scroll" id="marquee-wrapper">
-        <div class="marquee-container">
-          <div class="marquee marquee-left">
-            <div class="marquee-track">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>ZLATAN IBILE</span>
-              <span class="star">★</span>
-              <span>ODUMODUBLVCK</span>
-              <span class="star">★</span>
-              <span>JERIQ</span>
-              <span class="star">★</span>
-              <span>$TRAFFITTI</span>
-              <span class="star">★</span>
-              <span>AYJAY BOBO</span>
-              <span class="star">★</span>
-              <span>ZENUNIVERSE</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Marquee 2 (Right Scrolling) -->
-        <div class="marquee-container">
-          <div class="marquee marquee-right">
-            <div class="marquee-track">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="marquee-track" aria-hidden="true">
-              <span>WAVE$TAR</span>
-              <span class="star">★</span>
-              <span>ARTSALGHUL</span>
-              <span class="star">★</span>
-              <span>$COTTYOLORIN</span>
-              <span class="star">★</span>
-              <span>R33NZO</span>
-              <span class="star">★</span>
-              <span>DAVETHEORACLE</span>
-              <span class="star">★</span>
-              <span>SUonO SAI</span>
-              <span class="star">★</span>
-              <span>MONOCHROME</span>
-              <span class="star">★</span>
-              <span>MAEVERSE</span>
-              <span class="star">★</span>
-              <span>ERIGOTHI</span>
-              <span class="star">★</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Static Lineup Grid (Visible when toggled) -->
-      <div class="static-lineup-container" id="static-lineup-container" style="display: none;">
-        <div class="static-lineup-grid">
-          <div class="static-artist">
-            <img src="images/artists/zlatan_ibile.jpg" alt="ZLATAN IBILE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZLATAN IBILE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/odumodublvck.jpg" alt="ODUMODUBLVCK" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ODUMODUBLVCK</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/jeriq.jpg" alt="JERIQ" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">JERIQ</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/straffitti.jpg" alt="$TRAFFITTI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$TRAFFITTI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/ayjay_bobo.jpg" alt="AYJAY BOBO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">AYJAY BOBO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/wavestar.jpg" alt="WAVE$TAR" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">WAVE$TAR</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/artsalghul.jpg" alt="ARTSALGHUL" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ARTSALGHUL</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/scottyolorin.jpg" alt="$COTTYOLORIN" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">$COTTYOLORIN</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/r33nzo.jpg" alt="R33NZO" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">R33NZO</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/davetheoracle.jpg" alt="DAVETHEORACLE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">DAVETHEORACLE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/suono_sai.jpg" alt="SUonO SAI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">SUonO SAI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/monochrome.jpg" alt="MONOCHROME" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MONOCHROME</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/maeverse.jpg" alt="MAEVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">MAEVERSE</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/erigothi.jpg" alt="ERIGOTHI" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ERIGOTHI</span>
-          </div>
-          <div class="static-artist">
-            <img src="images/artists/zenuniverse.jpg" alt="ZENUNIVERSE" loading="lazy" onerror="this.style.display='none'">
-            <div class="artist-overlay"></div>
-            <span class="artist-name">ZENUNIVERSE</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Toggle View Button -->
-      <div class="toggle-btn-wrap reveal-on-scroll">
-        <button class="lineup-toggle-btn" id="lineup-toggle-btn">View Full Lineup</button>
-      </div>
-    </section>
-
-    <!-- Gallery Section (Past Editions) -->
-    <section class="gallery-section" id="gallery">
-      <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">PAST EDITIONS</h2>
-      </div>
-      <div class="gallery-container reveal-on-scroll">
-        <div class="gallery-scroller" id="gallery-scroller">
-          <div class="gallery-item" data-index="0" data-src="images/THIRSTY_1.JPG">
-            <img src="images/THIRSTY_1.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="1" data-src="images/THIRSTY_31.JPG">
-            <img src="images/THIRSTY_31.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="2" data-src="images/THIRSTY_37.JPG">
-            <img src="images/THIRSTY_37.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="3" data-src="images/THIRSTY_63.JPG">
-            <img src="images/THIRSTY_63.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="4" data-src="images/THIRSTY_69.JPG">
-            <img src="images/THIRSTY_69.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="5" data-src="images/THIRSTY_75.JPG">
-            <img src="images/THIRSTY_75.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="6" data-src="images/THIRSTY_76.JPG">
-            <img src="images/THIRSTY_76.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="7" data-src="images/THIRSTY_77.JPG">
-            <img src="images/THIRSTY_77.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="8" data-src="images/THIRSTY_79.JPG">
-            <img src="images/THIRSTY_79.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="9" data-src="images/THIRSTY_94.JPG">
-            <img src="images/THIRSTY_94.JPG" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="10" data-src="images/opt_000a9740.jpg">
-            <img src="images/opt_000a9740.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="11" data-src="images/opt_000a9787.jpg">
-            <img src="images/opt_000a9787.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="12" data-src="images/opt_000a9721.jpg">
-            <img src="images/opt_000a9721.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="13" data-src="images/opt_000a9736.jpg">
-            <img src="images/opt_000a9736.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="14" data-src="images/opt_9r3a9656.jpg">
-            <img src="images/opt_9r3a9656.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="15" data-src="images/opt__dsc9531.jpg">
-            <img src="images/opt__dsc9531.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="16" data-src="images/opt_000a9733.jpg">
-            <img src="images/opt_000a9733.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="17" data-src="images/opt_9r3a9651.jpg">
-            <img src="images/opt_9r3a9651.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="18" data-src="images/opt_9r3a9650.jpg">
-            <img src="images/opt_9r3a9650.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="19" data-src="images/opt_000a9845.jpg">
-            <img src="images/opt_000a9845.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="20" data-src="images/opt_9r3a9667.jpg">
-            <img src="images/opt_9r3a9667.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="21" data-src="images/opt_000a9712.jpg">
-            <img src="images/opt_000a9712.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="22" data-src="images/opt_000a9856.jpg">
-            <img src="images/opt_000a9856.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="23" data-src="images/opt__dsc9499.jpg">
-            <img src="images/opt__dsc9499.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="24" data-src="images/opt__dsc9562.jpg">
-            <img src="images/opt__dsc9562.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="25" data-src="images/opt_000a9775.jpg">
-            <img src="images/opt_000a9775.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-          <div class="gallery-item" data-index="26" data-src="images/opt_000a9761.jpg">
-            <img src="images/opt_000a9761.jpg" alt="Thirsty Past Edition Photo" loading="lazy">
-            <div class="gallery-item-overlay">
-              <span class="gallery-zoom-icon">🔍</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Gallery Lightbox Modal -->
-    <dialog id="gallery-lightbox" class="lightbox-modal">
-      <div class="lightbox-content">
-        <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
-        <button class="lightbox-nav prev" aria-label="Previous image">&lsaquo;</button>
-        <div class="lightbox-image-container">
-          <img id="lightbox-img" src="" alt="Zoomed past edition photo">
-        </div>
-        <button class="lightbox-nav next" aria-label="Next image">&rsaquo;</button>
-        <div class="lightbox-counter"><span id="lightbox-current">1</span> / 10</div>
-      </div>
-    </dialog>
-
-
-    <!-- Venue Section with Map Layout -->
-
-
-
   </main>
 
   <!-- Footer -->
@@ -945,77 +803,64 @@
     <div class="footer-content">
       <p>&copy; 2026 THIRSTYCLUB999. ALL RIGHTS RESERVED.</p>
       <div class="socials">
-        <a href="https://www.instagram.com/thirstynalia?igsh=MWVhczg5OGdjYzdqaw==" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
-        <a href="https://x.com/thirstyclub999?s=21" target="_blank" rel="noopener noreferrer">X</a>
-        <a href="https://www.tiktok.com/@thirstylaboratory?_r=1&_t=ZS-972kqJbnlir" target="_blank" rel="noopener noreferrer">TIKTOK</a>
+        <a href="#">INSTAGRAM</a>
+        <a href="#">TWITTER</a>
+        <a href="#">DISCORD</a>
       </div>
     </div>
   </footer>
 
-
-
-  <!-- Success Dialog Modal -->
-  <dialog id="success-modal">
-    <div class="modal-content success-content">
-      <button class="close-modal" id="close-success-modal" aria-label="Close modal">&times;</button>
-      <div class="success-icon">✨</div>
-      <h3 id="success-modal-heading">YOU'RE IN!</h3>
-      <p class="success-title" id="success-modal-title">Welcome to Thirstyclub999</p>
-      <p class="success-desc" id="success-modal-desc">Your RSVP is confirmed and your Thirsty ID is generated. Your passport has been successfully downloaded.</p>
-      <div class="success-card">
-        <p class="card-id-label">YOUR ACCESS ID</p>
-        <h4 id="success-member-id">T999-XXXX</h4>
-        <p class="card-note">The passport grants you access to the event. Keep it safe.</p>
+  <!-- Auth Dialog Modal (Login / Signup) -->
+  <dialog id="ticket-modal">
+    <div class="modal-content">
+      <button class="close-modal" aria-label="Close modal">&times;</button>
+      
+      <!-- Tab Headers for Dialog -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="auth-login-tab-btn">LOGIN</button>
+        <button class="auth-tab-btn" id="auth-signup-tab-btn">SIGN UP</button>
       </div>
-      <button class="buy-button" id="success-modal-close-btn">ENTER CLUBHOUSE</button>
-    </div>
-  </dialog>
 
-  <!-- Processing Dialog Modal -->
-  <dialog id="processing-modal">
-    <div class="modal-content processing-content" style="text-align: center; align-items: center;">
-      <h3 style="font-family: 'Kyrilla', sans-serif; font-weight: 950; font-size: 1.8rem; color: var(--accent-color); margin-bottom: 0.5rem; letter-spacing: 0.05em; text-shadow: 0 0 12px var(--accent-glow);">PROCESSING Passport</h3>
-      <p class="processing-desc" style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1rem;">Signing your passport and generating your Thirsty ID...</p>
-      <div class="scanner-container">
-        <div class="scanner-line"></div>
-        <div class="scanner-passport-preview">
-          <svg viewBox="0 0 100 130" class="scanner-passport-svg">
-            <rect x="5" y="5" width="90" height="120" rx="8" fill="#5A060C" stroke="rgba(255, 62, 62, 0.3)" stroke-width="2"/>
-            <circle cx="50" cy="40" r="15" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
-            <circle cx="43" cy="48" r="12" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
-            <circle cx="57" cy="48" r="12" fill="none" stroke="rgba(255, 62, 62, 0.15)" stroke-width="1.5"/>
-            <line x1="5" y1="65" x2="95" y2="65" stroke="rgba(0,0,0,0.5)" stroke-width="3"/>
-            <rect x="15" y="75" width="25" height="35" rx="2" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(255, 62, 62, 0.2)"/>
-            <line x1="48" y1="80" x2="85" y2="80" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
-            <line x1="48" y1="90" x2="85" y2="90" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
-            <line x1="48" y1="100" x2="85" y2="100" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
-            <line x1="48" y1="110" x2="85" y2="110" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2"/>
-          </svg>
+      <!-- Login Form -->
+      <form id="login-form">
+        <p class="modal-desc">Login with your ThirstyID or Email.</p>
+        <div class="input-group">
+          <label for="login-id">ThirstyID or Email</label>
+          <input type="text" id="login-id" placeholder="T999-XXXX or email..." required>
         </div>
-      </div>
-      <div class="processing-status" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
-        <span class="status-dot pulsed" style="width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; display: inline-block;"></span>
-        <span id="processing-status-text" style="font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.05em;">VERIFYING CREDENTIALS...</span>
-      </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="enter password..." required>
+        </div>
+        <div class="auth-toggle-link">
+          Don't have an ID? <span id="switch-to-signup">Sign up here</span>
+        </div>
+        <button type="submit" class="submit-ticket-btn">Login</button>
+      </form>
+
+      <!-- Signup Form (Hidden by default) -->
+      <form id="signup-form" style="display: none;">
+        <p class="modal-desc">Create your profile to get a ThirstyID and RSVP.</p>
+        <div class="input-group">
+          <label for="signup-username">Username</label>
+          <input type="text" id="signup-username" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" placeholder="email..." required>
+        </div>
+        <div class="input-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="enter password..." required>
+        </div>
+        <div class="auth-toggle-link">
+          Already have an ID? <span id="switch-to-login">Login here</span>
+        </div>
+        <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
+      </form>
     </div>
   </dialog>
 
-  <!-- Admin Passport View Dialog -->
-  <dialog id="admin-passport-modal" style="background: #0a0a0a; border: 1px solid var(--glass-border); padding: 2.5rem; max-width: 680px; width: 90%;">
-    <div class="modal-content" style="align-items: center; justify-content: center; position: relative;">
-      <button class="close-modal" id="close-admin-passport-modal" aria-label="Close modal">&times;</button>
-      <h3 style="font-family: 'Kyrilla', sans-serif; font-weight: 950; font-size: 1.8rem; color: var(--accent-color); margin-bottom: 1.5rem; text-align: center; letter-spacing: 0.15em;">MEMBER PASSPORT</h3>
-      <div class="canvas-wrapper vertical-passport-wrapper" style="margin-bottom: 1.5rem; width: 100%; max-width: 450px;">
-        <div class="passport-glow-border"></div>
-        <canvas id="admin-passport-canvas" width="600" height="800" style="width: 100%; height: auto; border-radius: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);"></canvas>
-      </div>
-      <div style="display: flex; gap: 1rem; width: 100%; max-width: 450px;">
-        <button class="buy-button" id="admin-download-passport-btn" style="flex: 1;">DOWNLOAD</button>
-        <button class="buy-button" id="admin-modal-checkin-btn" style="flex: 1; background: #fff; color: var(--accent-color);">CHECK IN</button>
-      </div>
-    </div>
-  </dialog>
-
-  <script src="main.js?v=20260610.1601"></script>
+  <script src="main.js"></script>
 </body>
 </html>
