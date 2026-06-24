@@ -400,17 +400,35 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         let email = loginId.toLowerCase();
 
-        // Check if input is a ThirstyID (T999-XXXX)
-        if (loginId.toUpperCase().startsWith("T999-")) {
-          // Resolve ThirstyID to Email
-          const { data: profile, error: profileErr } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('thirstyclub_id', loginId.toUpperCase())
-            .single();
+        // Resolve identifier if it's not a direct email address
+        if (!loginId.includes("@")) {
+          let profile = null;
+          let profileErr = null;
 
-          if (profileErr || !profile || !profile.email) {
-            throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
+          if (loginId.toUpperCase().startsWith("T999-")) {
+            // Resolve ThirstyID to Email
+            const { data, error } = await supabase
+              .from('profiles')
+              .select('email')
+              .eq('thirstyclub_id', loginId.toUpperCase())
+              .single();
+            profile = data;
+            profileErr = error;
+            if (profileErr || !profile || !profile.email) {
+              throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
+            }
+          } else {
+            // Resolve Username to Email
+            const { data, error } = await supabase
+              .from('profiles')
+              .select('email')
+              .ilike('username', loginId)
+              .single();
+            profile = data;
+            profileErr = error;
+            if (profileErr || !profile || !profile.email) {
+              throw new Error("Username or ThirstyID not found. Make sure it is spelled correctly.");
+            }
           }
           email = profile.email;
         }
