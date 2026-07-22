@@ -1,17 +1,10 @@
 /* --- Fonts Load --- */
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
-
 @font-face {
-  font-family: 'Kyrilla';
-  src: url('fonts/KyrillaSansSerif-Bold.ttf') format('truetype');
-  font-weight: 700;
+  font-family: 'Retron2000';
+  src: url('Retron2000.ttf') format('truetype');
+  font-weight: 100 900;
   font-style: normal;
-}
-@font-face {
-  font-family: 'Kyrilla';
-  src: url('fonts/KyrillaSansSerif-Black.ttf') format('truetype');
-  font-weight: 900;
-  font-style: normal;
+  font-display: swap;
 }
 
 /* --- CSS Variables & Reset --- */
@@ -75,7 +68,7 @@ html {
   scroll-behavior: smooth;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
+  
   font-size: 16px;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
@@ -126,7 +119,7 @@ header {
 }
 
 header .logo {
-  font-family: 'Kyrilla', sans-serif;
+  
   font-weight: 900;
   font-size: 1.8rem;
   letter-spacing: 0.1em;
@@ -222,7 +215,7 @@ header nav .nav-btn:hover {
 }
 
 .hero-content h1 {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 8vw;
   line-height: 1.1;
@@ -383,7 +376,7 @@ header nav .nav-btn:hover {
 }
 
 .section-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 3.5rem;
   letter-spacing: 0.05em;
@@ -427,7 +420,7 @@ header nav .nav-btn:hover {
 }
 
 .marquee span {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 4rem;
   padding: 0 2rem;
@@ -465,7 +458,7 @@ header nav .nav-btn:hover {
 }
 
 .static-artist {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 1.6rem;
   letter-spacing: 0.05em;
@@ -505,7 +498,7 @@ header nav .nav-btn:hover {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--text-color);
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.1em;
@@ -565,7 +558,7 @@ header nav .nav-btn:hover {
 }
 
 .venue-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 4rem;
   letter-spacing: 0.05em;
@@ -600,7 +593,7 @@ header nav .nav-btn:hover {
   justify-content: flex-start;
   align-items: center;
   gap: 1.5rem;
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 2.2rem;
   letter-spacing: 0.05em;
@@ -733,7 +726,7 @@ header nav .nav-btn:hover {
   background: #000;
   border: 1px solid var(--accent-color);
   padding: 0.3rem 0.6rem;
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 700;
   font-size: 0.65rem;
   letter-spacing: 0.1em;
@@ -750,7 +743,7 @@ header nav .nav-btn:hover {
   border: 1px solid var(--glass-border);
   padding: 0.5rem 0.8rem;
   border-radius: 2px;
-  font-family: monospace;
+  
   font-size: 0.75rem;
   display: flex;
   flex-direction: column;
@@ -848,7 +841,7 @@ header nav .nav-btn:hover {
 }
 
 .ticket-header h4 {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 1.6rem;
   letter-spacing: 0.05em;
@@ -1045,7 +1038,7 @@ dialog::backdrop {
   border-bottom: 2px solid transparent;
   color: var(--text-dim);
   padding: 0.8rem 0;
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 950;
   font-size: 1.2rem;
   letter-spacing: 0.05em;
@@ -1106,7 +1099,7 @@ dialog::backdrop {
   padding: 0.9rem 1rem;
   color: var(--text-color);
   border-radius: 2px;
-  font-family: inherit;
+  
   font-size: 0.95rem;
   outline: none;
   transition: var(--transition-smooth);
@@ -1178,7 +1171,7 @@ header .logout-btn {
 }
 
 .dash-logo {
-  font-family: 'Kyrilla', sans-serif;
+  
   font-weight: 950;
   font-size: 1.4rem;
   letter-spacing: 0.1em;
@@ -1206,7 +1199,7 @@ header .logout-btn {
   border-bottom: 2px solid transparent;
   color: var(--text-dim);
   padding: 0.8rem 0;
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 700;
   font-size: 1.1rem;
   letter-spacing: 0.05em;
@@ -1272,7 +1265,7 @@ header .logout-btn {
 .ticket-stub-left::after { bottom: -9px; }
 
 .ticket-logo {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 950;
   font-size: 2.2rem;
   letter-spacing: 0.15em;
@@ -1323,7 +1316,7 @@ header .logout-btn {
 }
 
 .barcode-number {
-  font-family: monospace;
+  
   font-size: 0.7rem;
   color: var(--text-dim);
   letter-spacing: 0.1em;
@@ -1335,7 +1328,7 @@ header .logout-btn {
 }
 
 .tab-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 950;
   font-size: 1.3rem;
   letter-spacing: 0.1em;
@@ -1379,14 +1372,14 @@ header .logout-btn {
 }
 
 .leaderboard-item .rank {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 800;
   color: var(--text-dim);
   font-size: 0.85rem;
 }
 
 .leaderboard-item .name {
-  font-family: 'Satoshi', sans-serif;
+  
   color: var(--text-color);
   font-weight: 700;
   margin-left: 0.75rem;
@@ -1396,7 +1389,7 @@ header .logout-btn {
 }
 
 .leaderboard-item .points {
-  font-family: 'Satoshi', sans-serif;
+  
   text-align: right;
   font-weight: 800;
   color: var(--accent-color);
@@ -1526,7 +1519,7 @@ header .logout-btn {
 }
 
 .podium-name {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.03em;
@@ -1549,7 +1542,7 @@ header .logout-btn {
 }
 
 .podium-points {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.65rem;
   color: var(--accent-color);
   font-weight: 850;
@@ -1558,7 +1551,7 @@ header .logout-btn {
 }
 
 .podium-rank-label {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.55rem;
   color: var(--text-dim);
   font-weight: 700;
@@ -1998,7 +1991,7 @@ header .logout-btn {
   transform: scale(1);
 }
 
-/* Lightbox Modal */
+/* Lightbox Modal (legacy dialog-based — overridden below for div-based impl) */
 .lightbox-modal {
   border: none;
   background: transparent;
@@ -2011,6 +2004,7 @@ header .logout-btn {
   justify-content: center;
   align-items: center;
   outline: none;
+  pointer-events: none;
 }
 
 .lightbox-modal[open] {
@@ -2112,7 +2106,7 @@ header .logout-btn {
   bottom: 3rem;
   left: 50%;
   transform: translateX(-50%);
-  font-family: monospace;
+  
   font-size: 0.95rem;
   color: var(--text-dim);
   background: rgba(0, 0, 0, 0.6);
@@ -2189,7 +2183,7 @@ header .logout-btn {
 }
 
 .control-header h3 {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 950;
   font-size: 1.5rem;
   letter-spacing: 0.05em;
@@ -2351,7 +2345,7 @@ header .logout-btn {
   display: flex;
   flex-direction: column;
   position: relative;
-  font-family: 'Satoshi', system-ui, -apple-system, sans-serif;
+  
   z-index: 10;
 }
 
@@ -2376,7 +2370,7 @@ header .logout-btn {
 }
 
 .app-header-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 1.15rem;
   letter-spacing: 0.08em;
@@ -2501,7 +2495,7 @@ header .logout-btn {
 
 /* View Header Details */
 .view-intro-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 900;
   font-size: 1.3rem;
   letter-spacing: 0.08em;
@@ -2555,7 +2549,7 @@ header .logout-btn {
 }
 
 .welcome-banner-title {
-  font-family: 'Kyrilla', 'Satoshi', sans-serif;
+  
   font-size: 1.35rem;
   font-weight: 900;
   line-height: 1.2;
@@ -2657,7 +2651,7 @@ header .logout-btn {
 }
 
 .banner-username {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.15rem;
   color: var(--text-color);
   margin: 2px 0 6px 0;
@@ -2711,7 +2705,7 @@ header .logout-btn {
 }
 
 .countdown-clock {
-  font-family: 'Satoshi', monospace;
+  
   font-size: 1.8rem;
   color: var(--text-color);
   letter-spacing: 0.04em;
@@ -2982,7 +2976,7 @@ header .logout-btn {
 }
 
 .profile-user-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.3rem;
   color: var(--text-color);
   letter-spacing: 0.02em;
@@ -3007,7 +3001,7 @@ header .logout-btn {
 }
 
 .stat-val {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.1rem;
   color: var(--text-color);
 }
@@ -3037,7 +3031,7 @@ header .logout-btn {
 }
 
 .connected-apps-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.85rem;
   font-weight: 900;
   margin: 0 0 0.5rem 0;
@@ -3111,7 +3105,7 @@ header .logout-btn {
 }
 
 .referral-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.6rem;
   font-weight: 900;
   margin: 0 0 0.2rem 0;
@@ -3170,7 +3164,7 @@ header .logout-btn {
   border: none;
   background: transparent;
   color: var(--input-text);
-  font-family: inherit;
+  
   font-size: 0.75rem;
   font-weight: 600;
   flex: 1;
@@ -3328,7 +3322,7 @@ header .logout-btn {
 }
 
 .product-price {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.8rem;
   color: var(--accent-color);
   margin-top: auto;
@@ -3345,7 +3339,10 @@ header .logout-btn {
 
 .community-subtabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   width: 100%;
@@ -3358,7 +3355,7 @@ header .logout-btn {
   border-radius: 10px;
   color: #888888;
   padding: 0.65rem 1.4rem;
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -3403,7 +3400,7 @@ header .logout-btn {
 }
 
 .crate-date-label {
-  font-family: 'Satoshi', monospace;
+  
   font-size: 1.6rem;
   color: var(--text-color);
   letter-spacing: 0.05em;
@@ -3663,7 +3660,7 @@ header .logout-btn {
   padding: 0.45rem 0.9rem;
   color: #ffffff;
   font-size: 0.75rem;
-  font-family: inherit;
+  
   outline: none;
   transition: var(--transition-smooth);
 }
@@ -3784,7 +3781,7 @@ header .logout-btn {
 }
 
 .wallet-balance-val {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 2.2rem;
   color: var(--text-color);
 }
@@ -3831,7 +3828,7 @@ header .logout-btn {
 }
 
 .ev-day {
-  font-family: 'Satoshi', monospace;
+  
   font-size: 1.15rem;
   color: var(--accent-color);
   line-height: 1;
@@ -3850,7 +3847,7 @@ header .logout-btn {
 }
 
 .ev-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.85rem;
   color: var(--text-color);
   margin: 1px 0 3px 0;
@@ -3935,7 +3932,7 @@ header .logout-btn {
 }
 
 .scan-digit {
-  font-family: 'Satoshi', monospace;
+  
   font-size: 2.2rem;
   color: rgba(255, 62, 62, 0.15);
   letter-spacing: 0.02em;
@@ -4229,7 +4226,7 @@ header .logout-btn {
 }
 
 .sidebar-logo {
-  font-family: 'Kyrilla', sans-serif;
+  
   font-weight: 950;
   font-size: 1.2rem;
   letter-spacing: 0.05em;
@@ -4289,7 +4286,7 @@ header .logout-btn {
   }
   .mobile-app-container {
     flex-direction: column !important;
-    height: 100vh;
+    height: 100dvh;
     border-radius: 0;
     margin: 0;
     max-width: 100vw;
@@ -4345,7 +4342,7 @@ header .logout-btn {
 }
 
 .admin-dashboard-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.8rem;
   font-weight: 950;
   color: var(--admin-text);
@@ -4410,7 +4407,7 @@ header .logout-btn {
 }
 
 .admin-stat-card .stat-value {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 2.5rem;
   font-weight: 900;
   color: var(--accent-color) !important;
@@ -4453,7 +4450,7 @@ header .logout-btn {
 }
 
 .admin-section-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--admin-text);
@@ -4504,7 +4501,7 @@ header .logout-btn {
   border: 1px solid var(--admin-border);
   color: var(--admin-text);
   border-radius: 6px;
-  font-family: inherit;
+  
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -4546,7 +4543,7 @@ header .logout-btn {
 .admin-users-table th {
   background: #0f0f0f;
   color: var(--admin-text-dim);
-  font-family: inherit;
+  
   font-weight: 700;
   letter-spacing: 0.05em;
   font-size: 0.75rem;
@@ -4566,7 +4563,7 @@ header .logout-btn {
 }
 
 .admin-users-table td:first-child {
-  font-family: monospace;
+  
   font-size: 0.85rem;
   color: var(--admin-text-dim);
   letter-spacing: 0.02em;
@@ -4614,7 +4611,7 @@ header .logout-btn {
   border-radius: 4px;
   padding: 0.1rem 0.4rem;
   font-size: 0.75rem;
-  font-family: monospace;
+  
   margin-right: 0.25rem;
 }
 
@@ -4643,7 +4640,7 @@ header .logout-btn {
   border: 1px solid var(--admin-border);
   color: var(--admin-text);
   border-radius: 6px;
-  font-family: inherit;
+  
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -4675,7 +4672,7 @@ header .logout-btn {
 .admin-action-btn {
   padding: 0.75rem 1.8rem;
   border-radius: 6px;
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -4767,7 +4764,7 @@ header .logout-btn {
   border: 1px solid var(--admin-border);
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
-  font-family: inherit;
+  
   font-size: 0.85rem;
   font-weight: 600;
   outline: none;
@@ -5125,7 +5122,7 @@ header .logout-btn {
 }
 
 .cart-item-price {
-  font-family: 'Satoshi', monospace;
+  
   font-weight: 700;
   color: var(--accent-color);
   font-size: 0.85rem;
@@ -5229,7 +5226,7 @@ header .logout-btn {
 }
 
 .product-details-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.75rem;
   font-weight: 900;
   color: #fff;
@@ -5239,7 +5236,7 @@ header .logout-btn {
 }
 
 .product-details-price {
-  font-family: 'Satoshi', monospace;
+  
   font-size: 1.5rem;
   font-weight: 900;
   color: var(--accent-color);
@@ -5299,7 +5296,7 @@ header .logout-btn {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #fff;
-  font-family: inherit;
+  
   padding: 0.6rem;
   width: 60px;
   text-align: center;
@@ -5439,7 +5436,7 @@ html.user-logged-in #user-dashboard-card {
 
 /* Typography styles */
 .game-select-card .game-card-title {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 1.7rem;
   line-height: 1.1;
   margin: 0 0 0.5rem 0;
@@ -5498,7 +5495,7 @@ html.user-logged-in #user-dashboard-card {
 
 /* Description styles */
 .game-select-card .game-card-desc {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.78rem;
   line-height: 1.45;
   margin: 0 0 1rem 0;
@@ -5554,7 +5551,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .game-select-card .game-card-cta .cta-text {
-  font-family: 'Satoshi', sans-serif;
+  
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.12em;
@@ -5671,7 +5668,7 @@ html.user-logged-in #user-dashboard-card {
   padding: 1rem;
   color: #fff;
   text-align: left;
-  font-family: inherit;
+  
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -5703,11 +5700,23 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .hunt-card {
-  background: rgba(15, 15, 15, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 14px;
-  padding: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   transition: var(--transition-smooth);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.hunt-card:hover {
+  border-color: rgba(255, 62, 62, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 62, 62, 0.08);
 }
 
 .hunt-card.unlocked {
@@ -5715,24 +5724,31 @@ html.user-logged-in #user-dashboard-card {
   background: rgba(46, 213, 115, 0.02);
 }
 
+.hunt-card.unlocked:hover {
+  border-color: #2ed573;
+  box-shadow: 0 8px 30px rgba(46, 213, 115, 0.08);
+}
+
 .hunt-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
 }
 
 .hunt-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--card-text);
+  letter-spacing: 0.03em;
+  
+  text-transform: uppercase;
 }
 
 .hunt-badge {
   font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 20px;
+  font-weight: 800;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -5740,20 +5756,22 @@ html.user-logged-in #user-dashboard-card {
 .hunt-badge.locked {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .hunt-badge.unlocked {
-  background: rgba(46, 213, 115, 0.15);
+  background: rgba(46, 213, 115, 0.12);
   color: #2ed573;
-  box-shadow: 0 0 8px rgba(46, 213, 115, 0.3);
+  border: 1px solid rgba(46, 213, 115, 0.2);
 }
 
 .hunt-clue-box {
-  background: rgba(255, 255, 255, 0.02);
-  border-left: 2px solid var(--accent-color);
-  padding: 0.75rem;
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 8px;
+  padding: 0.85rem;
+  margin-bottom: 0.5rem;
 }
 
 .hunt-card.unlocked .hunt-clue-box {
@@ -5761,39 +5779,54 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .hunt-clue-title {
-  font-size: 0.7rem;
-  color: var(--text-dim);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent-color);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.hunt-card.unlocked .hunt-clue-title {
+  color: #2ed573;
 }
 
 .hunt-clue-text {
-  font-size: 0.8rem;
-  line-height: 1.4;
-  color: #ddd;
+  font-size: 0.78rem;
+  color: var(--card-text-dim);
+  line-height: 1.45;
+}
+
+.hunt-form {
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 .hunt-input-row {
   display: flex;
   gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .hunt-input {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex: 2;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
-  padding: 0.6rem 0.8rem;
-  color: #fff;
-  font-size: 0.75rem;
-  font-family: inherit;
+  color: var(--input-text);
+  padding: 0.65rem 0.85rem;
+  
+  font-size: 0.8rem;
   outline: none;
   transition: var(--transition-smooth);
+  box-sizing: border-box;
+  min-height: 38px;
 }
 
 .hunt-input:focus {
-  border-color: var(--accent-color);
+  border-color: rgba(255, 62, 62, 0.45);
+  box-shadow: 0 0 8px rgba(255, 62, 62, 0.15);
 }
 
 .hunt-input:disabled {
@@ -5802,25 +5835,38 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .hunt-submit-btn {
+  flex: 1;
   background: var(--accent-color);
-  border: none;
+  border: 1px solid transparent;
   color: #fff;
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 1rem;
   border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 800;
   cursor: pointer;
+  text-align: center;
   transition: var(--transition-smooth);
+  
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hunt-submit-btn:hover:not(:disabled) {
   background: #ff5555;
-  box-shadow: 0 0 10px rgba(255, 62, 62, 0.4);
+  box-shadow: 0 0 14px rgba(255, 62, 62, 0.4);
 }
 
 .hunt-submit-btn:disabled {
-  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-dim) !important;
   cursor: not-allowed;
+  box-shadow: none !important;
 }
 
 /* --- Responsive Games Grid --- */
@@ -5919,7 +5965,7 @@ html.user-logged-in #user-dashboard-card {
 .game-leaderboard-item .score {
   font-weight: 800;
   color: var(--accent-color);
-  font-family: monospace;
+  
 }
 
 /* --- Speed Tap Challenge --- */
@@ -5996,18 +6042,23 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .raid-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   transition: var(--transition-smooth);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
 }
 
 .raid-card:hover {
-  border-color: rgba(255, 62, 62, 0.2);
+  border-color: rgba(255, 62, 62, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 62, 62, 0.08);
 }
 
 .raid-header {
@@ -6017,69 +6068,89 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .raid-title {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.05em;
+  color: var(--card-text);
+  letter-spacing: 0.03em;
+  
+  text-transform: uppercase;
 }
 
 .raid-points {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 900;
   color: #2ed573;
-  font-weight: 700;
+  background: rgba(46, 213, 115, 0.12);
+  border: 1px solid rgba(46, 213, 115, 0.25);
+  padding: 0.2rem 0.6rem;
+  border-radius: 40px;
+  letter-spacing: 0.05em;
+  display: inline-block;
 }
 
 .raid-body {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  line-height: 1.4;
+  font-size: 0.8rem;
+  color: var(--card-text-dim);
+  line-height: 1.5;
 }
 
 .raid-actions {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 .raid-btn {
   flex: 1;
-  padding: 0.5rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
   cursor: pointer;
   text-align: center;
   transition: var(--transition-smooth);
+  
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
 }
 
 .raid-btn.action {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
   text-decoration: none;
-  display: inline-block;
 }
 
 .raid-btn.action:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 62, 62, 0.1);
+  border-color: rgba(255, 62, 62, 0.3);
+  color: #fff;
 }
 
 .raid-btn.claim {
   background: var(--accent-color);
-  border: none;
+  border: 1px solid transparent;
   color: #fff;
 }
 
 .raid-btn.claim:hover:not(:disabled) {
   background: #ff5555;
-  box-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
+  box-shadow: 0 0 14px rgba(255, 62, 62, 0.4);
 }
 
 .raid-btn.claim:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-dim) !important;
   cursor: not-allowed;
+  box-shadow: none !important;
 }
 
 /* --- Bounties --- */
@@ -6091,76 +6162,217 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .bounty-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   transition: var(--transition-smooth);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .bounty-card:hover {
-  border-color: rgba(255, 62, 62, 0.2);
+  border-color: rgba(255, 62, 62, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 62, 62, 0.08);
 }
 
 .bounty-details {
   flex: 1;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .bounty-title {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
-  margin-bottom: 0.25rem;
-  letter-spacing: 0.05em;
+  color: var(--card-text);
+  letter-spacing: 0.03em;
+  
+  text-transform: uppercase;
 }
 
 .bounty-desc {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  line-height: 1.3;
+  font-size: 0.8rem;
+  color: var(--card-text-dim);
+  line-height: 1.45;
 }
 
 .bounty-reward {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 900;
   color: #2ed573;
-  font-weight: 700;
-  margin-top: 0.35rem;
+  background: rgba(46, 213, 115, 0.12);
+  border: 1px solid rgba(46, 213, 115, 0.25);
+  padding: 0.2rem 0.6rem;
+  border-radius: 40px;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+  margin-top: 0.25rem;
 }
 
 .bounty-claim-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
   cursor: pointer;
   transition: var(--transition-smooth);
   background: var(--accent-color);
-  border: none;
+  border: 1px solid transparent;
   color: #fff;
   white-space: nowrap;
+  
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bounty-claim-btn:hover:not(:disabled) {
   background: #ff5555;
-  box-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
+  box-shadow: 0 0 14px rgba(255, 62, 62, 0.4);
 }
 
 .bounty-claim-btn:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-dim) !important;
   cursor: not-allowed;
+  box-shadow: none !important;
 }
 
-/* Global uppercase override for inline elements using Kyrilla */
-[style*="font-family: 'Kyrilla'"], 
-[style*="font-family:'Kyrilla'"] {
-  text-transform: uppercase !important;
+@media (max-width: 480px) {
+  .bounty-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .bounty-claim-btn {
+    width: 100%;
+  }
 }
+
+/* --- Feed Polls Styling --- */
+.post-poll-container {
+  margin: 0.8rem 0;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.poll-question {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  
+}
+
+.poll-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.poll-option-btn {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.65rem 0.85rem;
+  
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.poll-option-btn:hover {
+  background: rgba(255, 62, 62, 0.1);
+  border-color: rgba(255, 62, 62, 0.3);
+}
+
+.poll-option-result {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.85rem;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.poll-option-result.voted-option {
+  border-color: rgba(255, 62, 62, 0.4);
+  box-shadow: 0 0 8px rgba(255, 62, 62, 0.15);
+}
+
+.poll-option-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 1;
+  width: 0;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.poll-option-result.voted-option .poll-option-fill {
+  background: rgba(255, 62, 62, 0.15);
+}
+
+.poll-option-label {
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+}
+
+.poll-option-meta {
+  position: relative;
+  z-index: 2;
+  font-weight: 700;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.poll-option-result.voted-option .poll-option-meta {
+  color: var(--accent-color);
+}
+
+.poll-total-votes {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.6rem;
+  text-align: right;
+}
+
+
 
 /* --- Community Ad Carousel --- */
 .community-ad-carousel .carousel-slide {
@@ -6181,6 +6393,12 @@ html.user-logged-in #user-dashboard-card {
   z-index: 2;
 }
 
+.community-ad-carousel {
+  background: var(--ad-bg, rgba(0,0,0,0.95)) !important;
+  border: 1px solid var(--ad-border, rgba(255, 62, 62, 0.15)) !important;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
 .community-ad-carousel .carousel-dots {
   position: absolute;
   bottom: 0.5rem !important;
@@ -6195,7 +6413,7 @@ html.user-logged-in #user-dashboard-card {
   width: 6px !important;
   height: 6px !important;
   border-radius: 50% !important;
-  background-color: rgba(255, 255, 255, 0.3) !important;
+  background-color: var(--ad-dot, rgba(255, 255, 255, 0.3)) !important;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -6214,7 +6432,7 @@ html.user-logged-in #user-dashboard-card {
   left: 0;
   right: 0;
   bottom: 0;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
   pointer-events: none;
   z-index: 3;
 }
@@ -6226,9 +6444,22 @@ html.user-logged-in #user-dashboard-card {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: var(--ad-overlay, linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%)) !important;
   pointer-events: none;
   z-index: 1;
+  transition: background 0.4s ease;
+}
+
+.community-ad-carousel .carousel-slide h4 {
+  color: var(--ad-text, #ffffff) !important;
+  text-shadow: var(--ad-shadow, 0 2px 4px rgba(0,0,0,0.8)) !important;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
+}
+
+.community-ad-carousel .carousel-slide p {
+  color: var(--ad-sub, #eeeeee) !important;
+  text-shadow: var(--ad-shadow, 0 1px 2px rgba(0,0,0,0.8)) !important;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
 }
 
 .community-ad-carousel .carousel-slide > div {
@@ -6268,7 +6499,7 @@ html.user-logged-in #user-dashboard-card {
   position: relative;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   color: #fff;
-  font-family: "Satoshi", "Inter", sans-serif;
+  
   text-align: center;
 }
 
@@ -6506,7 +6737,7 @@ html.user-logged-in #user-dashboard-card {
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-weight: 800;
-  font-family: monospace;
+  
 }
 
 .ad-player-screen {
@@ -6617,7 +6848,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .success-title {
-  font-family: "Satoshi", sans-serif;
+  
   font-size: 1.2rem;
   font-weight: 900;
   color: #ffffff;
@@ -6683,7 +6914,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .badge-title {
-  font-family: "Satoshi", sans-serif !important;
+  
   font-weight: 800;
   font-size: 0.7rem;
   color: #ffffff;
@@ -6693,7 +6924,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .badge-desc {
-  font-family: "Satoshi", sans-serif !important;
+  
   font-size: 0.55rem;
   color: var(--text-dim);
   margin: 0;
@@ -6764,6 +6995,8 @@ html.user-logged-in #user-dashboard-card {
 #page-loader.loaded {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+  display: none;
 }
 
 .loader-content {
@@ -6784,7 +7017,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .loader-text {
-  font-family: 'Satoshi', sans-serif;
+  
   font-size: 0.85rem;
   font-weight: 900;
   color: #ffffff;
@@ -7012,7 +7245,7 @@ html.user-logged-in #user-dashboard-card {
 .lightbox-counter {
   position: absolute;
   bottom: 2rem;
-  font-family: 'Satoshi', sans-serif;
+  
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.85rem;
   font-weight: 700;
@@ -7040,4 +7273,407 @@ html.user-logged-in #user-dashboard-card {
 }
 
 
+/* --- Gamified Games Lobby --- */
+.lobby-streak-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  min-width: 60px;
+}
 
+.lobby-streak-avatar-frame {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--accent-color), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lobby-streak-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lobby-streak-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-color);
+  max-width: 64px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lobby-streak-val {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Recent items list */
+.lobby-recent-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.lobby-recent-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-color);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lobby-recent-content {
+  flex: 1;
+}
+
+.lobby-recent-msg {
+  font-size: 0.78rem;
+  color: var(--text-color);
+  line-height: 1.4;
+  margin-bottom: 0.35rem;
+}
+
+.lobby-recent-msg strong {
+  font-weight: 800;
+}
+
+.lobby-recent-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+.lobby-recent-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  transition: var(--transition-smooth);
+}
+
+.lobby-recent-action-btn:hover {
+  color: var(--accent-color);
+}
+
+/* ==========================================================================
+   14. Global Mobile Responsiveness Overrides
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Landing Header */
+  header {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  header nav {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* App Header Navbar Fix (Prevents Cut-off) */
+  .app-header {
+    padding: 0 0.5rem;
+    gap: 0.25rem;
+  }
+  .app-header-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    flex: 1;
+  }
+  .header-icon-btn, .header-back-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+  }
+  .header-right-actions {
+    gap: 0.15rem;
+  }
+  
+  /* Sidebar Nav for tablets/small screens */
+  .app-sidebar-nav {
+    width: 200px;
+  }
+  
+  /* Modals */
+  .modal-content, .auth-card {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 1rem auto;
+    padding: 1.5rem !important;
+  }
+  
+  /* Cart Sidebar */
+  .cart-sidebar {
+    width: 100%;
+    right: -100%;
+  }
+  
+  /* Components */
+  .games-hub-grid {
+    grid-template-columns: 1fr;
+  }
+  .lobby-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  .lobby-header > div {
+    text-align: center !important;
+    justify-content: center;
+  }
+  
+  /* Ensure main viewport doesn't overflow horizontally */
+  .app-views-viewport {
+    padding: 1rem 0.75rem;
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header-title {
+    font-size: 0.75rem;
+    max-width: 110px;
+  }
+  
+  /* Components fixes */
+  .raid-card, .bounty-card, .hunt-card {
+    padding: 1rem;
+  }
+  
+  .game-card-title {
+    font-size: 1.1rem;
+  }
+  
+  .lobby-streak-item {
+    min-width: 50px;
+  }
+}
+
+/* --- Extra PWA and Cutoff Fixes --- */
+.app-header, .mobile-app-container {
+  padding-top: env(safe-area-inset-top);
+}
+.app-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 8vw !important;
+    word-break: break-word;
+    max-width: 95%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 10vw !important;
+    word-break: break-word;
+  }
+  .app-header {
+    height: calc(70px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+
+body, input, button, textarea, select, .mobile-app-container, .app-header-title {
+  font-family: 'Retron2000', monospace !important;
+  text-transform: uppercase !important;
+}
+
+/* Exclude password, email, and username inputs from uppercase — users need to see exact case */
+input[type="password"],
+input[type="email"],
+input[id*="password"],
+input[id*="email"],
+input[id*="username"],
+input[id*="login-id"] {
+  text-transform: none !important;
+}
+
+/* Exclude icon fonts from the override */
+i[class^="ph"], i[class*=" ph"] {
+  font-family: "Phosphor" !important;
+  text-transform: none !important;
+}
+
+/* --- Retron 2000 Targeted Fixes --- */
+/* Only fix elements that actually overflow with the chunky pixel font */
+.app-header-title {
+  font-size: 0.95rem !important;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glitch-text {
+  word-break: normal !important;
+  white-space: nowrap !important;
+}
+
+.hero-content h1 {
+  white-space: nowrap !important;
+  word-break: normal !important;
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: clamp(2rem, 7.1vw, 6rem) !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: clamp(1.6rem, 6.8vw, 4rem) !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Dashboard nav tabs - slightly smaller text for the chunky font */
+.app-bottom-nav .nav-tab-item span {
+  font-size: 0.6rem !important;
+}
+
+/* Community subtab buttons */
+.community-subtabs .subtab-btn {
+  font-size: 0.7rem !important;
+  padding: 0.4rem 0.6rem !important;
+  letter-spacing: 0 !important;
+}
+
+/* Welcome banner title */
+.welcome-banner-title {
+  font-size: 1.1rem !important;
+  line-height: 1.3;
+}
+
+.welcome-banner-highlight {
+  font-size: 1.4rem !important;
+}
+
+/* Cards and stat text */
+.stat-value {
+  font-size: 1.8rem !important;
+}
+
+/* Sidebar logo */
+.sidebar-logo {
+  font-size: 1rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Landing page header - keep it tighter on mobile */
+@media (max-width: 480px) {
+  header .logo {
+    font-size: 1rem !important;
+    letter-spacing: 0.02em;
+  }
+  header nav a {
+    font-size: 0.65rem !important;
+  }
+  header nav .nav-btn {
+    font-size: 0.65rem !important;
+    padding: 0.35rem 0.6rem !important;
+  }
+}
+
+/* =========================================
+   Universal Mobile Responsiveness Fixes
+   ========================================= */
+
+/* 1. Ensure inputs are always clickable and selectable */
+input, textarea, select {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-appearance: none;
+  font-size: 16px !important; /* Prevents iOS Safari zoom on focus */
+  position: relative !important;
+  z-index: 9999 !important;
+  cursor: text !important;
+}
+
+/* 1b. Fix iOS Safari dialog tap bug */
+dialog, .modal-content {
+  pointer-events: auto !important;
+}
+/* 2. Prevent table/list overflows */
+.admin-users-table-wrapper, 
+.leaderboard-container, 
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* 3. Mobile specific layout adjustments */
+@media (max-width: 768px) {
+  /* Fluid typography for major headings */
+  h1, h2, h3, .app-header-title {
+    font-size: clamp(1.2rem, 5vw, 2rem) !important;
+  }
+  
+  /* Touch target sizes for links and buttons */
+  a, button, .nav-btn, .table-action-btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Use dvh for mobile containers to prevent URL bar issues */
+  .mobile-app-container, .auth-modal-content {
+    min-height: 100dvh;
+  }
+  
+  /* Reduce excessive padding */
+  .admin-dashboard-container {
+    padding: 1rem !important;
+  }
+  
+  /* Ensure widgets wrap on small screens */
+  .dashboard-widgets, .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* Hide cursor glow on mobile/touch devices entirely */
+@media (hover: none) and (pointer: coarse) {
+  #cursor-glow {
+    display: none !important;
+  }
+}

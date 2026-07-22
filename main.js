@@ -1,5 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
   
+  // Register PWA Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker registered successfully:', reg.scope))
+      .catch(err => console.error('Service Worker registration failed:', err));
+  }
+  // --- Global Web Haptic Touch Simulator ---
+  const triggerHaptic = (duration = 12) => {
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate(duration);
+      } catch (e) {}
+    }
+  };
+
+  // Bind to any tap/click on interactive elements immediately on pointerdown
+  document.addEventListener('pointerdown', (e) => {
+    const target = e.target.closest('button, a, .nav-tab-item, .subtab-btn, .carousel-dot, .clickable, input[type="submit"], input[type="button"], .profile-menu-item, .socials a, .lobby-streak-item, .game-select-card');
+    if (target) {
+      triggerHaptic(12);
+    }
+  });
+  // --- Ad Banner Alternating Colors Controller ---
+  let currentAdIndex = 0;
+  const updateAdColors = (index) => {
+    const card = document.getElementById('community-ad-card');
+    if (!card) return;
+
+    const isLightMode = document.documentElement.classList.contains('light-mode');
+    let bg, border, overlay, text, sub, dot, shadow;
+
+    if (isLightMode) {
+      // Light Mode: Alternates Black and Dark Red
+      if (index === 1) {
+        bg = '#9e0c0c'; // Red
+        border = 'rgba(255, 255, 255, 0.15)';
+        overlay = 'linear-gradient(180deg, rgba(158, 12, 12, 0.2) 0%, rgba(158, 12, 12, 0.85) 100%)';
+      } else {
+        bg = '#000000'; // Black
+        border = 'rgba(255, 62, 62, 0.25)';
+        overlay = 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.85) 100%)';
+      }
+      text = '#ffffff';
+      sub = '#eeeeee';
+      dot = 'rgba(255, 255, 255, 0.3)';
+      shadow = '0 2px 4px rgba(0,0,0,0.8)';
+    } else {
+      // Dark Mode: Alternates White and Off-white
+      if (index === 1) {
+        bg = '#f4f4f5'; // Off-white
+        border = 'rgba(0, 0, 0, 0.08)';
+        overlay = 'linear-gradient(180deg, rgba(244, 244, 245, 0.15) 0%, rgba(244, 244, 245, 0.85) 100%)';
+      } else {
+        bg = '#ffffff'; // White
+        border = 'rgba(0, 0, 0, 0.08)';
+        overlay = 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.85) 100%)';
+      }
+      text = '#000000';
+      sub = '#333333';
+      dot = 'rgba(0, 0, 0, 0.2)';
+      shadow = 'none';
+    }
+
+    card.style.setProperty('--ad-bg', bg);
+    card.style.setProperty('--ad-border', border);
+    card.style.setProperty('--ad-overlay', overlay);
+    card.style.setProperty('--ad-text', text);
+    card.style.setProperty('--ad-sub', sub);
+    card.style.setProperty('--ad-dot', dot);
+    card.style.setProperty('--ad-shadow', shadow);
+  };
+
   // Auto-redirect if already logged in when visiting login.html
   if (window.location.pathname.endsWith('login.html') && localStorage.getItem('thirsty_logged_in') === 'true') {
     window.location.href = 'index.html';
@@ -132,6 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (adminSidebarBtn) adminSidebarBtn.style.display = isAdmin ? 'flex' : 'none';
       if (adminBottomBtn) adminBottomBtn.style.display = isAdmin ? 'flex' : 'none';
 
+      // Admin post creator visibility
+      const creatorContainer = document.getElementById('signals-post-creator-container');
+      if (creatorContainer) {
+        creatorContainer.style.display = isUserAdmin() ? 'block' : 'none';
+      }
+
       // Update Dashboard contents
       if (dashWelcomeText) dashWelcomeText.textContent = `Welcome, ${profile.username}`;
       if (ticketUserId) ticketUserId.textContent = profile.thirstyclub_id || 'T999-XXXX';
@@ -190,6 +268,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const adminBottomBtn = document.getElementById('admin-bottom-btn');
       if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
       if (adminBottomBtn) adminBottomBtn.style.display = 'none';
+
+      // Admin post creator visibility
+      const creatorContainer = document.getElementById('signals-post-creator-container');
+      if (creatorContainer) {
+        creatorContainer.style.display = 'none';
+      }
 
       if (navDashLink) {
         navDashLink.textContent = 'Sign In';
@@ -256,6 +340,41 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           currentUserProfile = profile;
           console.log("Successfully fetched profile:", currentUserProfile);
+          
+          // Track and update daily login streak
+          try {
+            const todayStr = new Date().toISOString().split('T')[0];
+            let socialsObj = currentUserProfile.socials || {};
+            let lastActiveDate = socialsObj.last_active_date;
+            let streakCount = socialsObj.streak_count || 0;
+
+            if (!lastActiveDate) {
+              streakCount = 1;
+              socialsObj.streak_count = streakCount;
+              socialsObj.last_active_date = todayStr;
+              await supabase.from('profiles').update({ socials: socialsObj }).eq('id', currentUserProfile.id);
+              console.log("First daily login streak started!");
+            } else if (lastActiveDate !== todayStr) {
+              const lastActive = new Date(lastActiveDate);
+              const today = new Date(todayStr);
+              const timeDiff = today.getTime() - lastActive.getTime();
+              const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
+              
+              if (dayDiff === 1) {
+                streakCount += 1;
+                console.log(`Daily streak continued! Current streak: ${streakCount}`);
+              } else {
+                streakCount = 1;
+                console.log("Streak broken. New streak started.");
+              }
+              socialsObj.streak_count = streakCount;
+              socialsObj.last_active_date = todayStr;
+              await supabase.from('profiles').update({ socials: socialsObj }).eq('id', currentUserProfile.id);
+            }
+            currentUserProfile.socials = socialsObj;
+          } catch (streakErr) {
+            console.error("Error updating daily login streak:", streakErr);
+          }
         }
 
         // Fetch ticket
@@ -276,6 +395,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       currentUserProfile = null;
       currentUserTicket = null;
+      
+      const isDirectPWA = window.matchMedia('(display-mode: standalone)').matches || window.location.hostname.includes('club999');
+      if (isDirectPWA && typeof showOnboardingScreen === 'function') {
+        showOnboardingScreen();
+      }
     }
     updateUI();
   };
@@ -387,6 +511,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Forgot Password Action
+  const forgotPasswordBtn = document.getElementById('btn-forgot-password');
+  if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener('click', async () => {
+      const email = prompt("Enter your email address to receive a password reset link:");
+      if (!email) return;
+      const trimmedEmail = email.trim().toLowerCase();
+      if (!trimmedEmail.includes("@")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
+          redirectTo: window.location.origin + '/index.html'
+        });
+        if (error) throw error;
+        alert("Password reset email sent! Please check your inbox (and spam folder) for instructions.");
+      } catch (err) {
+        alert("Error sending password reset email: " + err.message);
+      }
+    });
+  }
+
   // Modal Auth Tabs switching
   const tabLoginBtn = document.getElementById('auth-login-tab-btn');
   const tabSignupBtn = document.getElementById('auth-signup-tab-btn');
@@ -423,6 +570,9 @@ document.addEventListener('DOMContentLoaded', () => {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      const errorMsg = document.getElementById('signup-error-msg');
+      if (errorMsg) errorMsg.style.display = 'none';
+
       const submitBtn = signupForm.querySelector('button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -445,7 +595,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (existingProfiles && existingProfiles.length > 0) {
-          alert("This username is already taken.");
+          if (errorMsg) {
+            errorMsg.textContent = "This username is already taken.";
+            errorMsg.style.display = 'block';
+          } else {
+            alert("This username is already taken.");
+          }
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = "Get ThirstyID & Passport";
@@ -470,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.session) {
           await syncSessionAndProfile(data.session);
+          await requestDevicePermissions();
           alert("Registration Successful!\n\nYour account is active, and your ThirstyID has been generated.");
           if (modal) modal.close();
           signupForm.reset();
@@ -479,7 +635,12 @@ document.addEventListener('DOMContentLoaded', () => {
           signupForm.reset();
         }
       } catch (err) {
-        alert("Sign Up Error: " + err.message);
+        if (errorMsg) {
+          errorMsg.textContent = err.message;
+          errorMsg.style.display = 'block';
+        } else {
+          alert("Sign Up Error: " + err.message);
+        }
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
@@ -494,6 +655,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      const errorMsg = document.getElementById('login-error-msg');
+      if (errorMsg) errorMsg.style.display = 'none';
+
       const submitBtn = loginForm.querySelector('button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -558,6 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.session) {
           await syncSessionAndProfile(data.session);
+          await requestDevicePermissions();
         }
 
         if (modal) {
@@ -567,12 +732,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         loginForm.reset();
       } catch (err) {
+        let displayMsg = "Login Error: " + err.message;
         if (err.code === 'email_not_confirmed' || err.message?.includes('Email not confirmed')) {
-          alert("Your email has not been confirmed yet.\n\nPlease check your inbox (and spam folder) for a confirmation email from ThirstyClub999, then try logging in again.");
+          displayMsg = "Your email has not been confirmed yet. Please check your inbox (and spam folder) for a confirmation email from ThirstyClub999.";
         } else if (err.code === 'invalid_credentials' || err.message?.includes('Invalid login credentials')) {
-          alert("Invalid login credentials.\n\nPlease check your email/username and password are correct. If you forgot your password, use the 'Forgot Password' link.");
+          displayMsg = "Invalid login credentials. Please check your email/username and password are correct.";
+        }
+        
+        if (errorMsg) {
+          errorMsg.textContent = displayMsg;
+          errorMsg.style.display = 'block';
         } else {
-          alert("Login Error: " + err.message);
+          alert(displayMsg);
         }
       } finally {
         if (submitBtn) {
@@ -687,7 +858,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update Header Title depending on view
     let title = "THIRSTYCLUB999";
     if (targetViewId === 'view-passport') title = "PASSPORT";
-    else if (targetViewId === 'view-profile') title = "PROFILE";
+    else if (targetViewId === 'view-profile') {
+      title = "PROFILE";
+      loadInbox();
+    }
     else if (targetViewId === 'view-wearthirsty') title = "WEARTHIRSTY";
     else if (targetViewId === 'view-product-details') title = "PRODUCT DETAILS";
     else if (targetViewId === 'view-drops') title = "DROPS";
@@ -977,13 +1151,194 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // B. Signals Feed Data
-  const mockSignals = [
+  // B. Signals Feed Data & News Model
+  const isUserAdmin = () => {
+    const session = currentSession;
+    const profile = currentUserProfile;
+    if (!session || !profile) return false;
+    return !!(session.user.email && (
+      session.user.email.startsWith('admin@') || 
+      session.user.email.endsWith('@thirstyclub999.com') ||
+      session.user.email === 'richmond@guava.earth' ||
+      session.user.email === 'richmonde@guava.earth' ||
+      session.user.email === 'guavanigeria@gmail.com' ||
+      session.user.email === 'thirstynalia@gmail.com' ||
+      session.user.email === 'straffitti@hotmail.com' ||
+      session.user.email === 'bookthirsty234@gmail.com' ||
+      session.user.email === 'godliverse@gmail.com' ||
+      session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
+      profile.role === 'admin' ||
+      profile.socials?.role === 'admin'
+    ));
+  };
+
+  const newsData = [
+    {
+      id: 'gbeds',
+      title: 'GBED$$$ OUT NOW',
+      label: 'NEW RELEASE',
+      time: 'RECENT DROP',
+      snippet: "Straffitti drops his highly anticipated 12-track project GBED$$$ under Thirsty Sonics, featuring ODUMODUBLVCK, PsychoYP, and Zlatan.",
+      image: 'images/GBEDS.jpeg',
+      date: 'JUNE 19, 2026',
+      location: 'THIRSTY SONICS IMPRINT',
+      body: `
+        <p>Thirsty Sonics is proud to announce the release of <strong>GBED$$$</strong>, the brand new 12-track project from alternative rap trailblazer <strong>$TRAFFITTI</strong>. Released on June 19, 2026, this mixtape is a high-octane sonic fusion of alté afrobeats, street-hop, and cyber-trap, positioning it as the definitive soundtrack of the underground scene.</p>
+        <p>The project highlights Straffitti's deep connections within the Nigerian alternative and street-hop community, featuring massive collaborations with industry heavyweights. Key tracks include the lead focus track 'OFE NSALA' featuring ODUMODUBLVCK, the trap anthem 'WOE$KII' with PsychoYP and SSSoundGawd, and the street-hop anthem 'TE WO II' alongside Zlatan and scottyolorin.</p>
+        <h4 style="color:#fff; font-size:0.9rem; margin: 1rem 0 0.5rem 0; font-family:'Satoshi', sans-serif;">TRACKLIST:</h4>
+        <ol style="padding-left:1.2rem; color:var(--text-dim); line-height:1.6; font-size:0.85rem;">
+          <li><strong>OFE NSALA</strong> (feat. ODUMODUBLVCK)</li>
+          <li><strong>GIMME DAT</strong></li>
+          <li><strong>WOE$KII</strong> (feat. PsychoYP & SSSoundGawd)</li>
+          <li><strong>GBONA LOWO</strong></li>
+          <li><strong>CHOO</strong></li>
+          <li><strong>PAAK AM</strong> (feat. BabyDaiz & Egertton)</li>
+          <li><strong>PAPASUPE</strong> (feat. Highonfi)</li>
+          <li><strong>PAA MII</strong></li>
+          <li><strong>JEALOUS</strong></li>
+          <li><strong>TE WO II</strong> (feat. Zlatan & scottyolorin)</li>
+          <li><strong>AVAILABLE</strong></li>
+          <li><strong>LOKE</strong></li>
+        </ol>
+      `,
+      hasGallery: false
+    },
+    {
+      id: 'launch',
+      title: 'ThirstyClub999 Launch',
+      label: 'PAST EVENT RECAP',
+      time: 'RECENT EVENT',
+      snippet: 'Our last private VIP meetup in Lagos was a massive success. Relive the cyber-lounge experience.',
+      image: 'images/THIRSTY_77.JPG',
+      date: 'LAGOS, NIGERIA • JUNE 07, 2026',
+      location: 'LAGOS, NIGERIA',
+      body: `
+        <p>The ThirstyClub999 Private Launch Event was an absolute masterclass in style, digital identity, and community connection. Set in a premium cyber-lounge in Lagos, founding members gathered to showcase their digital passports and check in seamlessly at the door.</p>
+        <p>The night was filled with energetic alté afrobeats sets, premium merch drops, and preview showcases of upcoming collection items. Thank you to everyone who made this launch party memorable. Keep your passports active for the next physical drop announcements.</p>
+      `,
+      hasGallery: true,
+      gallery: [
+        'images/THIRSTY_1.JPG',
+        'images/THIRSTY_31.JPG',
+        'images/THIRSTY_37.JPG',
+        'images/THIRSTY_63.JPG',
+        'images/THIRSTY_69.JPG',
+        'images/THIRSTY_75.JPG',
+        'images/THIRSTY_76.JPG',
+        'images/THIRSTY_77.JPG',
+        'images/THIRSTY_79.JPG',
+        'images/THIRSTY_94.JPG'
+      ]
+    }
+  ];
+
+  const renderNews = () => {
+    const container = document.getElementById('home-news-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    newsData.forEach(article => {
+      const card = document.createElement('div');
+      card.className = 'latest-signal-preview-card';
+      card.style.cssText = 'display: flex; gap: 12px; align-items: center; padding: 1.25rem; cursor: pointer;';
+      card.innerHTML = `
+        <div class="news-thumbnail-frame" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+          <img src="${article.image}" alt="${article.title}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div class="news-content-block" style="flex: 1; text-align: left;">
+          <div class="signal-header" style="margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: center;">
+            <span class="signal-label" style="color: var(--accent-color); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">${article.label}</span>
+            <span class="signal-time" style="text-transform: uppercase;">${article.time}</span>
+          </div>
+          <div class="news-title" style="font-weight: 800; font-size: 0.95rem; color: #fff; margin-bottom: 0.2rem; line-height: 1.2;">${article.title}</div>
+          <p class="news-snippet" style="font-size: 0.75rem; color: var(--text-dim); margin: 0 0 0.5rem 0; line-height: 1.3;">${article.snippet}</p>
+          <div class="news-link-btn" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
+            <span>${article.hasGallery ? 'VIEW GALLERY' : 'READ MORE'}</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      `;
+      card.onclick = () => {
+        openNewsDetails(article.id);
+        switchView('view-news-details');
+      };
+      container.appendChild(card);
+    });
+  };
+
+  const openNewsDetails = (newsId) => {
+    const article = newsData.find(a => a.id === newsId);
+    if (!article) return;
+
+    const contentEl = document.getElementById('news-details-content');
+    if (!contentEl) return;
+
+    let galleryHtml = '';
+    if (article.hasGallery && article.gallery) {
+      galleryHtml = `
+        <div class="gallery-title" style="font-size: 0.8rem; font-weight: 800; color: #fff; letter-spacing: 0.05em; margin-bottom: 0.8rem; text-transform: uppercase;">EVENT GALLERY</div>
+        <div class="event-photos-gallery-wrap">
+          <div class="event-photos-gallery">
+            ${article.gallery.map((img, i) => `<div class="gallery-photo-item"><img src="${img}" alt="Gallery image ${i+1}"></div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    contentEl.innerHTML = `
+      <div class="event-details-hero" style="position: relative; width: 100%; height: 200px; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid rgba(255, 62, 62, 0.15);">
+        <img src="${article.image}" alt="${article.title}" style="width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%); padding: 1rem;">
+          <span style="font-size: 0.65rem; background: var(--accent-color); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">${article.label}</span>
+        </div>
+      </div>
+      
+      <h2 style="font-family: 'Satoshi', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">${article.title}</h2>
+      <div style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem;">${article.date}</div>
+      
+      <div class="news-body-text" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.5rem;">
+        ${article.body}
+      </div>
+
+      ${galleryHtml}
+    `;
+
+    if (article.hasGallery) {
+      setTimeout(() => {
+        initLightbox();
+      }, 50);
+    }
+  };
+
+  const defaultSignals = [
+    {
+      id: 3,
+      username: 'THIRSTYCLUB999',
+      handle: '@tc999',
+      avatar: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>",
+      time: 'Just now',
+      text: 'GBED$$$ out now! Alternative trailblazer $TRAFFITTI drops his highly anticipated 12-track project under Thirsty Sonics, featuring ODUMODUBLVCK, PsychoYP, Zlatan and more. Stream it everywhere!',
+      media: 'images/GBEDS.jpeg',
+      likes: 1240,
+      comments: 0,
+      liked: false,
+      commentsList: [],
+      poll: {
+        question: "What is your favorite track on GBED$$$?",
+        options: [
+          { text: "OFE NSALA (feat. ODUMODUBLVCK)", votes: 512 },
+          { text: "WOE$KII (feat. PsychoYP)", votes: 342 },
+          { text: "PAPASUPE", votes: 120 },
+          { text: "TE WO II (feat. Zlatan)", votes: 284 }
+        ]
+      }
+    },
     {
       id: 1,
       username: 'THIRSTYCLUB999',
       handle: '@tc999',
       avatar: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>",
-      time: '2m ago',
+      time: '2h ago',
       text: 'THE SYSTEM IS DRY. WE BRING THE THIRST.',
       media: 'images/THIRSTY_1.JPG',
       likes: 999,
@@ -999,7 +1354,7 @@ document.addEventListener('DOMContentLoaded', () => {
       username: 'THIRSTYCLUB999',
       handle: '@tc999',
       avatar: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>",
-      time: '1h ago',
+      time: '1d ago',
       text: 'NO RULES. ONLY THE CLUB.',
       media: 'images/THIRSTY_69.JPG',
       likes: 854,
@@ -1011,6 +1366,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  let mockSignals = [];
+  try {
+    const saved = localStorage.getItem('thirsty_club_signals');
+    if (saved) {
+      mockSignals = JSON.parse(saved);
+    }
+  } catch(e) {
+    console.error("Failed to parse signals", e);
+  }
+  if (!mockSignals || mockSignals.length === 0) {
+    mockSignals = defaultSignals;
+  }
+
   const triggerLike = (s, post) => {
     if (!s.liked) {
       s.liked = true;
@@ -1018,17 +1386,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const likeBtn = post.querySelector(`.like-btn-${s.id}`);
       likeBtn.querySelector('.like-count').textContent = s.likes;
       likeBtn.classList.add('liked');
+      localStorage.setItem('thirsty_club_signals', JSON.stringify(mockSignals));
     }
 
     const frame = post.querySelector(`#media-frame-${s.id}`);
-    const heart = document.createElement('div');
-    heart.className = 'double-tap-heart';
-    heart.innerHTML = '❤️';
-    frame.appendChild(heart);
+    if (frame) {
+      const heart = document.createElement('div');
+      heart.className = 'double-tap-heart';
+      heart.innerHTML = '❤️';
+      frame.appendChild(heart);
 
-    setTimeout(() => {
-      heart.remove();
-    }, 800);
+      setTimeout(() => {
+        heart.remove();
+      }, 800);
+    }
   };
 
   const toggleLike = (s, post) => {
@@ -1038,8 +1409,77 @@ document.addEventListener('DOMContentLoaded', () => {
       s.likes -= 1;
       likeBtn.classList.remove('liked');
       likeBtn.querySelector('.like-count').textContent = s.likes;
+      localStorage.setItem('thirsty_club_signals', JSON.stringify(mockSignals));
     } else {
       triggerLike(s, post);
+    }
+  };
+
+  const renderPoll = (s, post) => {
+    const pollContainer = post.querySelector(`#poll-container-${s.id}`);
+    if (!pollContainer || !s.poll) return;
+
+    pollContainer.innerHTML = '';
+
+    const votedIdxKey = `poll_voted_${s.id}`;
+    const savedVotedIdx = localStorage.getItem(votedIdxKey);
+    const hasVoted = savedVotedIdx !== null;
+
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'poll-question';
+    questionDiv.textContent = s.poll.question;
+    pollContainer.appendChild(questionDiv);
+
+    const optionsList = document.createElement('div');
+    optionsList.className = 'poll-options-list';
+
+    const totalVotes = s.poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+
+    s.poll.options.forEach((opt, idx) => {
+      if (hasVoted) {
+        const votedIdx = parseInt(savedVotedIdx, 10);
+        const isSelected = votedIdx === idx;
+        const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+
+        const resultEl = document.createElement('div');
+        resultEl.className = `poll-option-result ${isSelected ? 'voted-option' : ''}`;
+        resultEl.innerHTML = `
+          <div class="poll-option-fill" style="width: 0%;"></div>
+          <div class="poll-option-label">${opt.text}</div>
+          <div class="poll-option-meta">
+            ${isSelected ? '<span>✓</span>' : ''}
+            <span>${pct}%</span>
+            <span style="font-size: 0.6rem; color: var(--text-dim);">(${opt.votes})</span>
+          </div>
+        `;
+        optionsList.appendChild(resultEl);
+
+        setTimeout(() => {
+          const fill = resultEl.querySelector('.poll-option-fill');
+          if (fill) fill.style.width = `${pct}%`;
+        }, 50);
+
+      } else {
+        const btn = document.createElement('button');
+        btn.className = 'poll-option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+          opt.votes = (opt.votes || 0) + 1;
+          localStorage.setItem(votedIdxKey, idx);
+          localStorage.setItem('thirsty_club_signals', JSON.stringify(mockSignals));
+          renderPoll(s, post);
+        };
+        optionsList.appendChild(btn);
+      }
+    });
+
+    pollContainer.appendChild(optionsList);
+
+    if (hasVoted) {
+      const totalEl = document.createElement('div');
+      totalEl.className = 'poll-total-votes';
+      totalEl.textContent = `${totalVotes} vote${totalVotes !== 1 ? 's' : ''}`;
+      pollContainer.appendChild(totalEl);
     }
   };
 
@@ -1082,9 +1522,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="post-time">${s.time}</span>
           </div>
           <p class="post-text">${s.text}</p>
+          ${s.media ? `
           <div class="post-media-frame" id="media-frame-${s.id}">
             <img src="${s.media}" alt="Post Media">
-          </div>
+          </div>` : ''}
+          <div class="post-poll-container" id="poll-container-${s.id}"></div>
           <div class="post-actions-row">
             <button class="post-action-btn like-btn-${s.id} ${s.liked ? 'liked' : ''}">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -1113,34 +1555,39 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         container.appendChild(post);
 
+        if (s.poll) {
+          renderPoll(s, post);
+        }
+
         // Bind Double Tap Like
         const mediaFrame = post.querySelector(`#media-frame-${s.id}`);
-        let lastTap = 0;
-        let lastTouchTap = 0;
-        mediaFrame.addEventListener('click', (e) => {
-          const currentTime = new Date().getTime();
-          const tapLength = currentTime - lastTap;
-          if (tapLength < 300 && tapLength > 0) {
-            triggerLike(s, post);
-            e.preventDefault();
-          }
-          lastTap = currentTime;
-        });
+        if (mediaFrame) {
+          let lastTap = 0;
+          let lastTouchTap = 0;
+          mediaFrame.addEventListener('click', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+              triggerLike(s, post);
+              e.preventDefault();
+            }
+            lastTap = currentTime;
+          });
 
-        // Mobile touch double-tap
-        mediaFrame.addEventListener('touchend', (e) => {
-          const currentTime = new Date().getTime();
-          const tapLength = currentTime - lastTouchTap;
-          if (tapLength < 300 && tapLength > 0) {
-            e.preventDefault();
-            triggerLike(s, post);
-          }
-          lastTouchTap = currentTime;
-        });
+          mediaFrame.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTouchTap;
+            if (tapLength < 300 && tapLength > 0) {
+              e.preventDefault();
+              triggerLike(s, post);
+            }
+            lastTouchTap = currentTime;
+          });
 
-        mediaFrame.addEventListener('dblclick', () => {
-          triggerLike(s, post);
-        });
+          mediaFrame.addEventListener('dblclick', () => {
+            triggerLike(s, post);
+          });
+        }
 
         // Bind Like Button
         const likeBtn = post.querySelector(`.like-btn-${s.id}`);
@@ -1764,12 +2211,120 @@ document.addEventListener('DOMContentLoaded', () => {
     return arr;
   };
 
-  const renderGames = () => {
+  // --- Real Streaks & Activity from Supabase ---
+
+  const renderGames = async () => {
     switchGameView('games-hub-select');
 
     const savedTriviaPoints = parseInt(localStorage.getItem('thirsty_trivia_points') || '0', 10);
     const triviaPointsDisplay = document.getElementById('trivia-current-points');
     if (triviaPointsDisplay) triviaPointsDisplay.textContent = savedTriviaPoints;
+
+    // Render horizontal streaks list from real DB data
+    const streaksList = document.getElementById('lobby-streaks-list');
+    if (streaksList) {
+      streaksList.innerHTML = '';
+      
+      // Get current user details
+      const activeUsername = (currentUserProfile && currentUserProfile.username) || 'Guest Member';
+      const activeAvatar = (currentUserProfile && currentUserProfile.avatar_url) || defaultAvatar;
+      const userStreakCount = currentUserProfile?.socials?.streak_count || 1;
+
+      // Inject current user streak first
+      const userStreakItem = document.createElement('div');
+      userStreakItem.className = 'lobby-streak-item';
+      userStreakItem.innerHTML = `
+        <div class="lobby-streak-avatar-frame" style="background: linear-gradient(135deg, #2ed573, transparent); border-color: rgba(46, 213, 115, 0.3);">
+          <img src="${activeAvatar}" class="lobby-streak-avatar" alt="You">
+        </div>
+        <div class="lobby-streak-name" style="color: #2ed573;">You</div>
+        <div class="lobby-streak-val" style="color: #2ed573;">🔥 ${userStreakCount}</div>
+      `;
+      streaksList.appendChild(userStreakItem);
+
+      // Fetch top streaks from Supabase
+      try {
+        const { data: allProfiles, error } = await supabase
+          .from('profiles')
+          .select('username, avatar_url, socials, thirstyclub_id')
+          .limit(1000);
+        
+        if (allProfiles && !error) {
+          const streakProfiles = allProfiles
+            .filter(p => p.socials?.streak_count && p.socials.streak_count > 0)
+            .filter(p => !currentUserProfile || p.thirstyclub_id !== currentUserProfile.thirstyclub_id)
+            .sort((a, b) => (b.socials.streak_count || 0) - (a.socials.streak_count || 0))
+            .slice(0, 10);
+
+          streakProfiles.forEach(s => {
+            const item = document.createElement('div');
+            item.className = 'lobby-streak-item';
+            item.innerHTML = `
+              <div class="lobby-streak-avatar-frame">
+                <img src="${s.avatar_url || defaultAvatar}" class="lobby-streak-avatar" alt="${s.username}">
+              </div>
+              <div class="lobby-streak-name">${s.username || 'Anonymous'}</div>
+              <div class="lobby-streak-val">🔥 ${s.socials.streak_count}</div>
+            `;
+            streaksList.appendChild(item);
+          });
+
+          // If no one else has streaks, show a placeholder
+          if (streakProfiles.length === 0) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'lobby-streak-item';
+            placeholder.innerHTML = `<div class="lobby-streak-name" style="font-size: 0.6rem; color: var(--text-dim);">Check in daily to build your streak!</div>`;
+            streaksList.appendChild(placeholder);
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to fetch streaks:", e);
+      }
+    }
+
+    // Render recent achievements timeline feed
+    const recentsList = document.getElementById('lobby-recents-list');
+    if (recentsList) {
+      recentsList.innerHTML = '';
+      mockRecentActivities.forEach(act => {
+        const item = document.createElement('div');
+        item.className = 'lobby-recent-item';
+        item.innerHTML = `
+          <img src="${act.avatar}" class="lobby-recent-avatar" alt="${act.name}">
+          <div class="lobby-recent-content">
+            <div class="lobby-recent-msg">
+              <strong>${act.name}</strong> ${act.message}
+              ${act.reward ? `<span style="color:#2ed573; font-weight:800; margin-left:4px;">(${act.reward})</span>` : ''}
+            </div>
+            <div class="lobby-recent-meta">
+              <button class="lobby-recent-action-btn clap-btn-${act.id} ${act.clapped ? 'clapped' : ''}" style="${act.clapped ? 'color: var(--accent-color);' : ''}">
+                👏 <span class="clap-count">${act.claps}</span>
+              </button>
+              <button class="lobby-recent-action-btn comment-btn-${act.id}">
+                💬 <span>${act.comments}</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Bind simple in-memory clap toggle
+        const clapBtn = item.querySelector(`.clap-btn-${act.id}`);
+        clapBtn.onclick = () => {
+          if (act.clapped) {
+            act.clapped = false;
+            act.claps -= 1;
+            clapBtn.style.color = '';
+          } else {
+            act.clapped = true;
+            act.claps += 1;
+            clapBtn.style.color = 'var(--accent-color)';
+          }
+          item.querySelector('.clap-count').textContent = act.claps;
+        };
+
+        recentsList.appendChild(item);
+      });
+    }
 
     const categoryCards = document.querySelectorAll('.category-card');
     categoryCards.forEach(card => {
@@ -2138,6 +2693,113 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   initGamesListeners();
+
+  const initPostCreator = () => {
+    const btnTogglePoll = document.getElementById('btn-toggle-poll-fields');
+    const pollFields = document.getElementById('creator-poll-fields');
+    const btnSubmitPost = document.getElementById('btn-submit-post');
+
+    if (btnTogglePoll && pollFields) {
+      btnTogglePoll.onclick = () => {
+        const isHidden = pollFields.style.display === 'none';
+        pollFields.style.display = isHidden ? 'block' : 'none';
+        btnTogglePoll.textContent = isHidden ? '- REMOVE POLL' : '+ ADD POLL';
+      };
+    }
+
+    if (btnSubmitPost) {
+      btnSubmitPost.onclick = () => {
+        const textInput = document.getElementById('creator-post-text');
+        const imgInput = document.getElementById('creator-post-image');
+        
+        const textVal = textInput.value.trim();
+        const imgVal = imgInput.value.trim();
+
+        if (!textVal) {
+          alert("Please write something to broadcast!");
+          return;
+        }
+
+        let pollData = null;
+        const pollFieldsVisible = pollFields && pollFields.style.display !== 'none';
+        
+        if (pollFieldsVisible) {
+          const qInput = document.getElementById('creator-poll-question');
+          const opt1Input = document.getElementById('creator-poll-opt1');
+          const opt2Input = document.getElementById('creator-poll-opt2');
+          const opt3Input = document.getElementById('creator-poll-opt3');
+          const opt4Input = document.getElementById('creator-poll-opt4');
+
+          const question = qInput.value.trim();
+          const opt1 = opt1Input.value.trim();
+          const opt2 = opt2Input.value.trim();
+          const opt3 = opt3Input.value.trim();
+          const opt4 = opt4Input.value.trim();
+
+          if (!question || !opt1 || !opt2) {
+            alert("Please fill in the poll question and at least two options.");
+            return;
+          }
+
+          const options = [
+            { text: opt1, votes: 0 },
+            { text: opt2, votes: 0 }
+          ];
+          if (opt3) options.push({ text: opt3, votes: 0 });
+          if (opt4) options.push({ text: opt4, votes: 0 });
+
+          pollData = {
+            question: question,
+            options: options
+          };
+        }
+
+        const newPostId = mockSignals.length ? Math.max(...mockSignals.map(s => s.id)) + 1 : 1;
+        const activeUsername = (currentUserProfile && currentUserProfile.username) || 'tc_admin';
+        const avatar = (currentUserProfile && currentUserProfile.avatar_url) || "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='50' fill='%23ff3e3e'/><text x='50' y='55' font-family='monospace' font-size='20' fill='white' font-weight='bold' text-anchor='middle'>999</text></svg>";
+        
+        const newPost = {
+          id: newPostId,
+          username: activeUsername,
+          handle: `@${activeUsername.toLowerCase().replace(/\s+/g, '')}`,
+          avatar: avatar,
+          time: 'Just now',
+          text: textVal,
+          media: imgVal || '',
+          likes: 0,
+          comments: 0,
+          liked: false,
+          commentsList: []
+        };
+
+        if (pollData) {
+          newPost.poll = pollData;
+        }
+
+        mockSignals.unshift(newPost);
+        localStorage.setItem('thirsty_club_signals', JSON.stringify(mockSignals));
+
+        // Clear fields
+        textInput.value = '';
+        imgInput.value = '';
+        if (pollFields) {
+          pollFields.style.display = 'none';
+          document.getElementById('creator-poll-question').value = '';
+          document.getElementById('creator-poll-opt1').value = '';
+          document.getElementById('creator-poll-opt2').value = '';
+          document.getElementById('creator-poll-opt3').value = '';
+          document.getElementById('creator-poll-opt4').value = '';
+        }
+        if (btnTogglePoll) {
+          btnTogglePoll.textContent = '+ ADD POLL';
+        }
+
+        renderSignals();
+      };
+    }
+  };
+
+  initPostCreator();
 
   // E. Notifications History
   const mockNotifications = [
@@ -2987,6 +3649,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         document.documentElement.classList.add('light-mode');
       }
+      updateAdColors(currentAdIndex);
     });
   }
 
@@ -3122,21 +3785,8 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    // Latest News Card click handlers
-    const newsReadBtn = document.getElementById('home-news-read-btn');
-    if (newsReadBtn) {
-      newsReadBtn.onclick = (e) => {
-        e.stopPropagation();
-        switchView('view-news-details');
-      };
-    }
-
-    const newsCard = document.getElementById('home-news-card');
-    if (newsCard) {
-      newsCard.onclick = () => {
-        switchView('view-news-details');
-      };
-    }
+    // Render dynamic news cards
+    renderNews();
 
     showCarouselSlide(0);
     startCarouselRotation();
@@ -3145,7 +3795,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCarousel();
 
   // --- Community Ad Carousel Auto-Rotation & Clicks ---
-  let currentAdIndex = 0;
   let adCarouselInterval = null;
 
   const showAdSlide = (index) => {
@@ -3172,6 +3821,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     currentAdIndex = index;
+    updateAdColors(index);
   };
 
   const startAdRotation = () => {
@@ -3215,14 +3865,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </li>
     `).join('');
 
-    const mockPlayers = [
-      { username: 'THIRSTYZOID', thirstyclub_id: 'T999-1337', created_at: '2026-01-01T08:00:00.000Z', avatar_url: 'images/THIRSTY_1.JPG', socials: { game_scores: { trivia_blitz: 12, treasure_hunt: 3, social_raids: 3, bounties_completed: 4 } } },
-      { username: 'Adeline Palmerston', thirstyclub_id: 'T999-2468', created_at: '2026-01-02T12:30:00.000Z', avatar_url: 'images/THIRSTY_69.JPG', socials: { game_scores: { trivia_blitz: 10, treasure_hunt: 2, social_raids: 2, bounties_completed: 3 } } },
-      { username: 'Lekan Thirsty', thirstyclub_id: 'T999-1122', created_at: '2026-01-03T15:45:00.000Z', avatar_url: 'images/THIRSTY_75.JPG', socials: { game_scores: { trivia_blitz: 8, treasure_hunt: 2, socials_raids: 2, bounties_completed: 2 } } },
-      { username: 'Tunde Gold', thirstyclub_id: 'T999-9081', created_at: '2026-01-04T10:15:00.000Z', avatar_url: 'images/THIRSTY_77.JPG', socials: { game_scores: { trivia_blitz: 7, treasure_hunt: 1, socials_raids: 1, bounties_completed: 2 } } },
-      { username: 'Evelyn Drinker', thirstyclub_id: 'T999-5566', created_at: '2026-01-05T09:00:00.000Z', avatar_url: 'images/THIRSTY_37.JPG', socials: { game_scores: { trivia_blitz: 5, treasure_hunt: 1, socials_raids: 0, bounties_completed: 1 } } }
-    ];
-
     const calculatePoints = (p) => {
       const scores = p.socials?.game_scores || {};
       let pts = 0;
@@ -3233,7 +3875,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return pts;
     };
 
-    let entries = [...mockPlayers];
+    let entries = [];
     const fetchStart = Date.now();
 
     try {
@@ -3241,26 +3883,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .from('profiles')
         .select('username, thirstyclub_id, socials, created_at, avatar_url')
         .order('created_at', { ascending: true })
-        .limit(100);
+        .limit(1000);
       
       if (profiles && !error) {
-        profiles.forEach(p => {
-          const idx = entries.findIndex(e => e.thirstyclub_id === p.thirstyclub_id || e.username === p.username);
-          if (idx !== -1) {
-            entries[idx].username = p.username || entries[idx].username;
-            entries[idx].created_at = p.created_at || entries[idx].created_at;
-            entries[idx].avatar_url = p.avatar_url || entries[idx].avatar_url;
-            entries[idx].socials = {
-              ...entries[idx].socials,
-              ...p.socials
-            };
-          } else {
-            entries.push(p);
-          }
-        });
+        entries = profiles;
       }
     } catch (e) {
-      console.warn("Failed to fetch profiles for leaderboard, using mock data:", e);
+      console.warn("Failed to fetch profiles for leaderboard:", e);
     }
 
     const mappedEntries = entries.map(e => ({
@@ -3290,8 +3919,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Sort chronologically by date of signup (earliest first)
-    mappedEntries.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    // Sort by points descending, then by join date ascending as tiebreaker
+    mappedEntries.sort((a, b) => b.points - a.points || new Date(a.created_at) - new Date(b.created_at));
 
     const elapsed = Date.now() - fetchStart;
     const remainingDelay = Math.max(0, 400 - elapsed);
@@ -3350,7 +3979,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ${podiumItems.map(item => {
             const isCurrentUser = currentUserProfile && item.player.thirstyclub_id === currentUserProfile.thirstyclub_id;
             return `
-              <div class="podium-card rank-${item.rank} ${isCurrentUser ? 'is-user' : ''}">
+              <div class="podium-card rank-${item.rank} ${isCurrentUser ? 'is-user' : ''}" data-thirstyid="${item.player.thirstyclub_id}">
                 <div class="podium-icon">${item.icon}</div>
                 <div class="podium-avatar-wrap">
                   <img src="${item.avatar}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -3363,6 +3992,15 @@ document.addEventListener('DOMContentLoaded', () => {
           }).join('')}
         </div>
       `;
+
+      // Add click handlers to podium cards
+      podiumContainer.querySelectorAll('.podium-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+          const tid = card.getAttribute('data-thirstyid');
+          if (tid) openUserProfileModal(tid);
+        });
+      });
     }
 
     // Render list for rank 4 and below
@@ -3374,6 +4012,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const isCurrentUser = currentUserProfile && e.thirstyclub_id === currentUserProfile.thirstyclub_id;
       const li = document.createElement('li');
       li.className = `leaderboard-item`;
+      li.setAttribute('data-thirstyid', e.thirstyclub_id);
+      li.style.cursor = 'pointer';
       if (isCurrentUser) {
         li.id = 'user-leaderboard-row';
       }
@@ -3385,12 +4025,20 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="name">${e.username}</span>
         <span class="points">${e.points.toLocaleString()} PTS</span>
       `;
+      li.addEventListener('click', () => {
+        openUserProfileModal(e.thirstyclub_id);
+      });
       container.appendChild(li);
     });
   };
 
   // --- Composio Spotify and Twitter Integrations ---
   const initComposioIntegrations = () => {
+    const compModal = document.getElementById('composio-modal');
+    const consentView = document.getElementById('composio-consent-view');
+    const loadingView = document.getElementById('composio-loading-view');
+    const successView = document.getElementById('composio-success-view');
+
     const spotifyBtn = document.getElementById('btn-connect-spotify');
     const twitterBtn = document.getElementById('btn-connect-twitter');
     const spotifyDesc = document.getElementById('spotify-integration-desc');
@@ -3400,14 +4048,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!spotifyBtn || !spotifyDesc) return;
       if (connected) {
         spotifyBtn.textContent = 'DISCONNECT';
-        spotifyBtn.style.background = 'rgba(255, 255, 255, 0.05)';
-        spotifyBtn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
-        spotifyDesc.textContent = 'Connected (Username: LekanTC999)';
-        spotifyDesc.style.color = '#39b54a';
+        spotifyBtn.style.background = 'rgba(255, 62, 62, 0.1)';
+        spotifyBtn.style.border = '1px solid rgba(255, 62, 62, 0.2)';
+        spotifyBtn.style.color = 'var(--accent-color)';
+        spotifyDesc.innerHTML = `<span class="active-pulse" style="display:inline-block; width:6px; height:6px; background:#2ed573; border-radius:50%; margin-right:4px; box-shadow:0 0 8px #2ed573; animation: glowPulse 1.5s infinite alternate;"></span> Connected (LekanTC999)`;
+        spotifyDesc.style.color = '#2ed573';
       } else {
         spotifyBtn.textContent = 'CONNECT';
         spotifyBtn.style.background = 'var(--accent-color)';
         spotifyBtn.style.border = 'none';
+        spotifyBtn.style.color = '#fff';
         spotifyDesc.textContent = 'Verify your stream counts';
         spotifyDesc.style.color = 'var(--text-dim)';
       }
@@ -3417,47 +4067,256 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!twitterBtn || !twitterDesc) return;
       if (connected) {
         twitterBtn.textContent = 'DISCONNECT';
-        twitterBtn.style.background = 'rgba(255, 255, 255, 0.05)';
-        twitterBtn.style.border = '1px solid rgba(255, 255, 255, 0.15)';
-        twitterDesc.textContent = 'Connected (Handle: @lekan_thirsty)';
-        twitterDesc.style.color = '#39b54a';
+        twitterBtn.style.background = 'rgba(255, 62, 62, 0.1)';
+        twitterBtn.style.border = '1px solid rgba(255, 62, 62, 0.2)';
+        twitterBtn.style.color = 'var(--accent-color)';
+        twitterDesc.innerHTML = `<span class="active-pulse" style="display:inline-block; width:6px; height:6px; background:#2ed573; border-radius:50%; margin-right:4px; box-shadow:0 0 8px #2ed573; animation: glowPulse 1.5s infinite alternate;"></span> Connected (@lekan_thirsty)`;
+        twitterDesc.style.color = '#2ed573';
       } else {
         twitterBtn.textContent = 'CONNECT';
         twitterBtn.style.background = 'var(--accent-color)';
         twitterBtn.style.border = 'none';
+        twitterBtn.style.color = '#fff';
         twitterDesc.textContent = 'Verify retweets & follows';
         twitterDesc.style.color = 'var(--text-dim)';
       }
     };
 
-    if (spotifyBtn) {
-      const isConnected = localStorage.getItem('composio_spotify_connected') === 'true';
-      updateSpotifyUI(isConnected);
-      spotifyBtn.onclick = () => {
-        const nextState = localStorage.getItem('composio_spotify_connected') !== 'true';
-        if (nextState) {
-          alert('Connecting to Spotify via Composio OAuth integrations...');
+    // Initial sync
+    const isSpotifyConnected = localStorage.getItem('composio_spotify_connected') === 'true';
+    const isTwitterConnected = localStorage.getItem('composio_twitter_connected') === 'true';
+    updateSpotifyUI(isSpotifyConnected);
+    updateTwitterUI(isTwitterConnected);
+
+    // OAuth Redirect detection from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const authCode = urlParams.get('auth');
+    if (authCode && compModal) {
+      consentView.style.display = 'none';
+      loadingView.style.display = 'none';
+      successView.style.display = 'flex';
+      
+      const successDesc = document.getElementById('composio-success-desc');
+      if (authCode === 'spotify') {
+        localStorage.setItem('composio_spotify_connected', 'true');
+        updateSpotifyUI(true);
+        if (successDesc) successDesc.textContent = 'Your Spotify integration is now active. Streaming playtimes and artist follow achievements will be synced automatically.';
+      } else if (authCode === 'twitter') {
+        localStorage.setItem('composio_twitter_connected', 'true');
+        updateTwitterUI(true);
+        if (successDesc) successDesc.textContent = 'Your X (Twitter) integration is now active. Retweet and community profile check-ins will verify instantly.';
+      }
+      compModal.showModal();
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    const triggerRedirectAnimation = async (provider) => {
+      consentView.style.display = 'none';
+      loadingView.style.display = 'flex';
+      successView.style.display = 'none';
+
+      const titleEl = document.getElementById('composio-loader-title');
+      const descEl = document.getElementById('composio-loader-desc');
+
+      if (titleEl) titleEl.textContent = 'Connecting Secure Gateway...';
+      if (descEl) descEl.textContent = 'Handshaking with Composio API authorization key...';
+
+      try {
+        const sessionData = await supabase.auth.getSession();
+        const userId = sessionData.data?.session?.user?.id;
+        
+        if (!userId) {
+          throw new Error('You must be logged in to connect integrations.');
         }
-        localStorage.setItem('composio_spotify_connected', nextState ? 'true' : 'false');
-        updateSpotifyUI(nextState);
+
+        const res = await fetch('/api/composio-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            provider: provider,
+            entityId: userId,
+            redirectUrl: window.location.href.split('?')[0] + `?auth=${provider}`
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to generate link');
+        }
+
+        if (titleEl) titleEl.textContent = `Redirecting to ${provider}...`;
+        if (descEl) descEl.textContent = `Establishing secure OAuth session with ${provider} server...`;
+
+        setTimeout(() => {
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else {
+            console.error('No redirectUrl returned from Composio API');
+            alert('Integration failed: Invalid response from authentication provider.');
+            compModal.close();
+          }
+        }, 1500);
+
+      } catch (err) {
+        console.error('Integration link error:', err);
+        alert(err.message || 'An error occurred while connecting the integration.');
+        compModal.close();
+      }
+    };
+
+    if (spotifyBtn) {
+      spotifyBtn.onclick = () => {
+        const isConnected = localStorage.getItem('composio_spotify_connected') === 'true';
+        if (isConnected) {
+          localStorage.setItem('composio_spotify_connected', 'false');
+          updateSpotifyUI(false);
+        } else if (compModal) {
+          // Open Modal, populate Spotify specifics
+          consentView.style.display = 'block';
+          loadingView.style.display = 'none';
+          successView.style.display = 'none';
+
+          document.getElementById('composio-target-logo').innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.894-.982-.336.075-.668-.135-.744-.47-.077-.336.136-.668.47-.744 3.856-.88 7.15-.506 9.822 1.13.294.18.385.564.206.86zm1.225-2.72c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.082-1.182-.413.125-.847-.11-.972-.522-.125-.413.11-.847.522-.972 3.67-1.114 8.243-.574 11.346 1.33.367.227.487.708.26 1.076zm.105-2.81c-3.258-1.934-8.644-2.114-11.758-1.168-.5.152-1.025-.133-1.177-.633-.153-.5.133-1.027.633-1.178 3.593-1.09 9.54-.887 13.298 1.344.45.267.6.846.333 1.296-.266.45-.845.6-1.297.333z"/>
+            </svg>
+          `;
+          document.getElementById('composio-connect-desc').textContent = 'Link your Spotify account via Composio to dynamically sync play counts, tracks, and verified streams for community quests.';
+          document.getElementById('composio-permissions-list').innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:#fff;">
+              <span style="color:#2ed573;">✓</span> Verify streaming check-ins and hours played
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:#fff;">
+              <span style="color:#2ed573;">✓</span> Unlock automatic Spotify badge rewards
+            </div>
+          `;
+
+          compModal.showModal();
+
+          document.getElementById('btn-authorize-composio').onclick = () => {
+            triggerRedirectAnimation('spotify');
+          };
+        }
       };
     }
 
     if (twitterBtn) {
-      const isConnected = localStorage.getItem('composio_twitter_connected') === 'true';
-      updateTwitterUI(isConnected);
       twitterBtn.onclick = () => {
-        const nextState = localStorage.getItem('composio_twitter_connected') !== 'true';
-        if (nextState) {
-          alert('Connecting to X via Composio OAuth integrations...');
+        const isConnected = localStorage.getItem('composio_twitter_connected') === 'true';
+        if (isConnected) {
+          localStorage.setItem('composio_twitter_connected', 'false');
+          updateTwitterUI(false);
+        } else if (compModal) {
+          consentView.style.display = 'block';
+          loadingView.style.display = 'none';
+          successView.style.display = 'none';
+
+          document.getElementById('composio-target-logo').innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          `;
+          document.getElementById('composio-connect-desc').textContent = 'Link your X (Twitter) profile via Composio to track social post retweets, follows, and campaign activities.';
+          document.getElementById('composio-permissions-list').innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:#fff;">
+              <span style="color:#2ed573;">✓</span> Verify campaign retweets and comments automatically
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:#fff;">
+              <span style="color:#2ed573;">✓</span> Fetch verified hashtag contributions
+            </div>
+          `;
+
+          compModal.showModal();
+
+          document.getElementById('btn-authorize-composio').onclick = () => {
+            triggerRedirectAnimation('twitter');
+          };
         }
-        localStorage.setItem('composio_twitter_connected', nextState ? 'true' : 'false');
-        updateTwitterUI(nextState);
       };
+    }
+
+    // Modal control buttons
+    const cancelBtn = document.getElementById('btn-cancel-composio');
+    if (cancelBtn) {
+      cancelBtn.onclick = () => compModal.close();
+    }
+
+    const enterBtn = document.getElementById('btn-enter-composio-success');
+    if (enterBtn) {
+      enterBtn.onclick = () => compModal.close();
     }
   };
 
   initComposioIntegrations();
+
+  // ==========================================
+  // Web Push Notifications
+  // ==========================================
+  const subscribeToPush = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    
+    const VAPID_PUBLIC_KEY = 'BPkah0j6OmMXTbZYPT8Ws8Jqe5acu5I_jjQJU9Ac1wlSUxsPhSY97qaJMy5nFXMgwPZrNQaktd617__OLHXlpTU'; // Replace with actual generated public key
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      let subscription = await registration.pushManager.getSubscription();
+      
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: VAPID_PUBLIC_KEY
+        });
+      }
+
+      // Ensure user is logged in before saving to DB
+      const sessionData = await supabase.auth.getSession();
+      if (!sessionData.data.session) return;
+
+      const subData = JSON.parse(JSON.stringify(subscription));
+
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .upsert({
+          user_id: sessionData.data.session.user.id,
+          endpoint: subData.endpoint,
+          keys_p256dh: subData.keys.p256dh,
+          keys_auth: subData.keys.auth
+        }, { onConflict: 'endpoint' });
+
+      if (error) console.error('Error saving push subscription:', error);
+
+    } catch (err) {
+      console.warn('Push subscription failed:', err);
+    }
+  };
+
+  // Attempt to subscribe on load if logged in
+  supabase.auth.getSession().then(({ data }) => {
+    if (data.session && Notification.permission === 'granted') {
+      subscribeToPush();
+    }
+  });
+
+  const requestDevicePermissions = async () => {
+    try {
+      if ('Notification' in window) {
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            await subscribeToPush();
+          }
+        }
+      }
+      
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop()); // Just asking for permission
+      }
+    } catch (err) {
+      console.warn("Permission request failed or was denied:", err);
+    }
+  };
 
   // ==========================================
   // Admin Portal Functionalities
@@ -4367,6 +5226,78 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Push Notification Blast handler
+  const sendPushBtn = document.getElementById('admin-send-push-btn');
+  const pushTitle = document.getElementById('admin-push-title');
+  const pushBody = document.getElementById('admin-push-body');
+  const pushUrl = document.getElementById('admin-push-url');
+  const pushStatusContainer = document.getElementById('push-status-container');
+  const pushProgressBar = document.getElementById('push-progress-bar');
+  const pushStatusText = document.getElementById('push-status-text');
+
+  if (sendPushBtn) {
+    sendPushBtn.addEventListener('click', async () => {
+      const title = pushTitle?.value.trim();
+      const body = pushBody?.value.trim();
+      const url = pushUrl?.value.trim();
+
+      if (!title || !body) {
+        alert("Please provide both a notification title and message body.");
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to send this push notification to all subscribed users?`)) {
+        return;
+      }
+
+      sendPushBtn.disabled = true;
+      if (pushStatusContainer) pushStatusContainer.style.display = 'block';
+      if (pushProgressBar) pushProgressBar.style.width = '50%';
+      if (pushStatusText) pushStatusText.textContent = `Sending push notifications via Vercel...`;
+
+      try {
+        const sessionData = await supabase.auth.getSession();
+        const token = sessionData.data.session?.access_token;
+        
+        const response = await fetch('/api/send-push', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            url: url
+          })
+        });
+
+        if (pushProgressBar) pushProgressBar.style.width = '100%';
+
+        if (!response.ok) {
+          const errRes = await response.json();
+          throw new Error(errRes.error || 'Server error');
+        }
+        
+        const resData = await response.json();
+        
+        if (pushStatusText) {
+          pushStatusText.textContent = `Push finished. Sent: ${resData.sent}. Failed: ${resData.failed}`;
+        }
+        alert(`Push Notifications complete!\n\nTotal Subscribers: ${resData.total_subscribers}\nSent: ${resData.sent}\nFailed: ${resData.failed}\nCleaned up expired: ${resData.expired_cleaned}`);
+        
+      } catch (sendErr) {
+        console.error(`Failed to send push notifications:`, sendErr);
+        if (pushStatusText) {
+          pushStatusText.textContent = `Push failed: ${sendErr.message}`;
+        }
+        alert(`Push Notifications failed: ${sendErr.message}`);
+      } finally {
+        sendPushBtn.disabled = false;
+      }
+    });
+  }
+
   // Admin Controls (Search/Filter/Sort/Toggles)
   const adminTableSearch = document.getElementById('admin-table-search');
   const adminFilterSelect = document.getElementById('admin-filter-select');
@@ -4836,6 +5767,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loader) {
       setTimeout(() => {
         loader.classList.add('loaded');
+        const isDirectPWA = window.matchMedia('(display-mode: standalone)').matches || window.location.hostname.includes('club999');
+        const isLoggedIn = localStorage.getItem('thirsty_logged_in') === 'true';
+        if (isDirectPWA && !isLoggedIn) {
+          if (typeof showOnboardingScreen === 'function') {
+            showOnboardingScreen();
+          }
+        }
       }, 1200);
     }
   });
@@ -4850,6 +5788,439 @@ document.addEventListener('DOMContentLoaded', () => {
     drawPassport();
   });
   
+  // --- Password Visibility Toggle ---
+  document.querySelectorAll('.password-wrapper').forEach(wrapper => {
+    const input = wrapper.querySelector('input');
+    const btn = wrapper.querySelector('.password-toggle-btn');
+    if (input && btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = isPassword ? 'ph ph-eye-slash' : 'ph ph-eye';
+        }
+      });
+    }
+  });
+
+  // --- User Profile Details Popup & Admin Messaging ---
+  const profileModal = document.getElementById('user-profile-modal');
+  const closeProfileModalBtn = document.getElementById('close-user-profile-modal');
+
+  if (closeProfileModalBtn && profileModal) {
+    closeProfileModalBtn.addEventListener('click', () => {
+      profileModal.close();
+    });
+  }
+
+  window.openUserProfileModal = async (tid) => {
+    if (!profileModal) return;
+
+    // Reset default placeholders
+    document.getElementById('user-profile-avatar').src = defaultAvatar;
+    document.getElementById('user-profile-name').textContent = 'Loading...';
+    document.getElementById('user-profile-tid').textContent = tid;
+    document.getElementById('user-profile-location').textContent = '...';
+    document.getElementById('user-profile-signature').textContent = '...';
+    document.getElementById('user-profile-level').textContent = '...';
+    document.getElementById('user-profile-streak').textContent = '...';
+    document.getElementById('admin-message-section').style.display = 'none';
+
+    profileModal.showModal();
+
+    try {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('thirstyclub_id', tid)
+        .single();
+
+      if (profile && !error) {
+        document.getElementById('user-profile-avatar').src = profile.avatar_url || defaultAvatar;
+        document.getElementById('user-profile-name').textContent = profile.username || 'Anonymous';
+        document.getElementById('user-profile-tid').textContent = profile.thirstyclub_id || tid;
+        document.getElementById('user-profile-location').textContent = profile.socials?.place_of_thirst || 'LAGOS';
+        document.getElementById('user-profile-signature').textContent = profile.socials?.signature || 'Wagwan';
+        
+        const calculatePoints = (p) => {
+          const scores = p.socials?.game_scores || {};
+          let pts = 0;
+          if (scores.trivia_blitz) pts += scores.trivia_blitz * 50;
+          if (scores.treasure_hunt) pts += scores.treasure_hunt * 150;
+          if (scores.social_raids) pts += scores.social_raids * 150;
+          if (scores.bounties_completed) pts += scores.bounties_completed * 200;
+          return pts;
+        };
+        const pts = calculatePoints(profile);
+        const lvl = Math.floor(pts / 500) + 1;
+        document.getElementById('user-profile-level').textContent = `LVL ${lvl} (${pts} PTS)`;
+        
+        const streak = profile.socials?.streak_count || 0;
+        document.getElementById('user-profile-streak').textContent = `🔥 ${streak} DAY${streak !== 1 ? 'S' : ''}`;
+
+        // Admin privileges check (GCL3F)
+        const isAdmin = currentUserProfile && (currentUserProfile.thirstyclub_id === 'T999-3572' || currentUserProfile.email === 'gclef40@gmail.com');
+        const isSelf = currentUserProfile && currentUserProfile.thirstyclub_id === profile.thirstyclub_id;
+        
+        if (isAdmin && !isSelf) {
+          document.getElementById('admin-message-section').style.display = 'block';
+          
+          const sendBtn = document.getElementById('btn-send-admin-message');
+          const textInput = document.getElementById('admin-message-text');
+          const statusDiv = document.getElementById('admin-message-status');
+          
+          textInput.value = '';
+          statusDiv.style.display = 'none';
+          
+          sendBtn.onclick = async () => {
+            const msg = textInput.value.trim();
+            if (!msg) return;
+            
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'SENDING...';
+            
+            try {
+              const { error: msgErr } = await supabase
+                .from('messages')
+                .insert({
+                  from_id: currentUserProfile.id,
+                  to_id: profile.id,
+                  message: msg
+                });
+                
+              if (msgErr) throw msgErr;
+              
+              statusDiv.textContent = '✓ Message Sent Successfully!';
+              statusDiv.style.color = '#2ed573';
+              statusDiv.style.display = 'block';
+              textInput.value = '';
+            } catch (err) {
+              console.error(err);
+              statusDiv.textContent = '✗ Error: ' + err.message;
+              statusDiv.style.color = 'var(--accent-color)';
+              statusDiv.style.display = 'block';
+            } finally {
+              sendBtn.disabled = false;
+              sendBtn.textContent = 'SEND MESSAGE';
+            }
+          };
+        }
+      } else {
+        document.getElementById('user-profile-name').textContent = 'Profile Not Found';
+      }
+    } catch (e) {
+      console.error(e);
+      document.getElementById('user-profile-name').textContent = 'Error Loading Profile';
+    }
+  };
+
+  // --- Inbox DM Loading ---
+  window.loadInbox = async () => {
+    const list = document.getElementById('profile-inbox-list');
+    if (!list) return;
+    
+    if (!currentUserProfile) {
+      list.innerHTML = `<div style="text-align: center; color: var(--text-dim); font-size: 0.8rem; padding: 1rem 0;">LOG IN TO VIEW MESSAGES</div>`;
+      return;
+    }
+    
+    try {
+      const { data: msgs, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('to_id', currentUserProfile.id)
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        if (error.code === 'PGRST116' || error.message.includes('relation "messages" does not exist')) {
+          list.innerHTML = `<div style="text-align: center; color: var(--text-dim); font-size: 0.8rem; padding: 1rem 0; line-height: 1.4;">"messages" table is not initialized yet. Admin must configure Supabase schema.</div>`;
+          return;
+        }
+        throw error;
+      }
+      
+      if (!msgs || msgs.length === 0) {
+        list.innerHTML = `<div style="text-align: center; color: var(--text-dim); font-size: 0.8rem; padding: 1rem 0;">NO MESSAGES RECEIVED</div>`;
+        return;
+      }
+      
+      const senderIds = [...new Set(msgs.map(m => m.from_id))];
+      const { data: senders } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', senderIds);
+        
+      const senderMap = {};
+      if (senders) {
+        senders.forEach(s => {
+          senderMap[s.id] = s;
+        });
+      }
+      
+      list.innerHTML = msgs.map(m => {
+        const sender = senderMap[m.from_id] || { username: 'Admin', avatar_url: defaultAvatar };
+        const date = new Date(m.created_at).toLocaleDateString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        return `
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; display: flex; gap: 0.75rem; align-items: flex-start;">
+            <img src="${sender.avatar_url || defaultAvatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--accent-color); object-fit: cover;">
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <span style="font-weight: bold; font-size: 0.85rem; color: #fff;">${sender.username}</span>
+                <span style="font-size: 0.65rem; color: var(--text-dim);">${date}</span>
+              </div>
+              <p style="margin: 0; font-size: 0.8rem; color: #eee; line-height: 1.3;">${m.message}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      console.warn("Failed to load inbox:", e);
+      list.innerHTML = `<div style="text-align: center; color: var(--accent-color); font-size: 0.8rem; padding: 1rem 0;">Error loading messages</div>`;
+    }
+  };
+
+  // --- Full Screen Onboarding Controller ---
+  const onboardScreen = document.getElementById('onboarding-screen');
+  const landingHeader = document.querySelector('header');
+  const landingMain = document.querySelector('main');
+  const appContainer = document.getElementById('user-dashboard-card');
+
+  window.showOnboardingScreen = () => {
+    if (onboardScreen) onboardScreen.style.display = 'flex';
+    if (landingHeader) landingHeader.style.display = 'none';
+    if (landingMain) landingMain.style.display = 'none';
+    if (appContainer) appContainer.style.display = 'none';
+  };
+
+  window.hideOnboardingScreen = () => {
+    if (onboardScreen) onboardScreen.style.display = 'none';
+    if (localStorage.getItem('thirsty_logged_in') === 'true') {
+      if (appContainer) appContainer.style.display = 'flex';
+      if (landingHeader) landingHeader.style.display = 'none';
+      if (landingMain) landingMain.style.display = 'none';
+    } else {
+      if (appContainer) appContainer.style.display = 'none';
+      if (landingHeader) landingHeader.style.display = 'flex';
+      if (landingMain) landingMain.style.display = 'block';
+    }
+  };
+
+  // Onboarding Tab Switching
+  const onboardLoginTabBtn = document.getElementById('onboard-login-tab-btn');
+  const onboardSignupTabBtn = document.getElementById('onboard-signup-tab-btn');
+  const onboardLoginForm = document.getElementById('onboard-login-form');
+  const onboardSignupForm = document.getElementById('onboard-signup-form');
+
+  const showOnboardLogin = () => {
+    if (onboardLoginTabBtn) onboardLoginTabBtn.classList.add('active');
+    if (onboardSignupTabBtn) onboardSignupTabBtn.classList.remove('active');
+    if (onboardLoginForm) onboardLoginForm.style.display = 'block';
+    if (onboardSignupForm) onboardSignupForm.style.display = 'none';
+  };
+
+  const showOnboardSignup = () => {
+    if (onboardSignupTabBtn) onboardSignupTabBtn.classList.add('active');
+    if (onboardLoginTabBtn) onboardLoginTabBtn.classList.remove('active');
+    if (onboardSignupForm) onboardSignupForm.style.display = 'block';
+    if (onboardLoginForm) onboardLoginForm.style.display = 'none';
+  };
+
+  if (onboardLoginTabBtn) onboardLoginTabBtn.onclick = showOnboardLogin;
+  if (onboardSignupTabBtn) onboardSignupTabBtn.onclick = showOnboardSignup;
+  
+  const onboardSwitchToSignup = document.getElementById('onboard-switch-to-signup');
+  if (onboardSwitchToSignup) onboardSwitchToSignup.onclick = showOnboardSignup;
+  const onboardSwitchToLogin = document.getElementById('onboard-switch-to-login');
+  if (onboardSwitchToLogin) onboardSwitchToLogin.onclick = showOnboardLogin;
+
+  // Onboarding Password toggler
+  document.querySelectorAll('#onboarding-screen .password-wrapper').forEach(wrapper => {
+    const input = wrapper.querySelector('input');
+    const btn = wrapper.querySelector('.password-toggle-btn');
+    if (input && btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = isPassword ? 'ph ph-eye-slash' : 'ph ph-eye';
+        }
+      });
+    }
+  });
+
+  // Onboarding Forgot Password
+  const onboardForgotPasswordBtn = document.getElementById('onboard-btn-forgot-password');
+  if (onboardForgotPasswordBtn) {
+    onboardForgotPasswordBtn.onclick = async () => {
+      const email = prompt("Enter your email address to receive a password reset link:");
+      if (!email) return;
+      const trimmedEmail = email.trim().toLowerCase();
+      if (!trimmedEmail.includes("@")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
+          redirectTo: window.location.origin + '/index.html'
+        });
+        if (error) throw error;
+        alert("Password reset email sent! Please check your inbox (and spam folder) for instructions.");
+      } catch (err) {
+        alert("Error sending password reset email: " + err.message);
+      }
+    };
+  }
+
+  // Onboarding Login Submit
+  if (onboardLoginForm) {
+    onboardLoginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('onboard-login-error-msg');
+      if (errorMsg) errorMsg.style.display = 'none';
+
+      const submitBtn = onboardLoginForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'LOGGING IN...';
+      }
+
+      const loginId = document.getElementById('onboard-login-id').value.trim();
+      const password = document.getElementById('onboard-login-password').value;
+
+      try {
+        let email = loginId.toLowerCase();
+        if (!loginId.includes("@")) {
+          // Resolve username/id to email
+          const cleanedInput = loginId.replace(/\s+/g, '');
+          const thirstIdMatch = cleanedInput.match(/^t(?:-)?999(?:-)?(\d{4})$/i);
+          let profile = null;
+
+          if (thirstIdMatch) {
+            const resolvedThirstyId = `T999-${thirstIdMatch[1]}`;
+            const { data, error } = await supabase
+              .from('profiles')
+              .select('email')
+              .eq('thirstyclub_id', resolvedThirstyId)
+              .single();
+            profile = data;
+            if (error || !profile || !profile.email) {
+              throw new Error("Invalid ThirstyID. Make sure it is spelled correctly.");
+            }
+          } else if (cleanedInput.toUpperCase().startsWith("T999")) {
+            throw new Error("Invalid ThirstyID format. It must be in the format T999-XXXX (with 4 numbers).");
+          } else {
+            const { data, error } = await supabase
+              .from('profiles')
+              .select('email')
+              .ilike('username', loginId)
+              .single();
+            profile = data;
+            if (error || !profile || !profile.email) {
+              throw new Error("Username or ThirstyID not found. Make sure it is spelled correctly.");
+            }
+          }
+          email = profile.email;
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        if (data.session) {
+          await syncSessionAndProfile(data.session);
+          hideOnboardingScreen();
+        }
+      } catch (err) {
+        let displayMsg = "Login Error: " + err.message;
+        if (err.code === 'email_not_confirmed' || err.message?.includes('Email not confirmed')) {
+          displayMsg = "Your email has not been confirmed yet. Please check your inbox for a confirmation email from ThirstyClub999.";
+        } else if (err.code === 'invalid_credentials' || err.message?.includes('Invalid login credentials')) {
+          displayMsg = "Invalid login credentials. Please check your email/username and password are correct.";
+        }
+        if (errorMsg) {
+          errorMsg.textContent = displayMsg;
+          errorMsg.style.display = 'block';
+        } else {
+          alert(displayMsg);
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'LOGIN';
+        }
+      }
+    };
+  }
+
+  // Onboarding Signup Submit
+  if (onboardSignupForm) {
+    onboardSignupForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('onboard-signup-error-msg');
+      if (errorMsg) errorMsg.style.display = 'none';
+
+      const submitBtn = onboardSignupForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'PROCESSING...';
+      }
+
+      const username = document.getElementById('onboard-signup-username').value.trim();
+      const email = document.getElementById('onboard-signup-email').value.trim().toLowerCase();
+      const password = document.getElementById('onboard-signup-password').value;
+
+      try {
+        const { data: existingProfiles, error: profileCheckError } = await supabase
+          .from('profiles')
+          .select('id')
+          .ilike('username', username);
+
+        if (profileCheckError) throw new Error("Could not check username availability.");
+
+        if (existingProfiles && existingProfiles.length > 0) {
+          if (errorMsg) {
+            errorMsg.textContent = "This username is already taken.";
+            errorMsg.style.display = 'block';
+          } else {
+            alert("This username is already taken.");
+          }
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { username } }
+        });
+        if (error) throw error;
+
+        if (data.session) {
+          await syncSessionAndProfile(data.session);
+          alert("Registration Successful!\n\nYour account is active, and your ThirstyID has been generated.");
+          hideOnboardingScreen();
+        } else {
+          alert("Registration Successful!\n\nPlease check your email inbox to verify your account. Once verified, your unique ThirstyID will be generated.");
+          showOnboardLogin();
+        }
+      } catch (err) {
+        if (errorMsg) {
+          errorMsg.textContent = err.message;
+          errorMsg.style.display = 'block';
+        } else {
+          alert("Sign Up Error: " + err.message);
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'GET THIRSTYID & PASSPORT';
+        }
+      }
+    };
+  }
+
   animateCounter('hero-counter', 999);
   animateCounter('logo-counter', 999);
 });

@@ -6,7 +6,12 @@
   <title>ThirstyClub999 | Join Our Community</title>
   <meta name="description" content="ThirstyClub999 - Join our community, create your passport and become a member.">
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260624.0615">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ThirstyClub">
+  <link rel="apple-touch-icon" href="images/favicon.png">
+  <link rel="stylesheet" href="style.css?v=v15">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/motion@10.16.2/dist/motion.js"></script>
   <script>
@@ -16,6 +21,7 @@
       }
     })();
   </script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
 
@@ -27,6 +33,75 @@
       <div class="loader-spinner-track">
         <div class="loader-spinner-bar"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Onboarding Full-Screen Container -->
+  <div id="onboarding-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: #030303; z-index: 999; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; box-sizing: border-box; overflow-y: auto;">
+    <div class="onboarding-logo-wrap" style="text-align: center; margin-bottom: 2rem;">
+      <img src="https://wearthirsty.com/cdn/shop/files/ThirstyLOGO_2026.png?height=100&width=100" alt="Thirsty Logo" style="width: 70px; height: 70px; animation: glowPulse 3s infinite alternate;">
+      <div style="font-size: 1.1rem; font-weight: 900; letter-spacing: 0.1em; margin-top: 0.5rem; text-transform: uppercase;">THIRSTYCLUB999</div>
+    </div>
+    
+    <div class="onboarding-card" style="width: 100%; max-width: 380px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 20px; padding: 2rem; box-sizing: border-box; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      <!-- Tab Headers -->
+      <div class="auth-tabs" style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 1.5rem;">
+        <button class="auth-tab-btn active" id="onboard-login-tab-btn" style="flex: 1; background: none; border: none; padding: 0.75rem; color: var(--text-dim); font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; text-transform: uppercase;">LOGIN</button>
+        <button class="auth-tab-btn" id="onboard-signup-tab-btn" style="flex: 1; background: none; border: none; padding: 0.75rem; color: var(--text-dim); font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; text-transform: uppercase;">SIGN UP</button>
+      </div>
+
+      <!-- Onboard Login Form -->
+      <form id="onboard-login-form">
+        <p class="modal-desc" style="font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-bottom: 1.25rem;">Login with your ThirstyID or Email.</p>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: block;">ThirstyID or Email</label>
+          <input type="text" id="onboard-login-id" placeholder="T999-XXXX or email..." required style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: block;">Password</label>
+          <div class="password-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+            <input type="password" id="onboard-login-password" placeholder="enter password..." required style="width: 100%; padding-right: 2.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+            <button type="button" class="password-toggle-btn" style="position: absolute; right: 0.75rem; background: none; border: none; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; height: 100%; outline: none; font-size: 1.2rem; transition: color 0.2s;" tabindex="-1">
+              <i class="ph ph-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="auth-toggle-link" style="text-align: center; margin-bottom: 0.75rem; font-size: 0.75rem; color: var(--text-dim);">
+          Don't have an ID? <span id="onboard-switch-to-signup" style="color: var(--accent-color); cursor: pointer; text-decoration: underline;">Sign up here</span>
+        </div>
+        <div class="auth-toggle-link" style="text-align: center; margin-bottom: 1rem; font-size: 0.75rem; color: var(--text-dim);">
+          <span id="onboard-btn-forgot-password" style="font-size: 0.75rem; text-decoration: underline; cursor: pointer; color: var(--text-dim);">Forgot Password?</span>
+        </div>
+        <div id="onboard-login-error-msg" style="display: none; color: var(--accent-color); font-size: 0.8rem; margin: 0.75rem 0; text-align: center; font-weight: bold; background: rgba(255, 62, 62, 0.1); border: 1px solid rgba(255, 62, 62, 0.2); padding: 0.5rem; border-radius: 6px;"></div>
+        <button type="submit" class="submit-ticket-btn" style="width: 100%; background: var(--accent-color); border: none; color: #fff; border-radius: 8px; padding: 0.85rem; font-size: 0.9rem; font-weight: 900; cursor: pointer; transition: all 0.2s; text-transform: uppercase;">Login</button>
+      </form>
+
+      <!-- Onboard Signup Form -->
+      <form id="onboard-signup-form" style="display: none;">
+        <p class="modal-desc" style="font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-bottom: 1.25rem;">Create your profile to get a ThirstyID and RSVP.</p>
+        <div class="input-group" style="margin-bottom: 0.75rem;">
+          <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: block;">Username</label>
+          <input type="text" id="onboard-signup-username" placeholder="Username" required style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div class="input-group" style="margin-bottom: 0.75rem;">
+          <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: block;">Email Address</label>
+          <input type="email" id="onboard-signup-email" placeholder="email..." required style="width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.4rem; display: block;">Password</label>
+          <div class="password-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+            <input type="password" id="onboard-signup-password" placeholder="enter password..." required style="width: 100%; padding-right: 2.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+            <button type="button" class="password-toggle-btn" style="position: absolute; right: 0.75rem; background: none; border: none; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; height: 100%; outline: none; font-size: 1.2rem; transition: color 0.2s;" tabindex="-1">
+              <i class="ph ph-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="auth-toggle-link" style="text-align: center; margin-bottom: 1rem; font-size: 0.75rem; color: var(--text-dim);">
+          Already have an ID? <span id="onboard-switch-to-login" style="color: var(--accent-color); cursor: pointer; text-decoration: underline;">Login here</span>
+        </div>
+        <div id="onboard-signup-error-msg" style="display: none; color: var(--accent-color); font-size: 0.8rem; margin: 0.75rem 0; text-align: center; font-weight: bold; background: rgba(255, 62, 62, 0.1); border: 1px solid rgba(255, 62, 62, 0.2); padding: 0.5rem; border-radius: 6px;"></div>
+        <button type="submit" class="submit-ticket-btn" style="width: 100%; background: var(--accent-color); border: none; color: #fff; border-radius: 8px; padding: 0.85rem; font-size: 0.9rem; font-weight: 900; cursor: pointer; transition: all 0.2s; text-transform: uppercase;">Get ThirstyID & Passport</button>
+      </form>
     </div>
   </div>
 
@@ -77,14 +152,11 @@
             <p>Upload a photo to generate your custom Thirsty Passport. If you are logged in, your details will be linked automatically.</p>
           </div>
 
-          <div class="upload-dropzone" id="passport-dropzone">
-            <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
-            <div class="dropzone-content">
-              <span class="upload-icon">📷</span>
-              <p class="dropzone-text">Drag & drop your picture or <span class="browse-link">browse</span></p>
-              <span class="file-info" id="passport-file-info">JPG, PNG or WEBP (Max 5MB)</span>
-            </div>
+          <div class="upload-dropzone" id="landing-passport-dropzone">
+            <input type="file" id="landing-passport-file-input" accept="image/*" style="display:none;">
+            <p id="landing-passport-file-info" style="margin: 0; font-size: 0.95rem; font-weight: 700;">TAP TO UPLOAD PHOTO</p>
           </div>
+          <button class="cta-button stroke-btn" id="landing-download-passport-btn">DOWNLOAD PASSPORT</button>
 
           <div class="passport-inputs">
             <div class="input-group">
@@ -154,19 +226,19 @@
             </button>
 
             <button class="nav-tab-item" data-target-view="view-community">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <i class="ph ph-users" style="font-size: 1.4rem;"></i>
               <span>COMMUNITY</span>
             </button>
             <button class="nav-tab-item" data-target-view="view-wearthirsty">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+              <i class="ph ph-shopping-bag" style="font-size: 1.4rem;"></i>
               <span>WEARTHIRSTY</span>
             </button>
             <button class="nav-tab-item" data-target-view="view-profile">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <i class="ph ph-user" style="font-size: 1.4rem;"></i>
               <span>PROFILE</span>
             </button>
             <button class="nav-tab-item" id="admin-sidebar-btn" data-target-view="view-admin" style="display: none;">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <i class="ph ph-shield-star" style="font-size: 1.4rem;"></i>
               <span>ADMIN</span>
             </button>
           </div>
@@ -185,7 +257,7 @@
           <div class="app-header">
             <div style="display: flex; align-items: center; justify-content: flex-start; width: 42px; height: 42px; position: relative;">
               <button class="header-back-btn" id="app-header-back" style="visibility: hidden; display: none;">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <i class="ph ph-caret-left" style="font-size: 1.5rem;"></i>
               </button>
               <img id="app-header-logo" src="https://wearthirsty.com/cdn/shop/files/ThirstyLOGO_2026.png?height=80&width=80" alt="Thirsty Logo" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255, 62, 62, 0.5));">
             </div>
@@ -193,15 +265,11 @@
           <div class="header-right-actions" style="display: flex; gap: 0.5rem; align-items: center;">
             <button class="header-icon-btn" id="header-cart-btn" title="Shopping Cart" style="position: relative;">
               <span class="cart-badge-count" id="header-cart-count" style="display: none; position: absolute; top: -5px; right: -5px; background: var(--accent-color); color: #fff; font-size: 0.65rem; font-weight: 900; width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">0</span>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
+              <i class="ph ph-shopping-cart" style="font-size: 1.5rem;"></i>
             </button>
             <button class="header-icon-btn" id="header-notif-btn" title="Notifications">
               <span class="notif-badge-dot"></span>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <i class="ph ph-bell" style="font-size: 1.5rem;"></i>
             </button>
           </div>
         </div>
@@ -303,23 +371,9 @@
                 <button class="cta-button mini-cta-btn" id="btn-open-sponsor" style="margin: 0; min-height: auto; width: auto; font-size: 0.65rem; padding: 0.4rem 0.8rem;">CLAIM</button>
               </div>
 
-              <!-- Latest News Card -->
-              <div class="latest-signal-preview-card" id="home-news-card" style="display: flex; gap: 12px; align-items: center; padding: 1.25rem; margin-top: 1.25rem;">
-                <div class="news-thumbnail-frame" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);">
-                  <img src="images/THIRSTY_77.JPG" alt="ThirstyClub999 Past Event" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="news-content-block" style="flex: 1; text-align: left;">
-                  <div class="signal-header" style="margin-bottom: 0.3rem; display: flex; justify-content: space-between; align-items: center;">
-                    <span class="signal-label" style="color: var(--accent-color); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.1em;">WHAT'S NEW?</span>
-                    <span class="signal-time">RECENT EVENT</span>
-                  </div>
-                  <div class="news-title" style="font-weight: 800; font-size: 0.95rem; color: #fff; margin-bottom: 0.2rem; line-height: 1.2;">ThirstyClub999 Launch</div>
-                  <p class="news-snippet" style="font-size: 0.75rem; color: var(--text-dim); margin: 0 0 0.5rem 0; line-height: 1.3;">Our last private VIP meetup in Lagos was a massive success. Relive the cyber-lounge experience.</p>
-                  <div class="news-link-btn" id="home-news-read-btn" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-color); display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                    <span>VIEW GALLERY</span>
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </div>
-                </div>
+              <!-- Latest News Container -->
+              <div id="home-news-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 1.25rem;">
+                <!-- Dynamically populated in main.js -->
               </div>
             </div>
           </div>
@@ -397,7 +451,6 @@
 
               <!-- Connected Apps (Composio) -->
               <div class="connected-apps-card">
-                <div style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block; margin-bottom: 0.75rem;">POWERED BY COMPOSIO</div>
                 <h4 class="connected-apps-title">CONNECTED APPS</h4>
                 <p class="connected-apps-desc">Verify streaming achievements on Spotify and raiding interactions on social platforms automatically.</p>
                 
@@ -477,6 +530,14 @@
                     <input type="text" id="referral-link-input" class="referral-input-field" readonly value="https://thirsty.guava.earth/invite/guest">
                     <button id="btn-copy-referral" class="referral-btn-copy">Copy Link</button>
                   </div>
+                </div>
+              </div>
+
+              <!-- Direct Messages / Inbox Card -->
+              <div class="connected-apps-card" id="profile-inbox-card" style="margin-top: 1.25rem;">
+                <h4 class="connected-apps-title">INBOX / DIRECT MESSAGES</h4>
+                <div id="profile-inbox-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                  <div style="text-align: center; color: var(--text-dim); font-size: 0.8rem; padding: 1rem 0;">NO MESSAGES RECEIVED</div>
                 </div>
               </div>
 
@@ -592,7 +653,7 @@
                     <!-- Core Glow Panel -->
                     <rect x="80" y="90" width="40" height="40" rx="3" fill="rgba(255, 62, 62, 0.1)" stroke="#ff3e3e" stroke-width="2"/>
                     <!-- Text 999 -->
-                    <text x="100" y="116" font-family="'Satoshi', monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
+                    <text x="100" y="116" font-family="Retron2000, monospace" font-size="16" font-weight="900" fill="#ffffff" text-anchor="middle">999</text>
                   </svg>
                 </div>
 
@@ -614,7 +675,7 @@
 
 
               <!-- Community Ad Banner Carousel -->
-              <div class="community-ad-carousel carousel-container" id="community-ad-card" style="margin-bottom: 1.5rem; height: 120px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255, 62, 62, 0.15); background: rgba(0,0,0,0.95); position: relative;">
+              <div class="community-ad-carousel carousel-container" id="community-ad-card" style="margin-bottom: 1.5rem; height: 120px; border-radius: 12px; overflow: hidden; position: relative;">
                 <div class="carousel-track" id="community-ad-track" style="position: relative; width: 100%; height: 100%;">
                   
                   <!-- Ad Slide 1 -->
@@ -622,7 +683,7 @@
                     <img src="images/THIRSTY_77.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: var(--accent-color); color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">SPONSORED</span>
-                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ThirstyClub999 Premium Wear</h4>
+                      <h4 style="font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">ThirstyClub999 Premium Wear</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Members get early access to drop coords</p>
                     </div>
                   </div>
@@ -632,7 +693,7 @@
                     <img src="images/THIRSTY_37.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: #39b54a; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">LIVE AD</span>
-                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Wet Vibes Vol 2 Coming Soon</h4>
+                      <h4 style="font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Wet Vibes Vol 2 Coming Soon</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Pre-save next mixtape streaming on Spotify</p>
                     </div>
                   </div>
@@ -642,7 +703,7 @@
                     <img src="images/THIRSTY_75.JPG" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; position: absolute; z-index:1;">
                     <div style="position: relative; z-index: 2; text-align: center; padding: 1rem;">
                       <span style="font-size: 0.55rem; background: #ffaa00; color: #fff; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;">EXCLUSIVE</span>
-                      <h4 style="font-family: 'Satoshi', sans-serif; font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lagos Cyber-Lounge RSVP</h4>
+                      <h4 style="font-size: 0.95rem; font-weight: 900; margin: 0.3rem 0 0.1rem 0; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lagos Cyber-Lounge RSVP</h4>
                       <p style="font-size: 0.65rem; color: #eee; margin: 0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">Lock your physical access passes now</p>
                     </div>
                   </div>
@@ -667,6 +728,32 @@
 
               <!-- Content Area 1: Signals Feed -->
               <div id="community-signals-section">
+                <!-- Admin-only Post Creator -->
+                <div id="signals-post-creator-container" style="display: none; margin-bottom: 1.5rem;">
+                  <div class="signal-post-card" style="padding: 1.5rem; text-align: left;">
+                    <div style="font-size: 0.65rem; color: var(--accent-color); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;">NEW BROADCAST SIGNAL</div>
+                    <textarea id="creator-post-text" placeholder="Share news, drops, or updates with the Club..." style="width: 100%; min-height: 80px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 0.75rem; font-size: 0.85rem; resize: none; outline: none; margin-bottom: 0.75rem; box-sizing: border-box; transition: border-color 0.2s;" onfocus="this.style.borderColor='rgba(255,62,62,0.3)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
+                    
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                      <input type="text" id="creator-post-image" placeholder="Image URL (optional)" style="flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; padding: 0.5rem 0.75rem; font-size: 0.8rem; outline: none; box-sizing: border-box; transition: border-color 0.2s;" onfocus="this.style.borderColor='rgba(255,62,62,0.3)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+                      <button id="btn-toggle-poll-fields" class="subtab-btn" style="margin: 0; padding: 0.5rem 1rem; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; background: transparent; color: #fff; font-size: 0.7rem; font-weight: 700; height: auto; width: auto; min-height: auto;">+ ADD POLL</button>
+                    </div>
+
+                    <!-- Poll Creator fields (hidden by default) -->
+                    <div id="creator-poll-fields" style="display: none; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; box-sizing: border-box;">
+                      <div style="font-size: 0.6rem; color: var(--text-dim); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem;">CREATE POLL</div>
+                      <input type="text" id="creator-poll-question" placeholder="Poll Question (e.g. Favorite track?)" style="width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: #fff; padding: 0.4rem 0.6rem; font-size: 0.78rem; outline: none; margin-bottom: 0.5rem; box-sizing: border-box;">
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.25rem;">
+                        <input type="text" id="creator-poll-opt1" placeholder="Option 1" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: #fff; padding: 0.4rem 0.6rem; font-size: 0.75rem; outline: none; box-sizing: border-box;">
+                        <input type="text" id="creator-poll-opt2" placeholder="Option 2" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: #fff; padding: 0.4rem 0.6rem; font-size: 0.75rem; outline: none; box-sizing: border-box;">
+                        <input type="text" id="creator-poll-opt3" placeholder="Option 3 (optional)" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: #fff; padding: 0.4rem 0.6rem; font-size: 0.75rem; outline: none; box-sizing: border-box;">
+                        <input type="text" id="creator-poll-opt4" placeholder="Option 4 (optional)" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: #fff; padding: 0.4rem 0.6rem; font-size: 0.75rem; outline: none; box-sizing: border-box;">
+                      </div>
+                    </div>
+
+                    <button id="btn-submit-post" class="cta-button" style="width: 100%; margin: 0; min-height: auto; padding: 0.7rem; font-size: 0.8rem; background: var(--accent-color); color: #fff; border: none; font-weight: 800; border-radius: 6px; cursor: pointer;">BROADCAST SIGNAL</button>
+                  </div>
+                </div>
                 <div class="signals-feed-list" id="signals-feed-container">
                   <!-- Dynamically populated in main.js -->
                 </div>
@@ -700,218 +787,256 @@
               <div id="community-games-section" style="display: none;">
                 
                 <!-- Games Hub Select Panel -->
-                <div id="games-hub-select" class="games-hub-grid">
-                  <!-- Game Card 1: Trivia Blitz (Light/Dark Responsive) -->
-                  <div class="game-select-card card-trivia" id="btn-select-trivia">
-                    <div class="game-card-left">
-                      <div class="game-card-info">
-                        <h3 class="game-card-title">
-                          <span class="title-bold">Trivia</span>
-                          <span class="title-light">Blitz</span>
-                        </h3>
-                        <p class="game-card-desc">1-min rapid Thirsty quiz. Speed & accuracy determine rank.</p>
-                      </div>
-                      <div class="game-card-cta">
-                        <div class="cta-circle">
-                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                          </svg>
-                        </div>
-                        <span class="cta-text">PLAY</span>
-                      </div>
-                    </div>
-                    <div class="game-card-right">
-                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <linearGradient id="brainGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3a3a3c"/>
-                            <stop offset="100%" stop-color="#1c1c1e"/>
-                          </linearGradient>
-                          <linearGradient id="brainGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ff453a"/>
-                            <stop offset="100%" stop-color="#ff9f0a"/>
-                          </linearGradient>
-                          <filter id="brainShadow" x="-10%" y="-10%" width="130%" height="130%">
-                            <feDropShadow dx="5" dy="10" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
-                          </filter>
-                        </defs>
-                        <circle cx="100" cy="100" r="60" fill="url(#brainGrad1)" opacity="0.05" />
-                        <g filter="url(#brainShadow)">
-                          <path d="M100 50 C125 50, 145 65, 145 90 C145 105, 135 115, 135 125 C135 135, 125 145, 115 145 C110 145, 105 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
-                          <path d="M100 50 C75 50, 55 65, 55 90 C55 105, 65 115, 65 125 C65 135, 75 145, 85 145 C90 145, 95 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
-                          <path d="M75 80 C80 75, 90 85, 85 95 C80 105, 70 100, 75 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
-                          <path d="M125 80 C120 75, 110 85, 115 95 C120 105, 130 100, 125 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
-                          <path d="M90 65 C95 60, 105 60, 110 65" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
-                          <path d="M90 125 C95 130, 105 130, 110 125" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
-                          <path d="M105 40 L80 100 L105 100 L95 155 L130 90 L105 90 Z" fill="url(#brainGrad2)" filter="drop-shadow(0px 0px 8px rgba(255, 69, 58, 0.6))"/>
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
+                <div id="games-hub-select">
                   
-                  <!-- Game Card 2: Treasure Hunt (Orange Gradient) -->
-                  <div class="game-select-card card-treasure" id="btn-select-treasure">
-                    <div class="game-card-left">
-                      <div class="game-card-info">
-                        <h3 class="game-card-title">
-                          <span class="title-bold">Treasure</span>
-                          <span class="title-light">Hunt</span>
-                        </h3>
-                        <p class="game-card-desc">Follow cryptic clues to find secret mystery boxes and codes.</p>
-                      </div>
-                      <div class="game-card-cta">
-                        <div class="cta-circle">
-                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                          </svg>
-                        </div>
-                        <span class="cta-text">PLAY</span>
+                  <!-- Gamified Lobby Header (Duolingo Vibe) -->
+                  <div class="lobby-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                    <div style="text-align: left;">
+                      <div style="font-size: 0.65rem; color: var(--accent-color); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem;">GAMES LOBBY</div>
+                      <h3 style="font-size: 1.4rem; color: #fff; margin: 0 0 0.2rem 0; letter-spacing: 0.05em; text-transform: uppercase;">MEMBERS HUB</h3>
+                      <div style="font-size: 0.72rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; font-weight: 700;">
+                        <span style="display: inline-block; width: 6px; height: 6px; background: #2ed573; border-radius: 50%;"></span>
+                        <span>42 MEMBERS ONLINE</span>
                       </div>
                     </div>
-                    <div class="game-card-right">
-                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <filter id="cursorShadow" x="-20%" y="-20%" width="150%" height="150%">
-                            <feDropShadow dx="8" dy="12" stdDeviation="10" flood-color="#801a00" flood-opacity="0.5"/>
-                          </filter>
-                          <linearGradient id="cursorBezel" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fff1e0"/>
-                            <stop offset="100%" stop-color="#ffd2a6"/>
-                          </linearGradient>
-                          <linearGradient id="cursorBody" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="100%" stop-color="#f5f5f7"/>
-                          </linearGradient>
-                        </defs>
-                        <g filter="url(#cursorShadow)" transform="translate(10, 10)">
-                          <path d="M 60 45 L 132 117 L 106 122 L 136 177 L 121 184 L 91 129 L 60 148 Z" fill="url(#cursorBezel)"/>
-                          <path d="M 57 40 L 129 112 L 103 117 L 133 172 L 118 179 L 88 124 L 57 143 Z" fill="url(#cursorBody)" stroke="#ffffff" stroke-width="1.5"/>
-                        </g>
-                      </svg>
+                    <div style="width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 62, 62, 0.2), transparent); border: 1px solid rgba(255, 62, 62, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 0 15px rgba(255, 62, 62, 0.1);">
+                      🎮
                     </div>
                   </div>
 
-                  <!-- Game Card 3: Social Raids (Black Gradient) -->
-                  <div class="game-select-card card-raids" id="btn-select-raids">
-                    <div class="game-card-left">
-                      <div class="game-card-info">
-                        <h3 class="game-card-title">
-                          <span class="title-bold">Social</span>
-                          <span class="title-light">Raids</span>
-                        </h3>
-                        <p class="game-card-desc">Help boost the club on social media & expand the universe.</p>
-                      </div>
-                      <div class="game-card-cta">
-                        <div class="cta-circle">
-                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                          </svg>
-                        </div>
-                        <span class="cta-text">PLAY</span>
-                      </div>
-                    </div>
-                    <div class="game-card-right">
-                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <filter id="targetShadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="5" dy="10" stdDeviation="6" flood-color="#000" flood-opacity="0.6"/>
-                          </filter>
-                          <linearGradient id="ringWhite" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="100%" stop-color="#d1d1d6"/>
-                          </linearGradient>
-                          <linearGradient id="ringRed" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#ff3b30"/>
-                            <stop offset="100%" stop-color="#c70000"/>
-                          </linearGradient>
-                        </defs>
-                        <g filter="url(#targetShadow)" transform="rotate(-15, 100, 100)">
-                          <ellipse cx="100" cy="125" rx="70" ry="40" fill="#2c2c2e" />
-                          <ellipse cx="100" cy="120" rx="70" ry="40" fill="url(#ringWhite)" />
-                          <ellipse cx="100" cy="120" rx="55" ry="31" fill="url(#ringRed)" />
-                          <ellipse cx="100" cy="120" rx="40" ry="22" fill="url(#ringWhite)" />
-                          <ellipse cx="100" cy="120" rx="20" ry="11" fill="url(#ringRed)" />
-                          <ellipse cx="100" cy="120" rx="6" ry="3" fill="#1c1c1e" />
-                          <g transform="translate(100, 120) rotate(-60)">
-                            <line x1="0" y1="0" x2="0" y2="-60" stroke="#e5e5ea" stroke-width="2.5" />
-                            <path d="M-6 -60 L6 -60 L10 -80 L-10 -80 Z" fill="url(#ringRed)" />
-                            <line x1="0" y1="-60" x2="0" y2="-80" stroke="#ffffff" stroke-width="1" />
-                            <rect x="-3" y="-25" width="6" height="15" rx="1.5" fill="#ffd60a" />
-                          </g>
-                          <g transform="translate(95, 118) rotate(35)">
-                            <line x1="0" y1="0" x2="0" y2="-65" stroke="#e5e5ea" stroke-width="2.5" />
-                            <path d="M-6 -65 L6 -65 L10 -85 L-10 -85 Z" fill="url(#ringRed)" />
-                            <line x1="0" y1="-65" x2="0" y2="-85" stroke="#ffffff" stroke-width="1" />
-                            <rect x="-3" y="-30" width="6" height="15" rx="1.5" fill="#ffd60a" />
-                          </g>
-                          <g transform="translate(108, 122) rotate(-10)">
-                            <line x1="0" y1="0" x2="0" y2="-55" stroke="#e5e5ea" stroke-width="2.5" />
-                            <path d="M-6 -55 L6 -55 L10 -75 L-10 -75 Z" fill="url(#ringRed)" />
-                            <line x1="0" y1="-55" x2="0" y2="-75" stroke="#ffffff" stroke-width="1" />
-                            <rect x="-3" y="-20" width="6" height="15" rx="1.5" fill="#ffd60a" />
-                          </g>
-                        </g>
-                      </svg>
+                  <!-- CLUB STREAKS (Duolingo Friends Streak Vibe) -->
+                  <div class="lobby-streaks-container" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15); text-align: left;">
+                    <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.85rem;">CLUB STREAKS</div>
+                    <div class="streaks-list-wrapper" id="lobby-streaks-list" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.25rem; -webkit-overflow-scrolling: touch;">
+                      <!-- Populated dynamically in main.js -->
                     </div>
                   </div>
 
-                  <!-- Game Card 4: Bounties (Light/Dark Responsive) -->
-                  <div class="game-select-card card-bounties" id="btn-select-bounties">
-                    <div class="game-card-left">
-                      <div class="game-card-info">
-                        <h3 class="game-card-title">
-                          <span class="title-bold">Community</span>
-                          <span class="title-light">Bounties</span>
-                        </h3>
-                        <p class="game-card-desc">Complete special community tasks & claim points.</p>
-                      </div>
-                      <div class="game-card-cta">
-                        <div class="cta-circle">
-                          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                          </svg>
+                  <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; text-align: left;">SELECT GAME & drops MISSION</div>
+
+                  <!-- Games Selection Grid -->
+                  <div class="games-hub-grid">
+                    <!-- Game Card 1: Trivia Blitz (Light/Dark Responsive) -->
+                    <div class="game-select-card card-trivia" id="btn-select-trivia">
+                      <div class="game-card-left">
+                        <div class="game-card-info">
+                          <h3 class="game-card-title">
+                            <span class="title-bold">Trivia</span>
+                            <span class="title-light">Blitz</span>
+                          </h3>
+                          <p class="game-card-desc">1-min rapid Thirsty quiz. Speed & accuracy determine rank.</p>
                         </div>
-                        <span class="cta-text">PLAY</span>
+                        <div class="game-card-cta">
+                          <div class="cta-circle">
+                            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="7" y1="17" x2="17" y2="7"></line>
+                              <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                          </div>
+                          <span class="cta-text">PLAY</span>
+                        </div>
+                      </div>
+                      <div class="game-card-right">
+                        <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <linearGradient id="brainGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#3a3a3c"/>
+                              <stop offset="100%" stop-color="#1c1c1e"/>
+                            </linearGradient>
+                            <linearGradient id="brainGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#ff453a"/>
+                              <stop offset="100%" stop-color="#ff9f0a"/>
+                            </linearGradient>
+                            <filter id="brainShadow" x="-10%" y="-10%" width="130%" height="130%">
+                              <feDropShadow dx="5" dy="10" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+                            </filter>
+                          </defs>
+                          <circle cx="100" cy="100" r="60" fill="url(#brainGrad1)" opacity="0.05" />
+                          <g filter="url(#brainShadow)">
+                            <path d="M100 50 C125 50, 145 65, 145 90 C145 105, 135 115, 135 125 C135 135, 125 145, 115 145 C110 145, 105 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
+                            <path d="M100 50 C75 50, 55 65, 55 90 C55 105, 65 115, 65 125 C65 135, 75 145, 85 145 C90 145, 95 140, 100 140" fill="url(#brainGrad1)" stroke="#2c2c2e" stroke-width="2"/>
+                            <path d="M75 80 C80 75, 90 85, 85 95 C80 105, 70 100, 75 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M125 80 C120 75, 110 85, 115 95 C120 105, 130 100, 125 110" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M90 65 C95 60, 105 60, 110 65" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M90 125 C95 130, 105 130, 110 125" fill="none" stroke="#48484a" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M105 40 L80 100 L105 100 L95 155 L130 90 L105 90 Z" fill="url(#brainGrad2)" filter="drop-shadow(0px 0px 8px rgba(255, 69, 58, 0.6))"/>
+                          </g>
+                        </svg>
                       </div>
                     </div>
-                    <div class="game-card-right">
-                      <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                          <filter id="glassShadow" x="-25%" y="-25%" width="150%" height="150%">
-                            <feDropShadow dx="8" dy="12" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
-                          </filter>
-                          <linearGradient id="metalRim" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#8e8e93"/>
-                            <stop offset="30%" stop-color="#aeaeb2"/>
-                            <stop offset="50%" stop-color="#ffffff"/>
-                            <stop offset="70%" stop-color="#3a3a3c"/>
-                            <stop offset="100%" stop-color="#1c1c1e"/>
-                          </linearGradient>
-                          <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#34c759" stop-opacity="0.1"/>
-                            <stop offset="50%" stop-color="#007aff" stop-opacity="0.05"/>
-                            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3"/>
-                          </linearGradient>
-                          <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3a3a3c"/>
-                            <stop offset="50%" stop-color="#1c1c1e"/>
-                            <stop offset="100%" stop-color="#000000"/>
-                          </linearGradient>
-                        </defs>
-                        <g filter="url(#glassShadow)">
-                          <rect x="40" y="115" width="16" height="55" rx="8" transform="rotate(45, 48, 142.5)" fill="url(#handleGrad)" stroke="#1c1c1e" stroke-width="1" />
-                          <rect x="44" y="115" width="8" height="12" rx="2" transform="rotate(45, 48, 142.5)" fill="#aeaeb2" />
-                          <circle cx="120" cy="80" r="45" fill="none" stroke="url(#metalRim)" stroke-width="7" />
-                          <circle cx="120" cy="80" r="41.5" fill="url(#lensReflect)" />
-                          <path d="M 92 65 C 100 52, 125 45, 142 55" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-                        </g>
-                      </svg>
+                    
+                    <!-- Game Card 2: Treasure Hunt (Orange Gradient) -->
+                    <div class="game-select-card card-treasure" id="btn-select-treasure">
+                      <div class="game-card-left">
+                        <div class="game-card-info">
+                          <h3 class="game-card-title">
+                            <span class="title-bold">Treasure</span>
+                            <span class="title-light">Hunt</span>
+                          </h3>
+                          <p class="game-card-desc">Follow cryptic clues to find secret mystery boxes and codes.</p>
+                        </div>
+                        <div class="game-card-cta">
+                          <div class="cta-circle">
+                            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="7" y1="17" x2="17" y2="7"></line>
+                              <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                          </div>
+                          <span class="cta-text">PLAY</span>
+                        </div>
+                      </div>
+                      <div class="game-card-right">
+                        <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <filter id="cursorShadow" x="-20%" y="-20%" width="150%" height="150%">
+                              <feDropShadow dx="8" dy="12" stdDeviation="10" flood-color="#801a00" flood-opacity="0.5"/>
+                            </filter>
+                            <linearGradient id="cursorBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#fff1e0"/>
+                              <stop offset="100%" stop-color="#ffd2a6"/>
+                            </linearGradient>
+                            <linearGradient id="cursorBody" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stop-color="#ffffff"/>
+                              <stop offset="100%" stop-color="#f5f5f7"/>
+                            </linearGradient>
+                          </defs>
+                          <g filter="url(#cursorShadow)" transform="translate(10, 10)">
+                            <path d="M 60 45 L 132 117 L 106 122 L 136 177 L 121 184 L 91 129 L 60 148 Z" fill="url(#cursorBezel)"/>
+                            <path d="M 57 40 L 129 112 L 103 117 L 133 172 L 118 179 L 88 124 L 57 143 Z" fill="url(#cursorBody)" stroke="#ffffff" stroke-width="1.5"/>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Game Card 3: Social Raids (Black Gradient) -->
+                    <div class="game-select-card card-raids" id="btn-select-raids">
+                      <div class="game-card-left">
+                        <div class="game-card-info">
+                          <h3 class="game-card-title">
+                            <span class="title-bold">Social</span>
+                            <span class="title-light">Raids</span>
+                          </h3>
+                          <p class="game-card-desc">Help boost the club on social media & expand the universe.</p>
+                        </div>
+                        <div class="game-card-cta">
+                          <div class="cta-circle">
+                            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="7" y1="17" x2="17" y2="7"></line>
+                              <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                          </div>
+                          <span class="cta-text">PLAY</span>
+                        </div>
+                      </div>
+                      <div class="game-card-right">
+                        <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <filter id="targetShadow" x="-20%" y="-20%" width="140%" height="140%">
+                              <feDropShadow dx="5" dy="10" stdDeviation="6" flood-color="#000" flood-opacity="0.6"/>
+                            </filter>
+                            <linearGradient id="ringWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#ffffff"/>
+                              <stop offset="100%" stop-color="#d1d1d6"/>
+                            </linearGradient>
+                            <linearGradient id="ringRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#ff3b30"/>
+                              <stop offset="100%" stop-color="#c70000"/>
+                            </linearGradient>
+                          </defs>
+                          <g filter="url(#targetShadow)" transform="rotate(-15, 100, 100)">
+                            <ellipse cx="100" cy="125" rx="70" ry="40" fill="#2c2c2e" />
+                            <ellipse cx="100" cy="120" rx="70" ry="40" fill="url(#ringWhite)" />
+                            <ellipse cx="100" cy="120" rx="55" ry="31" fill="url(#ringRed)" />
+                            <ellipse cx="100" cy="120" rx="40" ry="22" fill="url(#ringWhite)" />
+                            <ellipse cx="100" cy="120" rx="20" ry="11" fill="url(#ringRed)" />
+                            <ellipse cx="100" cy="120" rx="6" ry="3" fill="#1c1c1e" />
+                            <g transform="translate(100, 120) rotate(-60)">
+                              <line x1="0" y1="0" x2="0" y2="-60" stroke="#e5e5ea" stroke-width="2.5" />
+                              <path d="M-6 -60 L6 -60 L10 -80 L-10 -80 Z" fill="url(#ringRed)" />
+                              <line x1="0" y1="-60" x2="0" y2="-80" stroke="#ffffff" stroke-width="1" />
+                              <rect x="-3" y="-25" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                            </g>
+                            <g transform="translate(95, 118) rotate(35)">
+                              <line x1="0" y1="0" x2="0" y2="-65" stroke="#e5e5ea" stroke-width="2.5" />
+                              <path d="M-6 -65 L6 -65 L10 -85 L-10 -85 Z" fill="url(#ringRed)" />
+                              <line x1="0" y1="-65" x2="0" y2="-85" stroke="#ffffff" stroke-width="1" />
+                              <rect x="-3" y="-30" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                            </g>
+                            <g transform="translate(108, 122) rotate(-10)">
+                              <line x1="0" y1="0" x2="0" y2="-55" stroke="#e5e5ea" stroke-width="2.5" />
+                              <path d="M-6 -55 L6 -55 L10 -75 L-10 -75 Z" fill="url(#ringRed)" />
+                              <line x1="0" y1="-55" x2="0" y2="-75" stroke="#ffffff" stroke-width="1" />
+                              <rect x="-3" y="-20" width="6" height="15" rx="1.5" fill="#ffd60a" />
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Game Card 4: Bounties (Light/Dark Responsive) -->
+                    <div class="game-select-card card-bounties" id="btn-select-bounties">
+                      <div class="game-card-left">
+                        <div class="game-card-info">
+                          <h3 class="game-card-title">
+                            <span class="title-bold">Community</span>
+                            <span class="title-light">Bounties</span>
+                          </h3>
+                          <p class="game-card-desc">Complete special community tasks & claim points.</p>
+                        </div>
+                        <div class="game-card-cta">
+                          <div class="cta-circle">
+                            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                              <line x1="7" y1="17" x2="17" y2="7"></line>
+                              <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                          </div>
+                          <span class="cta-text">PLAY</span>
+                        </div>
+                      </div>
+                      <div class="game-card-right">
+                        <svg class="game-card-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <filter id="glassShadow" x="-25%" y="-25%" width="150%" height="150%">
+                              <feDropShadow dx="8" dy="12" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
+                            </filter>
+                            <linearGradient id="metalRim" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#8e8e93"/>
+                              <stop offset="30%" stop-color="#aeaeb2"/>
+                              <stop offset="50%" stop-color="#ffffff"/>
+                              <stop offset="70%" stop-color="#3a3a3c"/>
+                              <stop offset="100%" stop-color="#1c1c1e"/>
+                            </linearGradient>
+                            <linearGradient id="lensReflect" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#34c759" stop-opacity="0.1"/>
+                              <stop offset="50%" stop-color="#007aff" stop-opacity="0.05"/>
+                              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3"/>
+                            </linearGradient>
+                            <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stop-color="#3a3a3c"/>
+                              <stop offset="50%" stop-color="#1c1c1e"/>
+                              <stop offset="100%" stop-color="#000000"/>
+                            </linearGradient>
+                          </defs>
+                          <g filter="url(#glassShadow)">
+                            <rect x="40" y="115" width="16" height="55" rx="8" transform="rotate(45, 48, 142.5)" fill="url(#handleGrad)" stroke="#1c1c1e" stroke-width="1" />
+                            <rect x="44" y="115" width="8" height="12" rx="2" transform="rotate(45, 48, 142.5)" fill="#aeaeb2" />
+                            <circle cx="120" cy="80" r="45" fill="none" stroke="url(#metalRim)" stroke-width="7" />
+                            <circle cx="120" cy="80" r="41.5" fill="url(#lensReflect)" />
+                            <path d="M 92 65 C 100 52, 125 45, 142 55" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                          </g>
+                        </svg>
+                      </div>
                     </div>
                   </div>
+
+                  <!-- RECENTS (Duolingo Recent Activity Feed Vibe) -->
+                  <div class="lobby-recents-container" style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15); text-align: left; margin-top: 1.25rem;">
+                    <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.85rem;">RECENT ACTIVITIES</div>
+                    <div class="lobby-recents-list" id="lobby-recents-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                      <!-- Populated dynamically in main.js -->
+                    </div>
+                  </div>
+
                 </div>
 
                 <!-- Trivia Blitz View -->
@@ -1037,8 +1162,8 @@
           <!-- 09. BADGES VIEW -->
           <div class="app-view" id="view-badges">
             <div class="view-content">
-              <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--accent-color); letter-spacing: 0.05em; text-transform: uppercase;">ACHIEVEMENTS</div>
-              <div class="view-intro-desc" style="font-family: 'Satoshi', sans-serif; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; letter-spacing: 0.02em; text-transform: uppercase;">COLLECT PREMIUM BADGES & STAMPS</div>
+              <div class="view-intro-title" style="font-size: 1.5rem; font-weight: 900; color: var(--accent-color); letter-spacing: 0.05em; text-transform: uppercase;">ACHIEVEMENTS</div>
+              <div class="view-intro-desc" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 1.5rem; letter-spacing: 0.02em; text-transform: uppercase;">COLLECT PREMIUM BADGES & STAMPS</div>
 
               <div class="badges-grid">
                 
@@ -1050,12 +1175,12 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#23395B" />
                       </g>
-                      <text x="50" y="21" fill="#F5D76E" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">LEADER</text>
+                      <text x="50" y="21" fill="#F5D76E" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">LEADER</text>
                       <circle cx="50" cy="65" r="22" fill="#F5D76E" stroke="#23395B" stroke-width="2" />
                       <path d="M15,95 L32,70 L48,95 L65,75 L85,100 Z" fill="#8CC7F5" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
                       <path d="M40,95 C40,90 42,85 45,82 C46,80 44,76 43,74 C47,75 49,70 47,66 C51,68 53,65 52,60 C56,66 60,68 58,74 C59,76 61,78 61,82 C61,86 58,95 58,95 Z" fill="#ffffff" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
                       <circle cx="50" cy="120" r="11" fill="#F26B4A" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1071,15 +1196,15 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#8AC6A2" />
                       </g>
-                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">CONNECTOR</text>
+                      <text x="50" y="21" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">CONNECTOR</text>
                       <rect x="22" y="44" width="56" height="42" rx="4" fill="#ffffff" stroke="#23395B" stroke-width="2.5" />
                       <line x1="22" y1="54" x2="78" y2="54" stroke="#23395B" stroke-width="2" />
                       <circle cx="28" cy="49" r="2" fill="#F26B4A" />
                       <circle cx="34" cy="49" r="2" fill="#F5D76E" />
                       <circle cx="40" cy="49" r="2" fill="#8AC6A2" />
-                      <text x="50" y="78" fill="#F26B4A" font-family="'Satoshi', sans-serif" font-weight="900" font-size="16" text-anchor="middle">&lt;/&gt;</text>
+                      <text x="50" y="78" fill="#F26B4A" font-family="Retron2000, monospace" font-weight="900" font-size="16" text-anchor="middle">&lt;/&gt;</text>
                       <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1095,14 +1220,14 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#8CC7F5" />
                       </g>
-                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">RAIDER</text>
+                      <text x="50" y="21" fill="#23395B" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">RAIDER</text>
                       <circle cx="50" cy="68" r="20" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
                       <path d="M35,62 L65,62 C68,62 68,65 68,68 L68,76 C68,79 65,79 63,79 L53,79 L45,86 L45,79 L35,79 C32,79 32,76 32,73 L32,65 C32,62 35,62 35,62 Z" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
                       <path d="M28,68 C28,52 72,52 72,68" fill="none" stroke="#23395B" stroke-width="3" />
                       <rect x="25" y="65" width="6" height="10" rx="2" fill="#23395B" />
                       <rect x="69" y="65" width="6" height="10" rx="2" fill="#23395B" />
                       <circle cx="50" cy="120" r="11" fill="#8AC6A2" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1118,13 +1243,13 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#F26B4A" />
                       </g>
-                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">PIONEER</text>
+                      <text x="50" y="21" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">PIONEER</text>
                       <circle cx="40" cy="52" r="12" fill="#F5D76E" />
                       <path d="M15,95 Q50,85 85,95" fill="none" stroke="#23395B" stroke-width="2" />
                       <path d="M26,82 C35,82 32,68 50,68 C68,68 65,82 74,82 C82,82 82,88 74,88 C50,88 50,88 26,88 C18,88 18,82 26,82 Z" fill="#ffffff" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
                       <rect x="35" y="77" width="30" height="5" fill="#F26B4A" stroke="#23395B" stroke-width="1.5" />
                       <circle cx="50" cy="120" r="11" fill="#F5D76E" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1140,16 +1265,16 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#8CC7F5" />
                       </g>
-                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">TRIVIA</text>
+                      <text x="50" y="21" fill="#23395B" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">TRIVIA</text>
                       <g stroke="#23395B" stroke-width="2" stroke-linejoin="round">
                         <rect x="42" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(15 56 65)" />
                         <rect x="34" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(5 48 65)" />
                         <rect x="25" y="44" width="28" height="42" rx="3" fill="#ffffff" transform="rotate(-8 39 65)" />
                       </g>
-                      <text x="32" y="54" fill="#F26B4A" font-family="sans-serif" font-weight="800" font-size="6">A</text>
+                      <text x="32" y="54" fill="#F26B4A" font-family="Retron2000, monospace" font-weight="800" font-size="6">A</text>
                       <path d="M39,65 L41.5,60 L44,65 L41.5,70 Z" fill="#F26B4A" />
                       <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1165,7 +1290,7 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#23395B" />
                       </g>
-                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">COINS</text>
+                      <text x="50" y="21" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">COINS</text>
                       <ellipse cx="50" cy="68" rx="20" ry="16" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
                       <rect x="68" y="64" width="6" height="8" rx="2" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
                       <polygon points="36,54 44,46 44,54" fill="#8CC7F5" stroke="#23395B" stroke-width="2" />
@@ -1174,7 +1299,7 @@
                       <line x1="50" y1="56" x2="50" y2="62" stroke="#23395B" stroke-width="3" stroke-linecap="round" />
                       <circle cx="50" cy="44" r="5" fill="#F5D76E" stroke="#23395B" stroke-width="1.5" />
                       <circle cx="50" cy="120" r="11" fill="#F26B4A" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1190,17 +1315,17 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#F5D76E" />
                       </g>
-                      <text x="50" y="21" fill="#23395B" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SHOPPER</text>
+                      <text x="50" y="21" fill="#23395B" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SHOPPER</text>
                       <path d="M22,46 Q28,40 34,46" stroke="#23395B" stroke-width="2" fill="none" />
                       <path d="M66,46 Q72,40 78,46" stroke="#23395B" stroke-width="2" fill="none" />
-                      <text x="24" y="56" fill="#8AC6A2" font-family="sans-serif" font-weight="900" font-size="8">$</text>
-                      <text x="74" y="56" fill="#8AC6A2" font-family="sans-serif" font-weight="900" font-size="8">$</text>
+                      <text x="24" y="56" fill="#8AC6A2" font-family="Retron2000, monospace" font-weight="900" font-size="8">$</text>
+                      <text x="74" y="56" fill="#8AC6A2" font-family="Retron2000, monospace" font-weight="900" font-size="8">$</text>
                       <path d="M24,72 C24,56 76,56 76,72 Z" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
                       <path d="M24,72 Q37,70 50,72 Q63,70 76,72" fill="none" stroke="#23395B" stroke-width="2" />
                       <line x1="50" y1="72" x2="50" y2="88" stroke="#23395B" stroke-width="2.5" />
                       <path d="M50,88 Q46,90 46,86" fill="none" stroke="#23395B" stroke-width="2.5" />
                       <circle cx="50" cy="120" r="11" fill="#23395B" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1216,7 +1341,7 @@
                         <polygon points="10,5 90,5 90,110 50,130 10,110" fill="#F7F0D8" />
                         <rect x="10" y="5" width="80" height="25" fill="#23395B" />
                       </g>
-                      <text x="50" y="21" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SPREADER</text>
+                      <text x="50" y="21" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="8" text-anchor="middle" letter-spacing="0.05em">SPREADER</text>
                       <path d="M22,54 L25,48 L28,54 L25,60 Z" fill="#F5D76E" />
                       <path d="M72,54 L75,48 L78,54 L75,60 Z" fill="#F5D76E" />
                       <polygon points="30,62 42,50 58,50 70,62 50,86" fill="#F26B4A" stroke="#23395B" stroke-width="2" stroke-linejoin="round" />
@@ -1226,7 +1351,7 @@
                       <line x1="45" y1="62" x2="50" y2="86" stroke="#23395B" stroke-width="1.5" />
                       <line x1="55" y1="62" x2="50" y2="86" stroke="#23395B" stroke-width="1.5" />
                       <circle cx="50" cy="120" r="11" fill="#8CC7F5" stroke="#23395B" stroke-width="2.5" />
-                      <text x="50" y="124" fill="#ffffff" font-family="'Satoshi', sans-serif" font-weight="900" font-size="10" text-anchor="middle">W</text>
+                      <text x="50" y="124" fill="#ffffff" font-family="Retron2000, monospace" font-weight="900" font-size="10" text-anchor="middle">W</text>
                     </svg>
                     <div class="badge-lock-overlay">🔒</div>
                   </div>
@@ -1398,7 +1523,7 @@
                 <!-- Dashboard Header -->
                 <div class="admin-header-bar" style="border-bottom: 1px solid rgba(255, 62, 62, 0.15); display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                   <div>
-                    <h4 class="admin-dashboard-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.8rem; font-weight: 950; color: var(--accent-color); letter-spacing: -0.02em; margin: 0 0 0.25rem 0;">ADMIN PORTAL</h4>
+                    <h4 class="admin-dashboard-title" style="font-size: 1.8rem; font-weight: 950; color: var(--accent-color); letter-spacing: -0.02em; margin: 0 0 0.25rem 0;">ADMIN PORTAL</h4>
                     <p class="admin-dashboard-sub" style="font-size: 0.9rem; color: var(--admin-text-dim); margin: 0; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 600;">ThirstyClub999 Guestlist Management</p>
                   </div>
                   <div class="admin-header-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
@@ -1410,19 +1535,19 @@
                 <!-- Summary Stats -->
                 <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
                   <div class="admin-stat-card stat-card-total" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-total" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-total" style="font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Total Signups</span>
                   </div>
                   <div class="admin-stat-card stat-card-male" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-male" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-male" style="font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Male (M)</span>
                   </div>
                   <div class="admin-stat-card stat-card-female" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-female" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-female" style="font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Female (F)</span>
                   </div>
                   <div class="admin-stat-card stat-card-other" style="background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                    <span class="stat-value" id="admin-stat-other" style="font-family: 'Satoshi', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
+                    <span class="stat-value" id="admin-stat-other" style="font-size: 2.5rem; font-weight: 900; color: var(--accent-color) !important; margin-bottom: 0.4rem; line-height: 1; letter-spacing: -0.03em;">0</span>
                     <span class="stat-label" style="font-size: 0.8rem; color: var(--admin-text-dim); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Other / N/A</span>
                   </div>
                 </div>
@@ -1431,11 +1556,11 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🎟 GUESTLIST</h5>
+                      <h5 class="admin-section-title" style="font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🎟 GUESTLIST</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">View and manage all registered guests. Change access level or view their passport.</p>
                     </div>
                     <div class="admin-table-search-wrapper" style="min-width: 260px;">
-                      <input type="text" id="admin-table-search" class="admin-table-search" placeholder="Search by name, email or ID..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.6rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s ease;">
+                      <input type="text" id="admin-table-search" class="admin-table-search" placeholder="Search by name, email or ID..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.9rem; outline: none; transition: border-color 0.2s ease;">
                     </div>
                   </div>
 
@@ -1443,7 +1568,7 @@
                     <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
                       <div class="admin-control-group">
                         <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">FILTER</label>
-                        <select id="admin-filter-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-family: inherit; font-size: 0.85rem; font-weight: 600; outline: none;">
+                        <select id="admin-filter-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; outline: none;">
                           <option value="all">All Users</option>
                           <option value="checked-in">Checked In</option>
                           <option value="pending">Pending Check-In</option>
@@ -1455,7 +1580,7 @@
                       </div>
                       <div class="admin-control-group">
                         <label style="font-size: 0.75rem; font-weight: 700; color: var(--admin-text-dim); margin-right: 0.5rem; letter-spacing: 0.05em;">SORT</label>
-                        <select id="admin-sort-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-family: inherit; font-size: 0.85rem; font-weight: 600; outline: none;">
+                        <select id="admin-sort-select" class="admin-access-select" style="background: #111111; color: var(--admin-text); border: 1px solid rgba(255, 62, 62, 0.25); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; outline: none;">
                           <option value="newest">Newest First</option>
                           <option value="oldest">Oldest First</option>
                           <option value="name-asc">Name (A-Z)</option>
@@ -1474,13 +1599,13 @@
                       <table class="admin-users-table" id="admin-users-table-el" style="width: 100%; min-width: 760px; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                         <thead>
                           <tr style="border-bottom: 1px solid rgba(255, 62, 62, 0.15);">
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">ThirstyID</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Username</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Email</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Gender</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Access Level</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Registered</th>
-                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-family: inherit; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Action</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">ThirstyID</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Username</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Email</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Gender</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Access Level</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Registered</th>
+                            <th style="background: rgba(10,10,10,0.9); color: var(--text-dim); border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding: 0.85rem 1rem; font-weight: 700; letter-spacing: 0.05em; font-size: 0.75rem; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">Action</th>
                           </tr>
                         </thead>
                         <tbody id="admin-users-list">
@@ -1500,7 +1625,7 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">✉️ WELCOME EMAIL TEMPLATE</h5>
+                      <h5 class="admin-section-title" style="font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">✉️ WELCOME EMAIL TEMPLATE</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Customise the automatic welcome email sent to guests on RSVP. Supports placeholders: <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{username}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{thirstyclub_id}</span> <span class="admin-placeholder-tag" style="display: inline-block; background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-family: monospace; margin-right: 0.25rem;">{place_of_thirst}</span>. Passport image auto-attached.</p>
                     </div>
                     <span class="admin-badge-pill auto-badge" style="background: #e6f6ec; color: #128a3f; border: 1px solid #c8eacc; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">AUTO</span>
@@ -1509,17 +1634,17 @@
                   <div class="admin-form-row" style="margin-bottom: 1.25rem;">
                     <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                       <label for="admin-email-subject" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Email Subject</label>
-                      <input type="text" id="admin-email-subject" class="admin-input" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                      <input type="text" id="admin-email-subject" class="admin-input" placeholder="YOUR ENTRY PASS GRANTED - ThirstyClub999" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
                     </div>
                   </div>
                   <div class="admin-form-row" style="margin-bottom: 1.25rem;">
                     <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                       <label for="admin-email-message" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Welcome Message Body</label>
-                      <textarea id="admin-email-message" rows="5" class="admin-textarea" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
+                      <textarea id="admin-email-message" rows="5" class="admin-textarea" placeholder="Your RSVP for ThirstyClub999 has been successfully confirmed and your passport is ready. Welcome to the Club." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
                     </div>
                   </div>
                   <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                    <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Satoshi', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;">SAVE TEMPLATE</button>
+                    <button id="admin-save-email-template-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;">SAVE TEMPLATE</button>
                   </div>
                 </div>
 
@@ -1527,7 +1652,7 @@
                 <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
-                      <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
+                      <h5 class="admin-section-title" style="font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
                       <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
                     </div>
                     <span class="admin-badge-pill manual-badge" style="background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">MANUAL</span>
@@ -1536,13 +1661,13 @@
                   <div class="admin-form-row" style="margin-bottom: 1.25rem;">
                     <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                       <label for="admin-broadcast-subject" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Subject Line</label>
-                      <input type="text" id="admin-broadcast-subject" class="admin-input" placeholder="ThirstyClub999 — Event Updates & Info" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                      <input type="text" id="admin-broadcast-subject" class="admin-input" placeholder="ThirstyClub999 — Event Updates & Info" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
                     </div>
                   </div>
                   <div class="admin-form-row" style="margin-bottom: 1.25rem;">
                     <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                       <label for="admin-broadcast-message" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Message Body</label>
-                      <textarea id="admin-broadcast-message" rows="6" class="admin-textarea" placeholder="Hi {username}, we have exciting updates for the event on June 14th! Doors open at 9PM..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-family: inherit; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
+                      <textarea id="admin-broadcast-message" rows="6" class="admin-textarea" placeholder="Hi {username}, we have exciting updates for the event on June 14th! Doors open at 9PM..." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 100px;"></textarea>
                     </div>
                   </div>
 
@@ -1555,7 +1680,54 @@
                   </div>
 
                   <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-                    <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn" style="background: transparent; border: 1px solid var(--accent-color); color: #fff; padding: 0.75rem 1.8rem; border-radius: 6px; font-family: 'Satoshi', sans-serif; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease;">📨 SEND BLAST TO ALL USERS</button>
+                    <button id="admin-broadcast-email-btn" class="admin-action-btn outline-btn" style="background: transparent; border: 1px solid var(--accent-color); color: #fff; padding: 0.75rem 1.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease;">📨 SEND BLAST TO ALL USERS</button>
+                  </div>
+                </div>
+
+                <!-- Section: Push Notifications -->
+                <div class="admin-section-card" style="background: rgba(15, 15, 15, 0.45); border: 1px solid rgba(255, 62, 62, 0.12); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;">
+                  <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
+                    <div>
+                      <h5 class="admin-section-title" style="font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">🔔 PUSH NOTIFICATIONS</h5>
+                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send real-time push notifications to all club members who have opted in. Notifications appear on their device lock screen instantly.</p>
+                    </div>
+                    <span class="admin-badge-pill" style="background: rgba(46, 213, 115, 0.1); color: #2ed573; border: 1px solid rgba(46, 213, 115, 0.2); flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
+                      <span style="display:inline-block; width:6px; height:6px; background:#2ed573; border-radius:50%; box-shadow:0 0 8px #2ed573; animation: glowPulse 1.5s infinite alternate;"></span>
+                      LIVE
+                    </span>
+                  </div>
+
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-push-title" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Notification Title</label>
+                      <input type="text" id="admin-push-title" class="admin-input" placeholder="🔥 ThirstyClub999 — Event Tonight!" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                    </div>
+                  </div>
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-push-body" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Message Body</label>
+                      <textarea id="admin-push-body" rows="4" class="admin-textarea" placeholder="Doors open at 9PM — check the app for exclusive updates and your entry pass." style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box; resize: vertical; line-height: 1.55; min-height: 80px;"></textarea>
+                    </div>
+                  </div>
+                  <div class="admin-form-row" style="margin-bottom: 1.25rem;">
+                    <div class="admin-form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <label for="admin-push-url" class="admin-label" style="font-size: 0.85rem; font-weight: 700; color: var(--admin-text); letter-spacing: 0.02em;">Deep Link URL <span style="font-weight: 400; color: var(--admin-text-dim); font-size: 0.75rem;">(optional)</span></label>
+                      <input type="text" id="admin-push-url" class="admin-input" placeholder="/" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 62, 62, 0.25); color: #fff; width: 100%; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.95rem; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: border-color 0.2s ease, box-shadow 0.2s ease; box-sizing: border-box;">
+                    </div>
+                  </div>
+
+                  <!-- Push Status -->
+                  <div id="push-status-container" style="display: none; background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 62, 62, 0.15); margin-bottom: 1.25rem; padding: 1.2rem; border-radius: 8px;">
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; margin-bottom: 0.8rem;">
+                      <div id="push-progress-bar" style="width: 0%; height: 100%; background: var(--accent-color); border-radius: 3px; transition: width 0.35s ease;"></div>
+                    </div>
+                    <div id="push-status-text" style="font-size: 0.85rem; color: var(--admin-text-dim); font-weight: 600;">Preparing to send...</div>
+                  </div>
+
+                  <div class="admin-form-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <button id="admin-send-push-btn" class="admin-action-btn primary-btn" style="padding: 0.75rem 1.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; border: none; background: var(--accent-color); color: #fff; box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px; display: flex; align-items: center; gap: 0.5rem;">
+                      🔔 SEND PUSH TO ALL MEMBERS
+                    </button>
                   </div>
                 </div>
 
@@ -1565,37 +1737,8 @@
 
           <!-- NEWS DETAILS VIEW -->
           <div class="app-view" id="view-news-details">
-            <div class="view-content" style="padding-top: 1rem;">
-              <div class="event-details-hero" style="position: relative; width: 100%; height: 200px; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid rgba(255, 62, 62, 0.15);">
-                <img src="images/THIRSTY_77.JPG" alt="News Hero" style="width: 100%; height: 100%; object-fit: cover;">
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%); padding: 1rem;">
-                  <span style="font-size: 0.65rem; background: var(--accent-color); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">PAST EVENT RECAP</span>
-                </div>
-              </div>
-              
-              <h2 style="font-family: 'Satoshi', sans-serif; text-transform: uppercase; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 0 0.5rem 0; letter-spacing: 0.05em; line-height: 1.2;">ThirstyClub999 Launch</h2>
-              <div style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem;">LAGOS, NIGERIA • JUNE 07, 2026</div>
-              
-              <div class="news-body-text" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.5rem;">
-                <p>The ThirstyClub999 Private Launch Event was an absolute masterclass in style, digital identity, and community connection. Set in a premium cyber-lounge in Lagos, founding members gathered to showcase their digital passports and check in seamlessly at the door.</p>
-                <p>The night was filled with energetic alté afrobeats sets, premium merch drops, and preview showcases of upcoming collection items. Thank you to everyone who made this launch party memorable. Keep your passports active for the next physical drop announcements.</p>
-              </div>
-
-              <div class="gallery-title" style="font-size: 0.8rem; font-weight: 800; color: #fff; letter-spacing: 0.05em; margin-bottom: 0.8rem; text-transform: uppercase;">EVENT GALLERY</div>
-              <div class="event-photos-gallery-wrap">
-                <div class="event-photos-gallery">
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_1.JPG" alt="Launch Party 1"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_31.JPG" alt="Launch Party 2"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_37.JPG" alt="Launch Party 3"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_63.JPG" alt="Launch Party 4"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_69.JPG" alt="Launch Party 5"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_75.JPG" alt="Launch Party 6"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_76.JPG" alt="Launch Party 7"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_77.JPG" alt="Launch Party 8"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_79.JPG" alt="Launch Party 9"></div>
-                  <div class="gallery-photo-item"><img src="images/THIRSTY_94.JPG" alt="Launch Party 10"></div>
-                </div>
-              </div>
+            <div class="view-content" style="padding-top: 1rem;" id="news-details-content">
+              <!-- Dynamically populated in main.js -->
             </div>
           </div>
 
@@ -1616,19 +1759,19 @@
           </button>
 
           <button class="nav-tab-item" data-target-view="view-community">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <i class="ph ph-users" style="font-size: 1.4rem;"></i>
             <span>COMMUNITY</span>
           </button>
           <button class="nav-tab-item" data-target-view="view-wearthirsty">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <i class="ph ph-shopping-bag" style="font-size: 1.4rem;"></i>
             <span>SHOP</span>
           </button>
           <button class="nav-tab-item" data-target-view="view-profile">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <i class="ph ph-user" style="font-size: 1.4rem;"></i>
             <span>PROFILE</span>
           </button>
           <button class="nav-tab-item" id="admin-bottom-btn" data-target-view="view-admin" style="display: none;">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <i class="ph ph-shield-star" style="font-size: 1.4rem;"></i>
             <span>ADMIN</span>
           </button>
         </div> <!-- Close .app-bottom-nav -->
@@ -1647,8 +1790,106 @@
     </div>
   </footer>
 
+  <!-- User Profile Detail Popup Modal -->
+  <dialog id="user-profile-modal" style="border: none; background: transparent; padding: 0; outline: none; max-width: 400px; width: 90%;" tabindex="-1">
+    <div class="modal-content" style="background: rgba(18, 18, 18, 0.95); border: 1px solid rgba(255, 62, 62, 0.2); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); backdrop-filter: blur(20px); padding: 2rem; position: relative; color: #fff; box-sizing: border-box;">
+      <button class="close-modal" id="close-user-profile-modal" style="position: absolute; top: 1rem; right: 1.25rem; background: none; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1; outline: none;">&times;</button>
+      
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 0.75rem auto; border: 2px solid var(--accent-color); box-shadow: 0 0 15px rgba(255, 62, 62, 0.3);">
+          <img id="user-profile-avatar" src="" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <h3 id="user-profile-name" style="margin: 0; font-size: 1.5rem; font-weight: 900; color: #fff; text-transform: uppercase;">USERNAME</h3>
+        <p id="user-profile-tid" style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: var(--accent-color); font-weight: bold; letter-spacing: 0.05em;">T999-XXXX</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span style="color: var(--text-dim);">LOCATION:</span>
+          <span id="user-profile-location" style="font-weight: 700;">LAGOS</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span style="color: var(--text-dim);">SIGNATURE:</span>
+          <span id="user-profile-signature" style="font-weight: 700;">WAGWAN</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span style="color: var(--text-dim);">LEVEL / XP:</span>
+          <span id="user-profile-level" style="font-weight: 700; color: #2ed573;">LVL 1</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span style="color: var(--text-dim);">DAILY STREAK:</span>
+          <span id="user-profile-streak" style="font-weight: 700; color: #ffaa00;">🔥 1 DAY</span>
+        </div>
+      </div>
+
+      <!-- Admin Direct Messaging Section -->
+      <div id="admin-message-section" style="display: none;">
+        <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem;">ADMIN DIRECT MESSAGE</div>
+        <textarea id="admin-message-text" placeholder="Type direct message..." style="width: 100%; height: 70px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 0.5rem; font-family: inherit; font-size: 0.8rem; resize: none; box-sizing: border-box; outline: none; margin-bottom: 0.75rem;"></textarea>
+        <button id="btn-send-admin-message" class="submit-ticket-btn" style="margin: 0; min-height: 36px; padding: 0.5rem 1rem;">SEND MESSAGE</button>
+        <div id="admin-message-status" style="font-size: 0.7rem; text-align: center; margin-top: 0.4rem; display: none;"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Composio Authorization Gateway Modal -->
+  <dialog id="composio-modal" style="border: none; background: transparent; padding: 0; outline: none; max-width: 420px; width: 90%;" tabindex="-1">
+    <div class="modal-content" style="background: rgba(18, 18, 18, 0.98); border: 1px solid rgba(255, 62, 62, 0.25); border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.9); backdrop-filter: blur(25px); padding: 2.25rem; position: relative; color: #fff; box-sizing: border-box; overflow: hidden;">
+      
+      <!-- Primary Consent View -->
+      <div id="composio-consent-view">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 900; box-shadow: 0 0 15px rgba(255, 62, 62, 0.4);">T</div>
+          <div style="font-size: 1rem; color: var(--text-dim);">🔀</div>
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #1a1a1a; border: 1px solid #333; display: flex; align-items: center; justify-content: center;" id="composio-target-logo">
+            <!-- App Icon (Spotify / Twitter) -->
+          </div>
+        </div>
+
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.2rem; font-weight: 900; text-align: center; text-transform: uppercase; letter-spacing: 0.02em;">Link account via Composio</h3>
+        <p style="margin: 0 0 1.5rem 0; font-size: 0.75rem; color: var(--text-dim); text-align: center; line-height: 1.4;" id="composio-connect-desc">
+          Integrate your profile to verify game quests, bounties, and streaming playtimes securely.
+        </p>
+
+        <!-- Permissions List -->
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.75rem;">
+          <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem;">PERMISSIONS REQUESTED</div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;" id="composio-permissions-list">
+            <!-- Dynamically populated permissions -->
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 1rem;">
+          <button id="btn-cancel-composio" style="flex: 1; min-height: 44px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #fff; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">CANCEL</button>
+          <button id="btn-authorize-composio" class="submit-ticket-btn" style="flex: 2; margin: 0; min-height: 44px; background: var(--accent-color);">AUTHORIZE & LINK</button>
+        </div>
+      </div>
+
+      <!-- Loading / Redirecting Overlay View -->
+      <div id="composio-loading-view" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0; text-align: center;">
+        <div class="loader-spinner-track" style="width: 60px; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin-bottom: 1.5rem; position: relative;">
+          <div class="loader-spinner-bar" style="width: 40%; height: 100%; background: var(--accent-color); animation: loaderSpinner 1.5s infinite ease-in-out;"></div>
+        </div>
+        <h4 style="margin: 0; font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em;" id="composio-loader-title">Redirecting...</h4>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.75rem; color: var(--text-dim);" id="composio-loader-desc">Connecting secure gateway with Composio API...</p>
+      </div>
+
+      <!-- Connection Success View -->
+      <div id="composio-success-view" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1rem 0; text-align: center;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(46, 213, 115, 0.1); border: 2px solid #2ed573; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: #2ed573; margin-bottom: 1.25rem; animation: checkmarkPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">✓</div>
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.2rem; font-weight: 900; text-transform: uppercase;">CONNECTION LINKED</h3>
+        <p style="margin: 0 0 1.75rem 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;" id="composio-success-desc">
+          Your integration is now active. Real-time quest achievements will be tracked directly.
+        </p>
+        <button id="btn-enter-composio-success" class="submit-ticket-btn" style="margin: 0; width: 100%; min-height: 44px; background: #2ed573; color: #fff;">RETURN TO PROFILE</button>
+      </div>
+
+    </div>
+  </dialog>
+
   <!-- Auth Dialog Modal (Login / Signup) -->
-  <dialog id="ticket-modal">
+  <dialog id="ticket-modal" tabindex="-1">
     <div class="modal-content">
       <button class="close-modal" aria-label="Close modal">&times;</button>
       
@@ -1667,11 +1908,20 @@
         </div>
         <div class="input-group">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" placeholder="enter password..." required>
+          <div class="password-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+            <input type="password" id="login-password" placeholder="enter password..." required style="width: 100%; padding-right: 2.75rem;">
+            <button type="button" class="password-toggle-btn" style="position: absolute; right: 0.75rem; background: none; border: none; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; height: 100%; outline: none; font-size: 1.2rem; transition: color 0.2s;" tabindex="-1">
+              <i class="ph ph-eye"></i>
+            </button>
+          </div>
         </div>
         <div class="auth-toggle-link">
           Don't have an ID? <span id="switch-to-signup">Sign up here</span>
         </div>
+        <div class="auth-toggle-link" style="margin-top: 0.5rem; text-align: center;">
+          <span id="btn-forgot-password" style="font-size: 0.75rem; text-decoration: underline; cursor: pointer; color: var(--text-dim);">Forgot Password?</span>
+        </div>
+        <div id="login-error-msg" style="display: none; color: var(--accent-color); font-size: 0.8rem; margin: 0.75rem 0; text-align: center; font-weight: bold; background: rgba(255, 62, 62, 0.1); border: 1px solid rgba(255, 62, 62, 0.2); padding: 0.5rem; border-radius: 6px;"></div>
         <button type="submit" class="submit-ticket-btn">Login</button>
       </form>
 
@@ -1688,11 +1938,17 @@
         </div>
         <div class="input-group">
           <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" placeholder="enter password..." required>
+          <div class="password-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+            <input type="password" id="signup-password" placeholder="enter password..." required style="width: 100%; padding-right: 2.75rem;">
+            <button type="button" class="password-toggle-btn" style="position: absolute; right: 0.75rem; background: none; border: none; color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; height: 100%; outline: none; font-size: 1.2rem; transition: color 0.2s;" tabindex="-1">
+              <i class="ph ph-eye"></i>
+            </button>
+          </div>
         </div>
         <div class="auth-toggle-link">
           Already have an ID? <span id="switch-to-login">Login here</span>
         </div>
+        <div id="signup-error-msg" style="display: none; color: var(--accent-color); font-size: 0.8rem; margin: 0.75rem 0; text-align: center; font-weight: bold; background: rgba(255, 62, 62, 0.1); border: 1px solid rgba(255, 62, 62, 0.2); padding: 0.5rem; border-radius: 6px;"></div>
         <button type="submit" class="submit-ticket-btn">Get ThirstyID & Passport</button>
       </form>
     </div>
@@ -1701,7 +1957,7 @@
   <!-- Shopping Cart Sidebar Drawer -->
   <div class="cart-sidebar" id="cart-sidebar">
     <div class="cart-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-      <h3 style="margin: 0; font-family: 'Satoshi', sans-serif; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color);">YOUR CART</h3>
+      <h3 style="margin: 0; font-size: 1.25rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color);">YOUR CART</h3>
       <button class="close-cart-btn" id="close-cart-btn" style="background: none; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1; transition: color 0.2s ease;">&times;</button>
     </div>
     <div class="cart-items-container" id="cart-items-container" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
@@ -1711,7 +1967,7 @@
     <div class="cart-footer" style="padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(5px);">
       <div class="cart-subtotal-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; font-weight: 700; font-size: 1rem; letter-spacing: 0.05em;">
         <span>SUBTOTAL</span>
-        <span id="cart-subtotal-val" style="color: var(--accent-color); font-family: 'Satoshi', monospace;">$0.00</span>
+        <span id="cart-subtotal-val" style="color: var(--accent-color); ">$0.00</span>
       </div>
       <button class="cta-button fill-btn" id="checkout-btn" style="width: 100%; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.05em; padding: 0.9rem;">PROCEED TO CHECKOUT</button>
     </div>
@@ -1719,10 +1975,10 @@
   <div class="cart-overlay" id="cart-overlay"></div>
 
   <!-- Checkout Dialog Modal -->
-  <dialog class="checkout-modal" id="checkout-dialog" style="max-width: 480px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none;">
+  <dialog class="checkout-modal" id="checkout-dialog" style="max-width: 480px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none;" tabindex="-1">
     <div class="modal-content" style="position: relative; display: flex; flex-direction: column;">
       <button class="close-modal" id="close-checkout-btn" style="position: absolute; top: -1rem; right: -1rem; background: transparent; border: none; color: var(--text-dim); font-size: 1.75rem; cursor: pointer; line-height: 1;">&times;</button>
-      <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); text-align: center; margin-bottom: 0.2rem;">CHECKOUT</div>
+      <div class="view-intro-title" style="font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); text-align: center; margin-bottom: 0.2rem;">CHECKOUT</div>
       <div class="view-intro-desc" style="font-size: 0.8rem; text-align: center; margin-bottom: 1.5rem;">SECURE CREDIT CARD TRANSACTION</div>
       
       <form id="checkout-form" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -1730,24 +1986,24 @@
         <div style="font-weight: 800; color: var(--accent-color); font-size: 0.8rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding-bottom: 0.3rem;">SHIPPING INFORMATION</div>
         <div style="display: flex; flex-direction: column; gap: 0.3rem;">
           <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">FULL NAME</label>
-          <input type="text" id="checkout-name" required placeholder="John Doe" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          <input type="text" id="checkout-name" required placeholder="John Doe" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.3rem;">
           <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">EMAIL ADDRESS</label>
-          <input type="email" id="checkout-email" required placeholder="name@domain.com" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          <input type="email" id="checkout-email" required placeholder="name@domain.com" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.3rem;">
           <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">SHIPPING ADDRESS</label>
-          <input type="text" id="checkout-address" required placeholder="123 Street Name" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          <input type="text" id="checkout-address" required placeholder="123 Street Name" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div style="display: flex; flex-direction: column; gap: 0.3rem;">
             <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CITY</label>
-            <input type="text" id="checkout-city" required placeholder="New York" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+            <input type="text" id="checkout-city" required placeholder="New York" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.3rem;">
             <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">POSTAL CODE</label>
-            <input type="text" id="checkout-zip" required placeholder="10001" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+            <input type="text" id="checkout-zip" required placeholder="10001" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
           </div>
         </div>
         
@@ -1755,20 +2011,20 @@
         <div style="font-weight: 800; color: var(--accent-color); font-size: 0.8rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 62, 62, 0.15); padding-bottom: 0.3rem; margin-top: 0.5rem;">PAYMENT DETAILS</div>
         <div style="display: flex; flex-direction: column; gap: 0.3rem;">
           <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CARDHOLDER NAME</label>
-          <input type="text" id="checkout-cardname" required placeholder="JOHN DOE" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          <input type="text" id="checkout-cardname" required placeholder="JOHN DOE" style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.3rem;">
           <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CARD NUMBER</label>
-          <input type="text" id="checkout-cardnumber" placeholder="4111 2222 3333 4444" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+          <input type="text" id="checkout-cardnumber" placeholder="4111 2222 3333 4444" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
           <div style="display: flex; flex-direction: column; gap: 0.3rem;">
             <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">EXPIRY DATE</label>
-            <input type="text" id="checkout-expiry" placeholder="MM/YY" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+            <input type="text" id="checkout-expiry" placeholder="MM/YY" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.3rem;">
             <label style="font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.05em;">CVV</label>
-            <input type="text" id="checkout-cvv" placeholder="321" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
+            <input type="text" id="checkout-cvv" placeholder="321" required style="padding: 0.75rem; border-radius: 4px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;">
           </div>
         </div>
         
@@ -1778,10 +2034,10 @@
   </dialog>
 
   <!-- Order Success Dialog Modal -->
-  <dialog class="checkout-modal" id="order-success-dialog" style="max-width: 400px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none; text-align: center;">
+  <dialog class="checkout-modal" id="order-success-dialog" style="max-width: 400px; width: 90%; background: #0a0a0a; border: 1px solid var(--glass-border); border-radius: 6px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95); outline: none; text-align: center;" tabindex="-1">
     <div class="modal-content" style="align-items: center; justify-content: center; gap: 1rem; padding: 1rem 0;">
       <div style="font-size: 3.5rem; filter: drop-shadow(0 0 12px rgba(255, 62, 62, 0.55));">🛒</div>
-      <div class="view-intro-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); margin: 0;">ORDER PLACED</div>
+      <div class="view-intro-title" style="font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; color: var(--accent-color); margin: 0;">ORDER PLACED</div>
       <div class="view-intro-desc" style="font-size: 0.8rem; color: #fff; margin-bottom: 0.5rem;">YOUR TRANSACTIONS ARE RECORDED ON THE LEDGER.</div>
       <p style="font-size: 0.85rem; color: var(--text-dim); margin: 0;">ORDER ID: <span id="success-order-id" style="font-weight: 700; color: #fff; font-family: monospace;">#TC999-7362</span></p>
       <button class="cta-button stroke-btn" id="success-close-btn" style="margin-top: 1.5rem; width: 100%; padding: 0.75rem;">RETURN TO SHOP</button>
@@ -1789,7 +2045,7 @@
   </dialog>
 
   <!-- Sponsored Reward Dialog Modal (matcha.xyz) -->
-  <dialog id="sponsor-modal" class="sponsor-reward-dialog" style="border: none; padding: 0; outline: none; background: transparent; overflow: visible; max-width: 320px; width: 90%;">
+  <dialog id="sponsor-modal" class="sponsor-reward-dialog" style="border: none; padding: 0; outline: none; background: transparent; overflow: visible; max-width: 320px; width: 90%;" tabindex="-1">
     <div class="sponsor-modal-wrapper">
       <!-- Close button -->
       <button class="sponsor-modal-close" id="btn-close-sponsor-modal" aria-label="Close dialog">×</button>
@@ -1865,6 +2121,25 @@
     <div class="lightbox-counter"><span id="lightbox-current-idx">1</span> / <span id="lightbox-total-count">10</span></div>
   </div>
 
-  <script src="main.js?v=20260624.0615"></script>
+  <script src="main.js?v=v15"></script>
+  <script>
+    // Auto-reload when a new service worker takes control
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+              window.location.reload();
+            }
+          });
+        });
+      });
+      // If the controller changes (new SW claimed), reload immediately
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    }
+  </script>
 </body>
 </html>
