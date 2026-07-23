@@ -2599,28 +2599,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
     ctx.clip();
     drawWaves(20, 385);
-    
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
-      ctx.restore();
+    ctx.restore();
     
     // Clip security waves to Bottom Page
     ctx.save();
@@ -2628,45 +2607,21 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.roundRect(20, 415, pageW, pageH, [0, 0, 16, 16]);
     ctx.clip();
     drawWaves(415, 780);
-    
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
-      ctx.restore();
+    ctx.restore();
     
     // 4. Draw Crease and Shadows
-    // Top page crease shadow
     let gradTop = ctx.createLinearGradient(0, 350, 0, 385);
     gradTop.addColorStop(0, 'rgba(0, 0, 0, 0)');
     gradTop.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
     ctx.fillStyle = gradTop;
     ctx.fillRect(20, 350, pageW, 35);
 
-    // Bottom page crease shadow
     let gradBottom = ctx.createLinearGradient(0, 415, 0, 450);
     gradBottom.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
     gradBottom.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = gradBottom;
     ctx.fillRect(20, 415, pageW, 35);
 
-    // The dark spine line itself
     let gradSpine = ctx.createLinearGradient(0, 385, 0, 415);
     gradSpine.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
     gradSpine.addColorStop(0.5, 'rgba(0, 0, 0, 0.85)');
@@ -2675,8 +2630,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillRect(0, 385, w, 30);
     
     // 5. Draw Top Page Content
-    // Left vertical signature
-    const sigText = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || 'Thirstyzoid';
+    const sigInput = document.getElementById('passport-input-sig');
+    const nameInput = document.getElementById('passport-input-name');
+    const sigText = sigInput?.value || (nameInput?.value ? nameInput.value : 'Thirstyzoid');
+    
+    // Left vertical signature line
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -2691,65 +2649,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.font = 'italic 24px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(sigText, 0, 0);
-    
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
-      ctx.restore();
-
-    // Middle Watermark: Preloaded Passportblend.JPG (reduced opacity)
-    if (passportBlendImage.complete && passportBlendImage.naturalWidth > 0) {
-      ctx.save();
-      // Clip to top page
-      ctx.beginPath();
-      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
-      ctx.clip();
-      
-      ctx.globalAlpha = 0.16; // reduced opacity (watermark)
-      
-      const imgW = 450;
-      const imgH = 300;
-      ctx.drawImage(passportBlendImage, 300 - imgW / 2, 202 - imgH / 2, imgW, imgH);
-      
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
-      ctx.restore();
-    }
+    ctx.restore();
 
     // Right vertical title
     ctx.save();
@@ -2761,34 +2661,38 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText("THIRSTYCLUB999", 0, -8);
     ctx.font = '700 13px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 0, 18);
-    
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
-      ctx.restore();
+    ctx.restore();
 
-    // Stamps
-    const stamps = currentUserProfile?.socials?.stamps || [];
-    stamps.forEach(stampObj => {
-      drawStamp(ctx, stampObj);
-    });
+    // The 3 logos as a watermark on the top half
+    const drawWatermarkLogos = () => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+      ctx.clip();
+      ctx.globalAlpha = 0.12; // light watermark
+      ctx.filter = 'grayscale(100%)';
+      
+      const l1 = new Image(); const l2 = new Image(); const l3 = new Image();
+      l1.src = 'images/ThirstyLOGO_2026.png';
+      l2.src = 'images/333 NEW LOGO V2 CHROME.png';
+      l3.src = 'images/UNRLSDFILES LOGO.png';
+      
+      let loaded = 0;
+      const onLogoLoad = () => {
+        loaded++;
+        if (loaded === 3) {
+          // All loaded, draw them centered horizontally
+          const y = 202; // middle of top page
+          const sz = 80;
+          ctx.drawImage(l1, 150, y - sz/2, sz, sz * (l1.height/l1.width));
+          ctx.drawImage(l2, 260, y - sz/2, sz, sz * (l2.height/l2.width));
+          ctx.drawImage(l3, 370, y - sz/2, sz, sz * (l3.height/l3.width));
+          ctx.restore();
+        }
+      };
+      l1.onload = onLogoLoad; l2.onload = onLogoLoad; l3.onload = onLogoLoad;
+    };
+    drawWatermarkLogos();
 
     // 6. Draw Bottom Page Content
     // Left header
@@ -2798,8 +2702,18 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText("THIRSTYCLUB999", 45, 452);
     ctx.font = '700 11px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 45 + 5, 470);
+    
+    // Top right logo icon
+    const trLogo = new Image();
+    trLogo.src = 'images/ThirstyLOGO_2026.png';
+    trLogo.onload = () => {
+      ctx.save();
+      ctx.filter = 'grayscale(100%)';
+      ctx.drawImage(trLogo, 510, 435, 30, 30 * (trLogo.height/trLogo.width));
+      ctx.restore();
+    };
 
-    // Left photo (user uploaded profile - COLORED!)
+    // Left photo (user uploaded profile)
     const uPhotoX = 45;
     const uPhotoY = 492;
     const uPhotoW = 185;
@@ -2807,7 +2721,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (uploadedImage) {
       ctx.save();
-      // Apply grayscale filter to make the passport photo black and white
       ctx.filter = 'grayscale(100%)';
       const imgW = uploadedImage.width;
       const imgH = uploadedImage.height;
@@ -2826,27 +2739,6 @@ document.addEventListener('DOMContentLoaded', () => {
         srcY = (imgH - srcH) / 2;
       }
       ctx.drawImage(uploadedImage, srcX, srcY, srcW, srcH, uPhotoX, uPhotoY, uPhotoW, uPhotoH);
-      
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
       ctx.restore();
     } else {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
@@ -2855,7 +2747,6 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.lineWidth = 1;
       ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
 
-      // Simple silhouette avatar representation
       ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
       ctx.beginPath();
       ctx.arc(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH/3, 28, 0, Math.PI * 2);
@@ -2863,18 +2754,13 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.beginPath();
       ctx.ellipse(uPhotoX + uPhotoW/2, uPhotoY + uPhotoH * 0.72, 52, 36, 0, Math.PI, 0);
       ctx.fill();
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-      ctx.font = '900 9px "Kyrilla", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText("UPLOAD PHOTO", uPhotoX + uPhotoW/2, uPhotoY + uPhotoH - 22);
     }
     
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
 
-    // Right details table (only 4 fields, vertically aligned with photo)
+    // Right details table
     const tblX = 250;
     const tblY = 495;
     const tblW = 295;
@@ -2892,13 +2778,12 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.stroke();
     }
 
-    // Fetch form values
-    const nameVal = (document.getElementById('passport-input-name')?.value || currentUserProfile?.username || 'THIRSTYZOID').toUpperCase();
-    const pobVal = (document.getElementById('passport-input-pob')?.value || currentUserProfile?.socials?.place_of_thirst || 'LAGOS').toUpperCase();
-    const genderVal = (document.getElementById('passport-input-gender')?.value || currentUserProfile?.socials?.gender || 'F').toUpperCase();
-    const finalSigVal = document.getElementById('passport-input-sig')?.value || currentUserProfile?.socials?.signature || sigText;
+    const nameVal = (nameInput?.value || 'THIRSTYZOID').toUpperCase();
+    const pobInput = document.getElementById('passport-input-pob');
+    const pobVal = (pobInput?.value || 'LAGOS').toUpperCase();
+    const genderInput = document.getElementById('passport-input-gender');
+    const genderVal = (genderInput?.value || 'F').toUpperCase();
 
-    // Helpers to draw cell rows
     const drawRowFull = (label, value, rx, ry, rw, isCursive = false) => {
       ctx.fillStyle = '#1b4d3e';
       ctx.textAlign = 'left';
@@ -2909,40 +2794,19 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.textAlign = 'center';
       if (isCursive) {
         ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42); // centered
+        ctx.fillText(value, rx + rw / 2, ry + 42);
       } else {
-        ctx.font = '900 13px "Kyrilla", sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42); // centered
+        ctx.font = '900 14px "Kyrilla", sans-serif';
+        ctx.fillText(value, rx + rw / 2, ry + 42);
       }
     };
 
     drawRowFull("Name:", nameVal, tblX, tblY, tblW);
     drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
     drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
-    drawRowFull("Signature:", finalSigVal, tblX, tblY + 3 * rowH, tblW, true);
-
-    // 5. Draw Logos
-    const logo1 = new Image();
-    const logo2 = new Image();
-    const logo3 = new Image();
-    
-    logo1.src = 'images/ThirstyLOGO_2026.png';
-    logo2.src = 'images/333 NEW LOGO V2 CHROME.png';
-    logo3.src = 'images/UNRLSDFILES LOGO.png';
-    
-    Promise.all([
-      new Promise(res => { logo1.onload = res; logo1.onerror = res; }),
-      new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
-      new Promise(res => { logo3.onload = res; logo3.onerror = res; })
-    ]).then(() => {
-      ctx.save();
-      // Draw at the bottom of the page
-      ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
-      ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
-      ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-      ctx.restore();
-    });
+    drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
   };
+
 
 
   const drawPassport = () => {
