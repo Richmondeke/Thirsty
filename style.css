@@ -92,7 +92,7 @@ body {
 /* --- Dynamic Cursor Glow Background --- */
 #cursor-glow {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -109,7 +109,7 @@ body {
 /* --- Header / Navigation --- */
 header {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   padding: 1.5rem 3rem;
@@ -181,13 +181,12 @@ header nav .nav-btn:hover {
   text-align: center;
   z-index: 2;
   padding: 0 1.5rem;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%),
-              url('images/Heroimage.png') no-repeat center center / cover;
+  background: #000;
 }
 
 .hero-scroll-overlay {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -199,8 +198,8 @@ header nav .nav-btn:hover {
 }
 
 .hero-overlay {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -310,7 +309,7 @@ header nav .nav-btn:hover {
 
 .cta-button::before {
   content: '';
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   width: 0;
@@ -334,7 +333,7 @@ header nav .nav-btn:hover {
 
 /* Scroll Indicator */
 .scroll-indicator {
-  position: absolute;
+  position: relative;
   bottom: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
@@ -646,7 +645,7 @@ header nav .nav-btn:hover {
 }
 
 .radar-sweep {
-  position: absolute;
+  position: relative;
   top: -50%;
   left: -50%;
   width: 200%;
@@ -663,7 +662,7 @@ header nav .nav-btn:hover {
 }
 
 .grid-line {
-  position: absolute;
+  position: relative;
   background: rgba(255, 62, 62, 0.1);
 }
 .grid-line.horizontal {
@@ -674,13 +673,13 @@ header nav .nav-btn:hover {
 }
 .grid-line.vertical {
   left: 50%;
-  top: 0;
+  margin: 1rem 0;
   height: 100%;
   width: 1px;
 }
 
 .radar-circle {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   border: 1px solid rgba(255, 62, 62, 0.06);
@@ -693,7 +692,7 @@ header nav .nav-btn:hover {
 
 /* Map Marker */
 .map-marker {
-  position: absolute;
+  position: relative;
   top: 42%;
   left: 58%;
   transform: translate(-50%, -50%);
@@ -709,7 +708,7 @@ header nav .nav-btn:hover {
 }
 
 .marker-pulse {
-  position: absolute;
+  position: relative;
   top: -6px;
   left: -6px;
   width: 24px;
@@ -726,7 +725,7 @@ header nav .nav-btn:hover {
 }
 
 .marker-label {
-  position: absolute;
+  position: relative;
   top: 18px;
   left: 50%;
   transform: translateX(-50%);
@@ -743,7 +742,7 @@ header nav .nav-btn:hover {
 }
 
 .map-hud {
-  position: absolute;
+  position: relative;
   bottom: 15px;
   left: 15px;
   background: rgba(0, 0, 0, 0.7);
@@ -823,7 +822,7 @@ header nav .nav-btn:hover {
 }
 
 .card-glow {
-  position: absolute;
+  position: relative;
   top: -50%;
   left: -50%;
   width: 200%;
@@ -1016,7 +1015,7 @@ dialog::backdrop {
 }
 
 .close-modal {
-  position: absolute;
+  position: relative;
   top: -1.5rem;
   right: -1.5rem;
   background: transparent;
@@ -1260,7 +1259,7 @@ header .logout-btn {
 .ticket-stub-left::after,
 .ticket-stub-left::before {
   content: '';
-  position: absolute;
+  position: relative;
   right: -9px;
   width: 18px;
   height: 18px;
@@ -1410,7 +1409,7 @@ header .logout-btn {
 }
 
 #user-leaderboard-row .name {
-  color: #fff;
+  color: var(--thirsty-red);
   font-weight: 800;
   text-shadow: 0 0 8px rgba(255, 62, 62, 0.3);
 }
@@ -1957,8 +1956,8 @@ header .logout-btn {
 }
 
 .gallery-item-overlay {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -2054,7 +2053,7 @@ header .logout-btn {
 }
 
 .lightbox-close {
-  position: absolute;
+  position: relative;
   top: 2.5rem;
   right: 2.5rem;
   background: transparent;
@@ -2073,7 +2072,7 @@ header .logout-btn {
 }
 
 .lightbox-nav {
-  position: absolute;
+  position: relative;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.03);
@@ -2108,7 +2107,7 @@ header .logout-btn {
 }
 
 .lightbox-counter {
-  position: absolute;
+  position: relative;
   bottom: 3rem;
   left: 50%;
   transform: translateX(-50%);
@@ -2290,8 +2289,8 @@ header .logout-btn {
 }
 
 .passport-glow-border {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -2407,7 +2406,7 @@ header .logout-btn {
 }
 
 .notif-badge-dot {
-  position: absolute;
+  position: relative;
   top: 6px;
   right: 6px;
   width: 7px;
@@ -2559,7 +2558,7 @@ header .logout-btn {
   font-size: 1.35rem;
   font-weight: 900;
   line-height: 1.2;
-  color: #fff;
+  color: var(--thirsty-red);
   margin: 0;
   text-transform: uppercase;
 }
@@ -2746,8 +2745,8 @@ header .logout-btn {
 .carousel-slide {
   opacity: 0;
   visibility: hidden;
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   transition: opacity 0.4s ease, visibility 0.4s ease;
@@ -2763,7 +2762,7 @@ header .logout-btn {
 
 /* Dots navigation indicators */
 .carousel-dots {
-  position: absolute;
+  position: relative;
   bottom: 0.75rem;
   left: 0;
   right: 0;
@@ -2970,7 +2969,7 @@ header .logout-btn {
 }
 
 .profile-level-badge {
-  position: absolute;
+  position: relative;
   bottom: 0;
   right: 0;
   background-color: var(--accent-color);
@@ -3423,7 +3422,7 @@ header .logout-btn {
 }
 
 .crate-glow {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -3555,7 +3554,7 @@ header .logout-btn {
 }
 
 .double-tap-heart {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
@@ -3755,7 +3754,7 @@ header .logout-btn {
 }
 
 .wallet-coin-card .card-glow {
-  position: absolute;
+  position: relative;
   top: 30%;
   right: -30px;
   width: 120px;
@@ -3897,12 +3896,12 @@ header .logout-btn {
 }
 
 .scanner-laser-line {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 2px;
   background-color: var(--accent-color);
   box-shadow: 0 0 10px var(--accent-color);
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   z-index: 2;
   animation: scanLaser 2.2s linear infinite;
@@ -3915,7 +3914,7 @@ header .logout-btn {
 }
 
 .hud-bracket {
-  position: absolute;
+  position: relative;
   width: 16px;
   height: 16px;
   border: 3px solid var(--accent-color);
@@ -4081,9 +4080,9 @@ header .logout-btn {
 }
 
 .slider {
-  position: absolute;
+  position: relative;
   cursor: pointer;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -4093,7 +4092,7 @@ header .logout-btn {
 }
 
 .slider:before {
-  position: absolute;
+  position: relative;
   content: "";
   height: 16px;
   width: 16px;
@@ -4552,7 +4551,7 @@ header .logout-btn {
   font-size: 0.75rem;
   text-transform: uppercase;
   position: sticky;
-  top: 0;
+  margin: 1rem 0;
   z-index: 10;
   box-shadow: 0 1px 0 var(--admin-border);
 }
@@ -4686,7 +4685,7 @@ header .logout-btn {
 
 .admin-action-btn.primary-btn {
   background: var(--accent-color);
-  color: #fff;
+  color: var(--thirsty-red);
   box-shadow: rgba(255, 62, 62, 0.3) 0px 4px 14px;
 }
 
@@ -4819,7 +4818,7 @@ header .logout-btn {
 
 .app-sidebar-nav .nav-tab-item::before {
   content: '';
-  position: absolute;
+  position: relative;
   left: 0;
   top: 50%;
   transform: translateY(-50%) scaleY(0);
@@ -4875,11 +4874,11 @@ header .logout-btn {
 }
 
 .buy-product-badge {
-  position: absolute;
+  position: relative;
   bottom: 10px;
   right: 10px;
   background: var(--accent-color);
-  color: #fff;
+  color: var(--thirsty-red);
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.05em;
@@ -4900,7 +4899,7 @@ header .logout-btn {
 .product-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--thirsty-red);
   margin-bottom: 0.3rem;
   letter-spacing: 0.02em;
 }
@@ -4956,8 +4955,8 @@ header .logout-btn {
 
 .shop-promo-banner::before {
   content: '';
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -4981,7 +4980,7 @@ header .logout-btn {
 .promo-title {
   font-size: 1.25rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--thirsty-red);
   letter-spacing: 0.03em;
   margin-bottom: 0.3rem;
 }
@@ -4994,14 +4993,14 @@ header .logout-btn {
 }
 
 .promo-code {
-  color: #fff;
+  color: var(--thirsty-red);
   font-weight: 700;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
 }
 
 .promo-action-btn {
   background: var(--accent-color);
-  color: #fff;
+  color: var(--thirsty-red);
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -5037,7 +5036,7 @@ header .logout-btn {
 /* Cart Sidebar Drawer */
 .cart-sidebar {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   right: -400px;
   width: 400px;
   height: 100vh;
@@ -5063,7 +5062,7 @@ header .logout-btn {
 
 .cart-overlay {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -5115,7 +5114,7 @@ header .logout-btn {
 .cart-item-title {
   font-weight: 700;
   font-size: 0.85rem;
-  color: #fff;
+  color: var(--thirsty-red);
   line-height: 1.2;
 }
 
@@ -5141,7 +5140,7 @@ header .logout-btn {
 .cart-item-qty-btn {
   background: rgba(255, 255, 255, 0.05);
   border: none;
-  color: #fff;
+  color: var(--thirsty-red);
   width: 20px;
   height: 20px;
   border-radius: 3px;
@@ -5187,7 +5186,7 @@ header .logout-btn {
 }
 
 .product-details-back-btn:hover {
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .product-details-grid {
@@ -5232,7 +5231,7 @@ header .logout-btn {
   font-family: 'Satoshi', sans-serif;
   font-size: 1.75rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--thirsty-red);
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-transform: uppercase;
@@ -5279,13 +5278,13 @@ header .logout-btn {
 
 .size-select-chip:hover {
   border-color: rgba(255, 255, 255, 0.3);
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .size-select-chip.active {
   background: var(--accent-color);
   border-color: var(--accent-color);
-  color: #fff;
+  color: var(--thirsty-red);
   box-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
 }
 
@@ -5298,7 +5297,7 @@ header .logout-btn {
 .qty-input-box {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  color: var(--thirsty-red);
   font-family: inherit;
   padding: 0.6rem;
   width: 60px;
@@ -5616,7 +5615,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .back-to-games-btn:hover {
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .category-grid {
@@ -5647,7 +5646,7 @@ html.user-logged-in #user-dashboard-card {
 .category-card h5 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--thirsty-red);
   margin-bottom: 0.25rem;
 }
 
@@ -5669,7 +5668,7 @@ html.user-logged-in #user-dashboard-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 1rem;
-  color: #fff;
+  color: var(--thirsty-red);
   text-align: left;
   font-family: inherit;
   font-size: 0.85rem;
@@ -5725,7 +5724,7 @@ html.user-logged-in #user-dashboard-card {
 .hunt-title {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .hunt-badge {
@@ -5785,7 +5784,7 @@ html.user-logged-in #user-dashboard-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
-  color: #fff;
+  color: var(--thirsty-red);
   font-size: 0.75rem;
   font-family: inherit;
   outline: none;
@@ -5804,7 +5803,7 @@ html.user-logged-in #user-dashboard-card {
 .hunt-submit-btn {
   background: var(--accent-color);
   border: none;
-  color: #fff;
+  color: var(--thirsty-red);
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-size: 0.75rem;
@@ -5857,7 +5856,7 @@ html.user-logged-in #user-dashboard-card {
 .game-leaderboard-title {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--thirsty-red);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -5913,7 +5912,7 @@ html.user-logged-in #user-dashboard-card {
 .game-leaderboard-item .name {
   flex: 1;
   font-weight: 700;
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .game-leaderboard-item .score {
@@ -5929,7 +5928,7 @@ html.user-logged-in #user-dashboard-card {
   border-radius: 50%;
   border: 4px solid var(--accent-color);
   background: rgba(255, 62, 62, 0.05);
-  color: #fff;
+  color: var(--thirsty-red);
   font-size: 1.5rem;
   font-weight: 900;
   cursor: pointer;
@@ -6019,7 +6018,7 @@ html.user-logged-in #user-dashboard-card {
 .raid-title {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--thirsty-red);
   letter-spacing: 0.05em;
 }
 
@@ -6055,7 +6054,7 @@ html.user-logged-in #user-dashboard-card {
 .raid-btn.action {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  color: var(--thirsty-red);
   text-decoration: none;
   display: inline-block;
 }
@@ -6068,7 +6067,7 @@ html.user-logged-in #user-dashboard-card {
 .raid-btn.claim {
   background: var(--accent-color);
   border: none;
-  color: #fff;
+  color: var(--thirsty-red);
 }
 
 .raid-btn.claim:hover:not(:disabled) {
@@ -6114,7 +6113,7 @@ html.user-logged-in #user-dashboard-card {
 .bounty-title {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--thirsty-red);
   margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
 }
@@ -6141,7 +6140,7 @@ html.user-logged-in #user-dashboard-card {
   transition: var(--transition-smooth);
   background: var(--accent-color);
   border: none;
-  color: #fff;
+  color: var(--thirsty-red);
   white-space: nowrap;
 }
 
@@ -6165,7 +6164,7 @@ html.user-logged-in #user-dashboard-card {
 /* --- Community Ad Carousel --- */
 .community-ad-carousel .carousel-slide {
   position: absolute !important;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100% !important;
   height: 100% !important;
@@ -6182,7 +6181,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .community-ad-carousel .carousel-dots {
-  position: absolute;
+  position: relative;
   bottom: 0.5rem !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
@@ -6209,8 +6208,8 @@ html.user-logged-in #user-dashboard-card {
 /* Glassmorphism details and semi-transparent overlay to ensure readability */
 .community-ad-carousel::after {
   content: '';
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -6221,8 +6220,8 @@ html.user-logged-in #user-dashboard-card {
 
 .community-ad-carousel .carousel-slide::after {
   content: '';
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -6267,13 +6266,13 @@ html.user-logged-in #user-dashboard-card {
   overflow: hidden;
   position: relative;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-  color: #fff;
+  color: var(--thirsty-red);
   font-family: "Satoshi", "Inter", sans-serif;
   text-align: center;
 }
 
 .sponsor-modal-close {
-  position: absolute;
+  position: relative;
   top: 12px;
   right: 12px;
   width: 28px;
@@ -6309,7 +6308,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .sponsor-aurora-bg {
-  position: absolute;
+  position: relative;
   top: -20px;
   left: -20px;
   right: -20px;
@@ -6355,7 +6354,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .retro-sticker {
-  position: absolute;
+  position: relative;
   border-radius: 12px;
   border: 2px solid #111;
   box-shadow: 2px 2px 0 #111;
@@ -6367,7 +6366,7 @@ html.user-logged-in #user-dashboard-card {
 
 .sticker-1 {
   background: #f472b6;
-  color: #fff;
+  color: var(--thirsty-red);
   transform: rotate(-15deg) translate(-35px, -20px);
   z-index: 2;
   width: 60px;
@@ -6395,7 +6394,7 @@ html.user-logged-in #user-dashboard-card {
 
 .sticker-3 {
   background: #38bdf8;
-  color: #fff;
+  color: var(--thirsty-red);
   transform: rotate(-5deg) translate(0px, 35px);
   z-index: 4;
   width: 65px;
@@ -6475,8 +6474,8 @@ html.user-logged-in #user-dashboard-card {
 
 /* Ad Player styles */
 .sponsor-ad-player {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -6578,8 +6577,8 @@ html.user-logged-in #user-dashboard-card {
 
 /* Success Overlay styling */
 .sponsor-success-overlay {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -6727,8 +6726,8 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .badge-lock-overlay {
-  position: absolute;
-  top: 0;
+  position: relative;
+  margin: 1rem 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -6738,7 +6737,7 @@ html.user-logged-in #user-dashboard-card {
   background: rgba(0, 0, 0, 0.55);
   border-radius: 8px;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--thirsty-red);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
@@ -6747,7 +6746,7 @@ html.user-logged-in #user-dashboard-card {
 /* --- Page Loader Styling --- */
 #page-loader {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -6807,7 +6806,7 @@ html.user-logged-in #user-dashboard-card {
   width: 40%;
   height: 100%;
   background: var(--accent-color);
-  position: absolute;
+  position: relative;
   left: -40%;
   border-radius: 1px;
   animation: loader-progress 1.2s infinite ease-in-out;
@@ -6917,7 +6916,7 @@ html.user-logged-in #user-dashboard-card {
 /* Lightbox Modal CSS */
 .lightbox-modal {
   position: fixed;
-  top: 0;
+  margin: 1rem 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -6965,7 +6964,7 @@ html.user-logged-in #user-dashboard-card {
 .lightbox-close,
 .lightbox-prev,
 .lightbox-next {
-  position: absolute;
+  position: relative;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #ffffff;
@@ -7010,7 +7009,7 @@ html.user-logged-in #user-dashboard-card {
 }
 
 .lightbox-counter {
-  position: absolute;
+  position: relative;
   bottom: 2rem;
   font-family: 'Satoshi', sans-serif;
   color: rgba(255, 255, 255, 0.6);
@@ -7040,4 +7039,163 @@ html.user-logged-in #user-dashboard-card {
 }
 
 
+
+
+/* UNRLSD Ticker */
+.unrlsd-ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  background-color: transparent;
+  color: var(--thirsty-red);
+  padding: 10px 0;
+  position: relative;
+  margin: 1rem 0;
+  left: 0;
+  z-index: 20;
+}
+
+.unrlsd-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker 15s linear infinite;
+}
+
+.unrlsd-ticker span {
+  font-family: 'Integral CF', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-right: 2rem;
+  white-space: nowrap;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Floating Artist Gallery */
+.floating-artists {
+  position: relative;
+  margin: 1rem 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.floating-artist {
+  position: relative;
+  filter: grayscale(100%) contrast(1.2) brightness(0.8);
+  opacity: 0.7;
+  object-fit: cover;
+  transition: all 0.5s ease;
+  pointer-events: auto;
+}
+
+.floating-artist:hover {
+  filter: grayscale(0%) contrast(1) brightness(1.1);
+  transform: scale(1.05) translateY(-10px) !important;
+  opacity: 1;
+  z-index: 20;
+}
+
+/* Artist Placements */
+.float-1 { width: 15vw; height: 18vw; top: 15%; left: 5%; transform: rotate(-5deg); animation: float1 8s ease-in-out infinite; }
+.float-2 { width: 12vw; height: 15vw; top: 10%; right: 10%; transform: rotate(3deg); animation: float2 9s ease-in-out infinite; }
+.float-3 { width: 14vw; height: 16vw; top: 40%; left: -2%; transform: rotate(8deg); animation: float3 10s ease-in-out infinite; }
+.float-4 { width: 16vw; height: 20vw; top: 50%; right: 5%; transform: rotate(-4deg); animation: float1 11s ease-in-out infinite; }
+.float-5 { width: 11vw; height: 14vw; bottom: 10%; left: 15%; transform: rotate(6deg); animation: float2 7s ease-in-out infinite; }
+.float-6 { width: 13vw; height: 17vw; bottom: 5%; right: 20%; transform: rotate(-7deg); animation: float3 9s ease-in-out infinite; }
+.float-7 { width: 10vw; height: 12vw; top: 5%; left: 30%; transform: rotate(2deg); animation: float1 8s ease-in-out infinite; }
+
+@keyframes float1 { 0%, 100% { margin-margin: 1rem 0; } 50% { margin-top: -15px; } }
+@keyframes float2 { 0%, 100% { margin-margin: 1rem 0; } 50% { margin-top: -20px; } }
+@keyframes float3 { 0%, 100% { margin-margin: 1rem 0; } 50% { margin-top: -10px; } }
+
+@media (max-width: 768px) {
+  .floating-artist { width: 25vw !important; height: 30vw !important; }
+  .float-3 { left: -5%; }
+  .float-4 { right: -5%; }
+}
+
+
+@font-face {
+  font-family: 'Kyrilla';
+  src: url('fonts/KyrillaSansSerif-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* Artist Marquee Section */
+.artist-marquee-section {
+  position: relative;
+  width: 100%;
+  padding: 4rem 0;
+  background: #000;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.marquee-container {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+
+.marquee-container:hover {
+  animation-play-state: paused;
+}
+
+.marquee-artist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3rem;
+}
+
+.marquee-artist img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  /* Blend the JPEG edges out to transparency */
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 70%);
+  /* Keep them black and white and contrasted */
+  filter: grayscale(100%) contrast(1.3) brightness(0.9);
+  transition: all 0.4s ease;
+}
+
+.marquee-artist:hover img {
+  filter: grayscale(0%) contrast(1.1) brightness(1.1);
+  transform: scale(1.1);
+}
+
+.marquee-artist-name {
+  margin-top: 1rem;
+  font-family: 'Integral CF', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--thirsty-red);
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .marquee-artist img {
+    width: 150px;
+    height: 150px;
+  }
+  .marquee-artist {
+    margin: 0 1.5rem;
+  }
+}
 
