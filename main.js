@@ -2921,12 +2921,6 @@ document.addEventListener('DOMContentLoaded', () => {
     drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
     drawRowFull("Signature:", finalSigVal, tblX, tblY + 3 * rowH, tblW, true);
 
-    if (logoImage.complete && logoImage.naturalWidth > 0) {
-      ctx.save();
-      ctx.filter = 'grayscale(100%)';
-      const logoSize = 36;
-      ctx.drawImage(logoImage, 505, 440, logoSize, logoSize);
-      
     // 5. Draw Logos
     const logo1 = new Image();
     const logo2 = new Image();
@@ -2941,14 +2935,13 @@ document.addEventListener('DOMContentLoaded', () => {
       new Promise(res => { logo2.onload = res; logo2.onerror = res; }),
       new Promise(res => { logo3.onload = res; logo3.onerror = res; })
     ]).then(() => {
+      ctx.save();
       // Draw at the bottom of the page
       ctx.drawImage(logo1, 100, 680, 80, 80 * (logo1.height/logo1.width));
       ctx.drawImage(logo2, 260, 680, 80, 80 * (logo2.height/logo2.width));
       ctx.drawImage(logo3, 420, 680, 80, 80 * (logo3.height/logo3.width));
-    });
-    
       ctx.restore();
-    }
+    });
   };
 
 
