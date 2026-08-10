@@ -7,6 +7,82 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
+  // Hero Title Interval Glitch (THIRSTYCLUB999 <-> UNRLSD)
+  // ==========================================
+  const glitchContainer = document.getElementById('hero-glitch-container');
+  const mainTitleEl = document.getElementById('hero-title-text');
+  const glitchREl = document.getElementById('hero-glitch-r');
+  const glitchBEl = document.getElementById('hero-glitch-b');
+
+  if (glitchContainer && mainTitleEl) {
+    let isThirstyMode = true;
+
+    function runGlitchTransition() {
+      // 1. Add chromatic glitch slice animation
+      glitchContainer.classList.add('glitch-active');
+
+      // 2. Mid-way through glitch (at 200ms), switch text
+      setTimeout(() => {
+        isThirstyMode = !isThirstyMode;
+        if (isThirstyMode) {
+          glitchContainer.classList.remove('unrlsd-mode');
+          mainTitleEl.innerHTML = 'THIRSTYCLUB<span style="color: var(--thirsty-red);">999</span>';
+          if (glitchREl) glitchREl.textContent = 'THIRSTYCLUB999';
+          if (glitchBEl) glitchBEl.textContent = 'THIRSTYCLUB999';
+        } else {
+          glitchContainer.classList.add('unrlsd-mode');
+          mainTitleEl.innerHTML = '<span style="color: var(--thirsty-red);">UNRLSD</span>';
+          if (glitchREl) glitchREl.textContent = 'UNRLSD';
+          if (glitchBEl) glitchBEl.textContent = 'UNRLSD';
+        }
+      }, 200);
+
+      // 3. Remove glitch active class when animation completes
+      setTimeout(() => {
+        glitchContainer.classList.remove('glitch-active');
+      }, 480);
+    }
+
+    // Trigger glitch every 3 seconds
+    setInterval(runGlitchTransition, 3000);
+  }
+
+  // ==========================================
+  // August 15 Countdown Timer
+  // ==========================================
+  const targetDate = new Date('2026-08-15T00:00:00+01:00').getTime();
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl = document.getElementById('cd-mins');
+  const secsEl = document.getElementById('cd-secs');
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance < 0) {
+      if (daysEl) daysEl.textContent = '00';
+      if (hoursEl) hoursEl.textContent = '00';
+      if (minsEl) minsEl.textContent = '00';
+      if (secsEl) secsEl.textContent = '00';
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minsEl) minsEl.textContent = String(minutes).padStart(2, '0');
+    if (secsEl) secsEl.textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ==========================================
   // 1. Dynamic Cursor Glow Tracker
   // ==========================================
   const cursorGlow = document.getElementById('cursor-glow');
