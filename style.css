@@ -328,13 +328,15 @@ header nav .nav-btn:hover {
 }
 
 .glitch-layer-r {
-  color: #ff0055 !important;
-  text-shadow: -4px 0 #ff0055 !important;
+  color: #ff0040 !important;
+  -webkit-text-fill-color: #ff0040 !important;
+  text-shadow: -4px 0 #cc0000 !important;
 }
 
 .glitch-layer-b {
-  color: #00e5ff !important;
-  text-shadow: 4px 0 #00e5ff !important;
+  color: #ff4466 !important;
+  -webkit-text-fill-color: #ff4466 !important;
+  text-shadow: 4px 0 #990011 !important;
 }
 
 /* Active Glitch Warped Slicing Animations */
