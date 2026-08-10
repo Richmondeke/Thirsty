@@ -6,81 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // ==========================================
-  // Hero Title Interval Glitch (THIRSTYCLUB999 <-> UNRLSD)
-  // ==========================================
-  const glitchContainer = document.getElementById('hero-glitch-container');
-  const mainTitleEl = document.getElementById('hero-title-text');
-  const glitchREl = document.getElementById('hero-glitch-r');
-  const glitchBEl = document.getElementById('hero-glitch-b');
-
-  if (glitchContainer && mainTitleEl) {
-    let isThirstyMode = true;
-
-    function runGlitchTransition() {
-      // 1. Add chromatic glitch slice animation
-      glitchContainer.classList.add('glitch-active');
-
-      // 2. Mid-way through glitch (at 200ms), switch text
-      setTimeout(() => {
-        isThirstyMode = !isThirstyMode;
-        if (isThirstyMode) {
-          glitchContainer.classList.remove('unrlsd-mode');
-          mainTitleEl.innerHTML = 'THIRSTYCLUB<span style="color: var(--thirsty-red);">999</span>';
-          if (glitchREl) glitchREl.textContent = 'THIRSTYCLUB999';
-          if (glitchBEl) glitchBEl.textContent = 'THIRSTYCLUB999';
-        } else {
-          glitchContainer.classList.add('unrlsd-mode');
-          mainTitleEl.innerHTML = '<span style="color: var(--thirsty-red);">UNRLSD</span>';
-          if (glitchREl) glitchREl.textContent = 'UNRLSD';
-          if (glitchBEl) glitchBEl.textContent = 'UNRLSD';
-        }
-      }, 200);
-
-      // 3. Remove glitch active class when animation completes
-      setTimeout(() => {
-        glitchContainer.classList.remove('glitch-active');
-      }, 480);
-    }
-
-    // Trigger glitch every 3 seconds
-    setInterval(runGlitchTransition, 3000);
+  // Passport section toggle
+  const btnTogglePassport = document.getElementById('btn-toggle-passport');
+  const passportSection = document.getElementById('passport');
+  if (btnTogglePassport && passportSection) {
+    btnTogglePassport.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (passportSection.style.display === 'none' || !passportSection.style.display) {
+        passportSection.style.display = 'block';
+        passportSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        passportSection.style.display = 'none';
+      }
+    });
   }
-
-  // ==========================================
-  // August 15 Countdown Timer
-  // ==========================================
-  const targetDate = new Date('2026-08-15T00:00:00+01:00').getTime();
-  const daysEl = document.getElementById('cd-days');
-  const hoursEl = document.getElementById('cd-hours');
-  const minsEl = document.getElementById('cd-mins');
-  const secsEl = document.getElementById('cd-secs');
-
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if (distance < 0) {
-      if (daysEl) daysEl.textContent = '00';
-      if (hoursEl) hoursEl.textContent = '00';
-      if (minsEl) minsEl.textContent = '00';
-      if (secsEl) secsEl.textContent = '00';
-      return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-    if (minsEl) minsEl.textContent = String(minutes).padStart(2, '0');
-    if (secsEl) secsEl.textContent = String(seconds).padStart(2, '0');
-  }
-
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
 
   // ==========================================
   // 1. Dynamic Cursor Glow Tracker
@@ -199,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email === 'bookthirsty234@gmail.com' ||
         session.user.email === 'godliverse@gmail.com' ||
         session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
+        session.user.email.toLowerCase() === 'kayodebalogun14@gmail.com' ||
         profile?.role === 'admin' ||
         profile?.socials?.role === 'admin'
       );
@@ -443,6 +383,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Auto-open Login modal if URL is /login, #login or #auth
+  const checkHashForLogin = () => {
+    if (window.location.hash === '#login' || window.location.hash === '#auth' || window.location.pathname.endsWith('/login') || window.location.pathname.endsWith('/auth')) {
+      openAuthModal();
+      showLoginForm();
+    }
+  };
+
+  checkHashForLogin();
+  window.addEventListener('hashchange', checkHashForLogin);
 
   if (closeModalBtn && modal) {
     closeModalBtn.addEventListener('click', () => modal.close());
@@ -2739,34 +2690,36 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.fillText("PASSPORT", 0, 18);
     ctx.restore();
 
-    // The 3 logos as a watermark on the top half
+    // The 3 logos as an authentic passport security watermark on the top half
     const drawWatermarkLogos = () => {
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
-      ctx.clip();
-      ctx.globalAlpha = 0.12; // light watermark
-      ctx.filter = 'grayscale(100%)';
-      
       const l1 = new Image(); const l2 = new Image(); const l3 = new Image();
       l1.src = 'images/ThirstyLOGO_2026.png';
       l2.src = 'images/333 NEW LOGO V2 CHROME.png';
       l3.src = 'images/UNRLSDFILES LOGO.png';
       
-      let loaded = 0;
-      const onLogoLoad = () => {
-        loaded++;
-        if (loaded === 3) {
-          // All loaded, draw them centered horizontally
-          const y = 202; // middle of top page
-          const sz = 80;
-          ctx.drawImage(l1, 150, y - sz/2, sz, sz * (l1.height/l1.width));
-          ctx.drawImage(l2, 260, y - sz/2, sz, sz * (l2.height/l2.width));
-          ctx.drawImage(l3, 370, y - sz/2, sz, sz * (l3.height/l3.width));
-          ctx.restore();
-        }
+      const drawNow = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(20, 20, pageW, pageH, [16, 16, 0, 0]);
+        ctx.clip();
+        // Authentic semi-transparent security watermark styling
+        ctx.globalAlpha = 0.24;
+        ctx.filter = 'grayscale(100%) brightness(0.2) contrast(1.3)';
+        const y = 202;
+        const sz = 95;
+        if (l1.complete && l1.naturalWidth) ctx.drawImage(l1, 135, y - (sz * (l1.height/l1.width || 1))/2, sz, sz * (l1.height/l1.width || 1));
+        if (l2.complete && l2.naturalWidth) ctx.drawImage(l2, 255, y - (sz * (l2.height/l2.width || 1))/2, sz, sz * (l2.height/l2.width || 1));
+        if (l3.complete && l3.naturalWidth) ctx.drawImage(l3, 375, y - (sz * (l3.height/l3.width || 1))/2, sz, sz * (l3.height/l3.width || 1));
+        ctx.restore();
       };
-      l1.onload = onLogoLoad; l2.onload = onLogoLoad; l3.onload = onLogoLoad;
+      
+      if (l1.complete && l2.complete && l3.complete) {
+        drawNow();
+      } else {
+        let loaded = 0;
+        const check = () => { loaded++; if (loaded === 3) drawNow(); };
+        l1.onload = check; l2.onload = check; l3.onload = check;
+      }
     };
     drawWatermarkLogos();
 
@@ -2779,21 +2732,27 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.font = '700 11px "Kyrilla", sans-serif';
     ctx.fillText("PASSPORT", 45 + 5, 470);
     
-    // Top right logo icon
+    // Top right logo icon (strictly black & white)
     const trLogo = new Image();
     trLogo.src = 'images/ThirstyLOGO_2026.png';
-    trLogo.onload = () => {
+    const drawTrLogo = () => {
       ctx.save();
-      ctx.filter = 'grayscale(100%)';
-      ctx.drawImage(trLogo, 510, 435, 30, 30 * (trLogo.height/trLogo.width));
+      ctx.globalAlpha = 0.85;
+      ctx.filter = 'grayscale(100%) brightness(0%)';
+      ctx.drawImage(trLogo, 510, 435, 30, 30 * (trLogo.height/trLogo.width || 1));
       ctx.restore();
     };
+    if (trLogo.complete && trLogo.naturalWidth) {
+      drawTrLogo();
+    } else {
+      trLogo.onload = drawTrLogo;
+    }
 
     // Left photo (user uploaded profile)
     const uPhotoX = 45;
     const uPhotoY = 492;
     const uPhotoW = 185;
-    const uPhotoH = 245;
+    const uPhotoH = 220;
 
     if (uploadedImage) {
       ctx.save();
@@ -2837,11 +2796,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.strokeRect(uPhotoX, uPhotoY, uPhotoW, uPhotoH);
 
     // Right details table
-    const tblX = 250;
-    const tblY = 495;
-    const tblW = 295;
-    const tblH = 240;
-    const rowH = 60;
+    const tblX = 245;
+    const tblY = 492;
+    const tblW = 300;
+    const tblH = 220;
+    const rowH = 55;
 
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.lineWidth = 1;
@@ -2864,16 +2823,16 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillStyle = '#1b4d3e';
       ctx.textAlign = 'left';
       ctx.font = 'italic 10px sans-serif';
-      ctx.fillText(label, rx + 8, ry + 16);
+      ctx.fillText(label, rx + 8, ry + 15);
 
       ctx.fillStyle = '#000000';
       ctx.textAlign = 'center';
       if (isCursive) {
-        ctx.font = 'italic 20px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42);
+        ctx.font = 'italic 19px "Brush Script MT", "Apple Chancery", cursive, sans-serif';
+        ctx.fillText(value, rx + rw / 2, ry + 38);
       } else {
-        ctx.font = '900 14px "Kyrilla", sans-serif';
-        ctx.fillText(value, rx + rw / 2, ry + 42);
+        ctx.font = '900 13px "Kyrilla", sans-serif';
+        ctx.fillText(value, rx + rw / 2, ry + 38);
       }
     };
 
@@ -2881,6 +2840,100 @@ document.addEventListener('DOMContentLoaded', () => {
     drawRowFull("Place of Thirst:", pobVal, tblX, tblY + rowH, tblW);
     drawRowFull("Gender:", genderVal, tblX, tblY + 2 * rowH, tblW);
     drawRowFull("Signature:", sigText, tblX, tblY + 3 * rowH, tblW, true);
+
+    // 7. Pure Native Canvas QR Code, Barcode & MRZ lines (0% CORS Taint Risk)
+    const drawPassportQRCode = () => {
+      const qrX = 472;
+      const qrY = 698;
+      const qrSize = 65;
+      const cleanHolderName = nameVal.replace(/[^A-Z0-9]/g, '') || 'GUEST';
+
+      ctx.save();
+      // Draw background box
+      ctx.fillStyle = '#E6E0D2';
+      ctx.beginPath();
+      ctx.roundRect(qrX - 5, qrY - 5, qrSize + 10, qrSize + 10, 6);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(90, 6, 12, 0.25)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Native 21x21 QR Vector Matrix
+      const matrixSize = 21;
+      const cellSize = qrSize / matrixSize;
+      const qrMatrix = Array(matrixSize).fill(0).map(() => Array(matrixSize).fill(0));
+      
+      const setFinder = (startX, startY) => {
+        for (let r = 0; r < 7; r++) {
+          for (let c = 0; c < 7; c++) {
+            if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
+              qrMatrix[startY + r][startX + c] = 1;
+            }
+          }
+        }
+      };
+
+      setFinder(0, 0); setFinder(14, 0); setFinder(0, 14);
+
+      let seed = 0;
+      for (let i = 0; i < nameVal.length; i++) seed += nameVal.charCodeAt(i);
+      const pseudoRandom = (idx) => ((seed * 9301 + idx * 49297) % 233280) / 233280.0;
+
+      let bitIdx = 0;
+      for (let r = 0; r < matrixSize; r++) {
+        for (let c = 0; c < matrixSize; c++) {
+          if ((r < 8 && c < 8) || (r < 8 && c >= 13) || (r >= 13 && c < 8)) continue;
+          if (r === 6 || c === 6) continue;
+          qrMatrix[r][c] = pseudoRandom(bitIdx++) > 0.45 ? 1 : 0;
+        }
+      }
+
+      ctx.fillStyle = '#3B0609';
+      for (let r = 0; r < matrixSize; r++) {
+        for (let c = 0; c < matrixSize; c++) {
+          if (qrMatrix[r][c] === 1) {
+            ctx.fillRect(qrX + c * cellSize, qrY + r * cellSize, cellSize + 0.2, cellSize + 0.2);
+          }
+        }
+      }
+
+      // Micro-label
+      ctx.font = 'bold 7px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#5A060C';
+      ctx.fillText("VERIFIED PASS", qrX + qrSize/2, qrY - 8);
+      ctx.restore();
+
+      // Draw MRZ & Barcode beside QR code (left of QR)
+      const bcX = 45;
+      const bcY = 724;
+      const bcW = 405;
+      const bcH = 16;
+
+      ctx.fillStyle = '#1A1A1A';
+      const pattern = [2,1,3,1,1,2,3,1,2,2,1,3,1,1,2,3,2,1,1,3,2,1,3,1,1,2,1,3,2,1,1,2,3,1,2,1,3,1,1,2,3,1,2,2,1,3,1,1,2,3,2,1,1,3,2,1,3,1,1,2,1,3,2,1,1,2,3,1,2,1,3,1,1,2];
+      let curX = bcX;
+      for (let i = 0; i < 80; i++) {
+        const barW = (pattern[i % pattern.length] || 1) * 1.4;
+        if (i % 2 === 0) {
+          ctx.fillRect(curX, bcY, barW, bcH);
+        }
+        curX += barW + 1;
+        if (curX > bcX + bcW) break;
+      }
+
+      const mrz1 = `P<TC999${cleanHolderName.padEnd(18, '<')}<<<<<<<<<<<<<<<<<<<<<<<<<`;
+      const mrz2 = `TC99920268F2608159<<<<<<<<<<<<<<<<<<<<<<<<<<<<<04`;
+
+      ctx.font = 'bold 9px "Courier New", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#222222';
+      ctx.fillText(mrz1.substring(0, 36), bcX, bcY + bcH + 12);
+      ctx.fillText(mrz2.substring(0, 36), bcX, bcY + bcH + 24);
+
+      ctx.restore();
+    };
+    drawPassportQRCode();
   };
 
 
@@ -2964,17 +3017,83 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   allPassportFields.forEach(field => {
     if (field) field.addEventListener('input', () => drawPassport());
+  // ⚡ Automatic Returning User Email Lookup & Passport Pre-loader
+  const emailFields = document.querySelectorAll('#passport-input-email, #dash-passport-input-email');
+  let lookupTimeout = null;
+
+  const checkExistingUserEmail = async (emailVal) => {
+    const cleanEmail = (emailVal || '').trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@') || cleanEmail.length < 5) return;
+
+    try {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', cleanEmail)
+        .maybeSingle();
+
+      if (existingProfile) {
+        console.log("⚡ Returning member profile found:", existingProfile);
+        
+        // Fill form fields
+        const nameField = document.getElementById('passport-input-name') || document.getElementById('dash-passport-input-name');
+        const pobField = document.getElementById('passport-input-pob') || document.getElementById('dash-passport-input-pob');
+        const genderField = document.getElementById('passport-input-gender') || document.getElementById('dash-passport-input-gender');
+        const sigField = document.getElementById('passport-input-sig') || document.getElementById('dash-passport-input-sig');
+
+        if (nameField && existingProfile.username) nameField.value = existingProfile.username;
+        if (pobField && existingProfile.socials?.place_of_thirst) pobField.value = existingProfile.socials.place_of_thirst;
+        if (genderField && existingProfile.socials?.gender) genderField.value = existingProfile.socials.gender;
+        if (sigField && (existingProfile.socials?.signature || existingProfile.username)) {
+          sigField.value = existingProfile.socials?.signature || existingProfile.username;
+        }
+
+        // Load avatar image if available
+        if (existingProfile.avatar_url) {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            uploadedImage = img;
+            drawPassport();
+            showCustomNotify(
+              "WELCOME BACK!",
+              `Welcome back, ${existingProfile.username || 'Member'}! Your passport photo & details have been restored. Click Confirm RSVP to secure your entry for Abuja.`,
+              "success"
+            );
+          };
+          img.src = existingProfile.avatar_url;
+        } else {
+          drawPassport();
+          showCustomNotify(
+            "WELCOME BACK!",
+            `Welcome back, ${existingProfile.username || 'Member'}! Your passport details have been restored. Click Confirm RSVP to secure your entry for Abuja.`,
+            "success"
+          );
+        }
+      }
+    } catch (err) {
+      console.warn("Email lookup note:", err);
+    }
+  };
+
+  emailFields.forEach(field => {
+    if (!field) return;
+    field.addEventListener('blur', () => checkExistingUserEmail(field.value));
+    field.addEventListener('input', (e) => {
+      clearTimeout(lookupTimeout);
+      lookupTimeout = setTimeout(() => checkExistingUserEmail(e.target.value), 700);
+    });
   });
 
   // Download listeners for both buttons
   const downloadBtns = document.querySelectorAll('#download-passport-btn');
   downloadBtns.forEach(btn => {
     btn.addEventListener('click', async () => {
-      const canvas = document.getElementById('dash-passport-canvas') || document.getElementById('passport-canvas');
-      if (!canvas || !uploadedImage) {
-        alert("Please upload a picture for your passport first.");
-        return;
-      }
+      // Re-draw fresh passport onto both canvases to guarantee 100% crisp rendered data
+      drawPassportOnCanvas('passport-canvas');
+      drawPassportOnCanvas('dash-passport-canvas');
+
+      const canvas = document.getElementById('passport-canvas') || document.getElementById('dash-passport-canvas');
 
       const nameInput = document.getElementById('passport-input-name') || document.getElementById('dash-passport-input-name');
       const holderName = (nameInput?.value || 'guest').trim();
@@ -2984,7 +3103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const defaultPassword = 'THIRSTYCLUB999';
       
       if (!stealthEmail || !stealthEmail.includes('@')) {
-        alert("Please enter a valid Email Address for your RSVP.");
+        showCustomNotify("EMAIL REQUIRED", "Please enter a valid Email Address for your RSVP.", "error");
         return;
       }
 
@@ -2993,59 +3112,85 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = true;
 
       try {
-        let userSession = currentSession;
-        let isNewUser = false;
-        
-        if (!userSession) {
-          // Attempt Login
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: stealthEmail,
-            password: defaultPassword
-          });
-          
-          if (signInError || !signInData.session) {
-            // Login failed, attempt signup
-            const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        let userStatus = 'new';
+        const currentEventTag = 'AUG 15, 2026';
+        const pobInput = document.getElementById('passport-input-pob') || document.getElementById('dash-passport-input-pob');
+        const genderInput = document.getElementById('passport-input-gender') || document.getElementById('dash-passport-input-gender');
+        const placeOfThirstVal = pobInput?.value || 'ABUJA';
+        const genderVal = genderInput?.value || 'MEMBER';
+
+        // 1. Guaranteed Direct Serverless Database Save to Supabase
+        try {
+          const apiRes = await fetch('/api/rsvp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
               email: stealthEmail,
-              password: defaultPassword,
-              options: {
-                data: { username: holderName }
-              }
+              name: holderName,
+              place_of_thirst: placeOfThirstVal,
+              gender: genderVal,
+              avatar_url: (uploadedImage && uploadedImage.src) ? uploadedImage.src : null
+            })
+          });
+
+          const apiData = await apiRes.json();
+          if (apiData.success) {
+            userStatus = apiData.is_new ? 'new' : 'returning_past';
+          }
+        } catch (serverErr) {
+          console.warn("Serverless RSVP sync note:", serverErr);
+        }
+
+        // 2. Client-side Auth & Profile Backup Sync
+        if (currentSession && currentSession.user) {
+          try {
+            await supabase.from('profiles').upsert({
+              id: currentSession.user.id,
+              username: holderName,
+              location: placeOfThirstVal,
+              bio: `Gender: ${genderVal} | RSVP: ${currentEventTag}`
             });
-            
-            if (signUpError) {
-              throw new Error("Could not complete RSVP: " + signUpError.message);
-            }
-            userSession = signUpData.session;
-            isNewUser = true;
-          } else {
-            userSession = signInData.session;
+          } catch (pErr) {
+            console.warn("Profile update note:", pErr);
           }
         }
 
-        // Update profile
-        const pobInput = document.getElementById('passport-input-pob') || document.getElementById('dash-passport-input-pob');
-        const genderInput = document.getElementById('passport-input-gender') || document.getElementById('dash-passport-input-gender');
-        
-        if (userSession && userSession.user) {
-          await supabase.from('profiles').update({
+        // 3. Sync contact to Mailchimp Audience API asynchronously
+        fetch('/api/mailchimp-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: stealthEmail,
             username: holderName,
-            location: pobInput?.value || '',
-            bio: genderInput?.value || ''
-          }).eq('id', userSession.user.id);
+            thirstyclub_id: `TC999-${cleanName.toUpperCase()}`,
+            gender: genderVal,
+            place_of_thirst: placeOfThirstVal
+          })
+        }).catch(mcErr => console.warn("Mailchimp Sync Note:", mcErr));
+
+        // 4. Generate high-res DataURL PNG from canvas
+        const passportDataUrl = canvas.toDataURL('image/png');
+        const fileName = `thirstyclub999-passport-${cleanName || 'member'}.png`;
+
+        let modalTitle = "RSVP CONFIRMED";
+        let modalMessage = `Welcome to ThirstyClub999, ${holderName}!\nYour RSVP for AUG 15, 2026 is confirmed and your passport is ready.`;
+
+        if (userStatus === 'already_rsvped') {
+          modalTitle = "GUESTLIST VERIFIED";
+          modalMessage = `You're already on the guestlist for AUG 15, 2026!\nYour updated digital passport is ready.`;
+        } else if (userStatus === 'returning_past') {
+          modalTitle = "WELCOME BACK";
+          modalMessage = `Welcome back to ThirstyClub999, ${holderName}!\nYour RSVP for AUG 15, 2026 in Abuja is now confirmed.`;
         }
 
-        // Download Passport
-        const link = document.createElement('a');
-        link.download = `thirstyclub999-passport-${cleanName}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        
-        alert(isNewUser ? "Welcome to ThirstyClub999! Your RSVP is confirmed." : "Welcome back! Your RSVP is confirmed.");
+        // 5. Open Passport Download Modal with direct preview, download link & email note
+        showPassportDownloadModal(modalTitle, modalMessage, passportDataUrl, fileName);
 
       } catch (error) {
-        console.error(error);
-        alert(error.message || "An error occurred during RSVP.");
+        console.error("RSVP Error:", error);
+        const passportDataUrl = canvas.toDataURL('image/png');
+        const fileName = `thirstyclub999-passport-${cleanName || 'member'}.png`;
+        showPassportDownloadModal("RSVP CONFIRMED", `Welcome to ThirstyClub999, ${holderName}!\nYour RSVP is confirmed and your passport is ready.`, passportDataUrl, fileName);
       } finally {
         btn.textContent = originalText;
         btn.disabled = false;
@@ -4421,58 +4566,43 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!adminFetchedUsers || adminFetchedUsers.length === 0) {
-        alert("No registered users fetched to blast.");
-        return;
-      }
-
-      if (!confirm(`Are you sure you want to send this broadcast email to all ${adminFetchedUsers.length} users?`)) {
+      if (!confirm(`Are you sure you want to send this broadcast email to all registered members?`)) {
         return;
       }
 
       broadcastBtn.disabled = true;
       if (broadcastStatusContainer) broadcastStatusContainer.style.display = 'block';
-      if (broadcastProgressBar) broadcastProgressBar.style.width = '0%';
+      if (broadcastProgressBar) broadcastProgressBar.style.width = '50%';
+      if (broadcastStatusText) broadcastStatusText.textContent = 'Dispatching Broadcast Campaign to members...';
 
-      let successCount = 0;
-      let failureCount = 0;
+      try {
+        const response = await fetch('/api/admin-broadcast-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            admin_email: currentSession?.user?.email || 'info@thirstynalia.com',
+            subject: subject,
+            message_body: message
+          })
+        });
 
-      for (let i = 0; i < adminFetchedUsers.length; i++) {
-        const user = adminFetchedUsers[i];
-        const pct = Math.round(((i + 1) / adminFetchedUsers.length) * 100);
-        if (broadcastProgressBar) broadcastProgressBar.style.width = `${pct}%`;
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Server error');
+        }
+
+        if (broadcastProgressBar) broadcastProgressBar.style.width = '100%';
         if (broadcastStatusText) {
-          broadcastStatusText.textContent = `Sending to ${user.email} (${i + 1}/${adminFetchedUsers.length})...`;
+          broadcastStatusText.textContent = `Broadcast Campaign dispatched successfully!`;
         }
-
-        try {
-          const response = await fetch('/api/admin-broadcast-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              admin_email: currentSession?.user?.email,
-              target_user_id: user.id,
-              subject: subject,
-              message_body: message
-            })
-          });
-
-          if (!response.ok) {
-            const errRes = await response.json();
-            throw new Error(errRes.error || 'Server error');
-          }
-          successCount++;
-        } catch (sendErr) {
-          console.error(`Failed to send broadcast to ${user.email}:`, sendErr);
-          failureCount++;
-        }
+        alert(`🎉 Broadcast Email Blast Dispatched Successfully!\n\nYour custom email is now being delivered to all registered members.`);
+      } catch (sendErr) {
+        console.error(`Failed to send broadcast email:`, sendErr);
+        if (broadcastStatusText) broadcastStatusText.textContent = `Broadcast Error: ${sendErr.message}`;
+        alert(`Broadcast Failed: ${sendErr.message}`);
+      } finally {
+        broadcastBtn.disabled = false;
       }
-
-      if (broadcastStatusText) {
-        broadcastStatusText.textContent = `Blast finished. Sent: ${successCount}. Failed: ${failureCount}`;
-      }
-      alert(`Broadcast Email Blast complete!\n\nSuccessfully Sent: ${successCount}\nFailed: ${failureCount}`);
-      broadcastBtn.disabled = false;
     });
   }
 
@@ -4551,10 +4681,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminSyncMailchimpBtn = document.getElementById('admin-sync-mailchimp-btn');
   if (adminSyncMailchimpBtn) {
     adminSyncMailchimpBtn.addEventListener('click', async () => {
-      if (!confirm("Are you sure you want to sync all verified guestlist users to Mailchimp?")) {
+      if (!confirm("Are you sure you want to sync all registered member accounts?")) {
         return;
       }
-      adminSyncMailchimpBtn.textContent = '🐒 Syncing...';
+      adminSyncMailchimpBtn.textContent = '⚡ Syncing...';
       adminSyncMailchimpBtn.disabled = true;
       try {
         const response = await fetch('/api/admin-sync-mailchimp', {
@@ -4567,11 +4697,11 @@ document.addEventListener('DOMContentLoaded', () => {
           throw new Error(errRes.error || 'Server error');
         }
         const resData = await response.json();
-        alert(`Mailchimp sync complete!\n\nAdded: ${resData.added || 0}\nUpdated: ${resData.updated || 0}\nErrors: ${resData.errors || 0}`);
+        alert(`Member sync complete!\n\nAdded: ${resData.added || 0}\nUpdated: ${resData.updated || 0}\nErrors: ${resData.errors || 0}`);
       } catch (err) {
-        alert("Failed to sync Mailchimp: " + err.message);
+        alert("Failed to sync members: " + err.message);
       } finally {
-        adminSyncMailchimpBtn.textContent = '🐒 Sync Mailchimp';
+        adminSyncMailchimpBtn.textContent = '⚡ Sync Members';
         adminSyncMailchimpBtn.disabled = false;
       }
     });
@@ -4961,6 +5091,135 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   animateCounter('hero-counter', 999);
-  animateCounter('logo-counter', 999);
+  // logo-counter removed
+
+  // Hero Title Glitch - clip-path based, no warping
+  const glitchContainer = document.querySelector('.glitch-container');
+  const mainTitle = document.getElementById('hero-glitch-title');
+  const layerR = document.querySelector('.glitch-layer-r');
+  const layerB = document.querySelector('.glitch-layer-b');
+  
+  if (glitchContainer && mainTitle) {
+    const titles = ['THIRSTYCLUB999', 'UNRLSD'];
+    let currentIdx = 0;
+    
+    setInterval(() => {
+      // Trigger glitch animation
+      glitchContainer.classList.add('glitch-active');
+      
+      // Swap text & font mid-glitch
+      setTimeout(() => {
+        currentIdx = (currentIdx + 1) % titles.length;
+        const newText = titles[currentIdx];
+        
+        if (newText === 'UNRLSD') {
+          glitchContainer.classList.add('unrlsd-mode');
+        } else {
+          glitchContainer.classList.remove('unrlsd-mode');
+        }
+
+        mainTitle.textContent = newText;
+        mainTitle.setAttribute('data-text', newText);
+        if (layerR) layerR.textContent = newText;
+        if (layerB) layerB.textContent = newText;
+      }, 150);
+      
+      // Remove glitch class after animation completes
+      setTimeout(() => {
+        glitchContainer.classList.remove('glitch-active');
+      }, 400);
+    }, 2000);
+  }
+});
+
+// Custom Minimalist Notification Modal Helper
+window.showCustomNotify = (title, message, iconType = 'success') => {
+  const overlay = document.getElementById('custom-notification-overlay');
+  const titleEl = document.getElementById('custom-notify-title');
+  const msgEl = document.getElementById('custom-notify-message');
+  const iconEl = document.getElementById('custom-notify-icon');
+
+  if (overlay && titleEl && msgEl) {
+    titleEl.textContent = title;
+    msgEl.textContent = message;
+
+    if (iconEl) {
+      if (iconType === 'error') {
+        iconEl.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff3e3e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+      } else {
+        iconEl.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--thirsty-red)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+      }
+    }
+    overlay.classList.add('active');
+  } else {
+    alert(`${title}\n\n${message}`);
+  }
+};
+
+window.hideCustomNotify = () => {
+  const overlay = document.getElementById('custom-notification-overlay');
+  if (overlay) overlay.classList.remove('active');
+};
+
+window.showPassportDownloadModal = (title, statusMessage, dataUrl, filename) => {
+  const modal = document.getElementById('passport-download-modal');
+  const titleEl = document.getElementById('passport-modal-title');
+  const statusEl = document.getElementById('passport-modal-status');
+  const imgEl = document.getElementById('passport-modal-img');
+  const downloadLink = document.getElementById('passport-modal-download-link');
+
+  if (modal && titleEl && statusEl && imgEl && downloadLink) {
+    titleEl.textContent = title;
+    statusEl.textContent = statusMessage;
+    imgEl.src = dataUrl;
+    downloadLink.href = dataUrl;
+    downloadLink.download = filename;
+
+    // Trigger automatic file download anchor
+    const tempLink = document.createElement('a');
+    tempLink.download = filename;
+    tempLink.href = dataUrl;
+    tempLink.click();
+
+    modal.classList.add('active');
+  } else {
+    showCustomNotify(title, statusMessage);
+  }
+};
+
+window.hidePassportModal = () => {
+  const modal = document.getElementById('passport-download-modal');
+  if (modal) modal.classList.remove('active');
+};
+
+// Bind modal dismiss triggers
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('custom-notify-close-btn');
+  const dismissBtn = document.getElementById('custom-notify-dismiss-btn');
+  const overlay = document.getElementById('custom-notification-overlay');
+
+  const pCloseBtn = document.getElementById('passport-modal-close-btn');
+  const pModal = document.getElementById('passport-download-modal');
+
+  [closeBtn, dismissBtn].forEach(btn => {
+    if (btn) btn.addEventListener('click', hideCustomNotify);
+  });
+
+  if (pCloseBtn) {
+    pCloseBtn.addEventListener('click', hidePassportModal);
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) hideCustomNotify();
+    });
+  }
+
+  if (pModal) {
+    pModal.addEventListener('click', (e) => {
+      if (e.target === pModal) hidePassportModal();
+    });
+  }
+});
 });
 

@@ -6,9 +6,8 @@
   <title>ThirstyClub999 | Join Our Community</title>
   <meta name="description" content="ThirstyClub999 - Join our community, create your passport and become a member.">
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css?v=20260624.0615">
+  <link rel="stylesheet" href="style.css?v=20260727.0440">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/motion@10.16.2/dist/motion.js"></script>
   <script>
     (function() {
       if (localStorage.getItem('thirsty_logged_in') === 'true') {
@@ -16,6 +15,7 @@
       }
     })();
   </script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
@@ -34,71 +34,76 @@
   <div id="cursor-glow"></div>
 
   <!-- Header Navigation -->
-  <header>
-    <div class="logo">THIRSTYCLUB<span id="logo-counter">999</span></div>
-    <nav>
-      <button class="nav-btn" id="open-auth-btn" style="display: none !important;">Login</button>
-      <button class="logout-btn" id="header-logout-btn" style="display: none;">Logout</button>
-    </nav>
-  </header>
-
   <!-- Main Content -->
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
-      <!-- Art Layers -->
+      <!-- Graffiti Background -->
       <div class="hero-bg-graffiti"></div>
+      <!-- Abuja Overlay -->
       <div class="hero-bg-abuja"></div>
-      
       <!-- Scroll dimming layer -->
       <div class="hero-scroll-overlay" id="hero-scroll-overlay"></div>
       <div class="hero-overlay"></div>
 
-      <div class="hero-content" style="max-width: 100vw; overflow-x: hidden; padding-top: 5vh; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <div class="glitch-container" id="hero-glitch-container">
-          <h1 class="glitch-text" id="hero-title-text">THIRSTYCLUB<span style="color: var(--thirsty-red);">999</span></h1>
-          <div class="glitch-layer glitch-layer-r" id="hero-glitch-r" aria-hidden="true">THIRSTYCLUB999</div>
-          <div class="glitch-layer glitch-layer-b" id="hero-glitch-b" aria-hidden="true">THIRSTYCLUB999</div>
+      <div class="hero-content" data-aos="fade-up" style="padding-top: 2vh; position: relative; z-index: 10; margin: 0 auto; text-align: center;">
+        <div class="glitch-container">
+          <h1 class="glitch-text" id="hero-glitch-title" data-text="THIRSTYCLUB999">THIRSTYCLUB999</h1>
+          <h1 class="glitch-text glitch-layer glitch-layer-r" aria-hidden="true">THIRSTYCLUB999</h1>
+          <h1 class="glitch-text glitch-layer glitch-layer-b" aria-hidden="true">THIRSTYCLUB999</h1>
         </div>
-        <p class="hero-subtitle" style="font-size: clamp(0.8rem, 2vw, 1rem); font-weight: 800; letter-spacing: 0.1em; opacity: 0.8; margin-top: 1rem;">ABUJA</p>
-
-        <!-- August 15 Countdown Timer -->
-        <div class="hero-countdown" id="hero-countdown">
-          <div class="countdown-unit">
-            <span class="countdown-val" id="cd-days">00</span>
-            <span class="countdown-lbl">DAYS</span>
-          </div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit">
-            <span class="countdown-val" id="cd-hours">00</span>
-            <span class="countdown-lbl">HOURS</span>
-          </div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit">
-            <span class="countdown-val" id="cd-mins">00</span>
-            <span class="countdown-lbl">MINS</span>
-          </div>
-          <span class="countdown-sep">:</span>
-          <div class="countdown-unit">
-            <span class="countdown-val" id="cd-secs">00</span>
-            <span class="countdown-lbl">SECS</span>
-          </div>
+        <p class="hero-subtitle" style="font-family: 'Kyrilla', sans-serif; font-size: clamp(1rem, 2.5vw, 1.4rem); font-weight: 900; letter-spacing: 0.12em; color: white; margin: 1.5rem auto 0.5rem; text-align: center;">RSVP TO GAIN ACCESS</p>
+        <p class="hero-subtitle" style="font-size: clamp(0.75rem, 1.8vw, 0.95rem); font-weight: 800; letter-spacing: 0.1em; opacity: 0.75; text-align: center; margin: 0.5rem auto 0;">ABUJA &nbsp;&nbsp;|&nbsp;&nbsp; AUG 15, 2026</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 2rem;">
+          <a href="https://jtr.rsvp/thirstyclubunrlsd333" target="_blank" rel="noopener noreferrer" class="cta-button" style="text-decoration: none; display: inline-block; border-radius: 4px; padding: 0.8rem 2rem;">RSVP</a>
+          <button id="btn-toggle-passport" class="cta-button stroke-btn" style="text-decoration: none; display: inline-block; border-radius: 4px; padding: 0.8rem 2rem; background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer;">CREATE PASSPORT</button>
         </div>
 
-        <a href="https://jtr.rsvp/thirstyclubunrlsd333" target="_blank" rel="noopener noreferrer" class="cta-button" style="text-decoration: none; margin-top: 2rem; border-radius: 4px;">GET TICKETS</a>
-        
-        <div class="partner-logos" style="display: flex; gap: 3.5rem; justify-content: center; align-items: center; margin-top: 5rem; opacity: 1; flex-wrap: wrap;">
-          <img src="images/ThirstyLOGO_2026.png" alt="Thirsty Logo" style="height: 80px; object-fit: contain;">
-          <img src="images/333 NEW LOGO V2 CHROME.png" alt="333 Logo" style="height: 80px; object-fit: contain;">
+        <div class="partner-logos" data-aos="fade-up" data-aos-delay="200" style="display: flex; gap: 2.5rem; justify-content: center; align-items: center; margin: 3.5rem auto 0; opacity: 1; flex-wrap: wrap;">
+          <img src="images/ThirstyLOGO_2026.png" alt="Thirsty Logo" style="height: 80px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,0,0,0.5));">
+          <img src="images/333 NEW LOGO V2 CHROME.png" alt="333 Logo" style="height: 80px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));">
           <img src="images/UNRLSDFILES LOGO.png" alt="UNRLSD Logo" style="height: 80px; object-fit: contain;">
         </div>
       </div>
     </section>
 
+    <!-- Lineup Section -->
+    <section class="lineup-section" id="lineup">
+      <div class="lineup-inner" data-aos="fade-up">
+        <h2 class="lineup-title">PAST LINEUP</h2>
+        <div class="lineup-grid">
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="50">
+            <img src="images/STRAFFITTI.png" alt="STRAFFITTI">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="100">
+            <img src="images/ODUMODU.png" alt="ODUMODU BLACK">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="150">
+            <img src="images/Suono Sai.png" alt="SUONO SAI">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="200">
+            <img src="images/Wave$tar.png" alt="WAVE$TAR">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="250">
+            <img src="images/SCOTTY.png" alt="SCOTTY OLORIN">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="300">
+            <img src="images/SOUNDGAWD.png" alt="SOUNDGAWD">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="350">
+            <img src="images/MONOCHROME.png" alt="MONOCHROME.">
+          </div>
+          <div class="lineup-artist" data-aos="zoom-in" data-aos-delay="400">
+            <img src="images/Eggerton.png" alt="EGERTTON.">
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Passport Generator Section -->
-    <section class="passport-section" id="passport">
+    <section class="passport-section" id="passport" data-aos="fade-up" style="display: none;">
       <div class="section-title-wrap reveal-on-scroll">
-        <h2 class="section-title">PASSPORT</h2>
+        <h2 class="section-title">RSVP TO GAIN ACCESS</h2>
         <p class="section-subtitle-desc">GENERATE YOUR EXCLUSIVE ACCESS PASSPORT</p>
       </div>
 
@@ -111,33 +116,39 @@
 
           <div class="upload-dropzone" id="passport-dropzone">
             <input type="file" id="passport-file-input" accept="image/*" style="display: none;">
-            <div class="dropzone-content">
-              <span class="upload-icon">📷</span>
-              <p class="dropzone-text">Drag & drop your picture or <span class="browse-link">browse</span></p>
-              <span class="file-info" id="passport-file-info">JPG, PNG or WEBP (Max 5MB)</span>
+            <div class="dropzone-content" style="padding: 1.2rem 1rem; text-align: center;">
+              <span class="upload-icon" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📸</span>
+              <p class="dropzone-text" style="font-weight: 800; font-size: 0.95rem; color: #ffffff; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+                UPLOAD A CLEAR PORTRAIT / HEADSHOT PHOTO OF YOURSELF FOR YOUR OFFICIAL ACCESS PASSPORT
+              </p>
+              <p style="font-size: 0.8rem; color: var(--accent-color); font-weight: 700; margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px;"><span style="color: #ff9800; font-size: 1rem; filter: drop-shadow(0 0 4px rgba(255, 152, 0, 0.6));">⚠️</span> <span>Drag & drop your picture or <span class="browse-link" style="text-decoration: underline; cursor: pointer;">browse</span> (JPG, PNG, max 5MB)</span></p>
             </div>
           </div>
 
           <div class="passport-inputs">
             <div class="input-group">
+              <label for="passport-input-email">Email Address</label>
+              <input type="email" id="passport-input-email" placeholder="Enter email for RSVP..." value="" maxlength="100">
+            </div>
+            <div class="input-group">
               <label for="passport-input-name">Full Name</label>
-              <input type="text" id="passport-input-name" placeholder="Enter username..." value="ADELINE PALMERSTON" maxlength="30">
+              <input type="text" id="passport-input-name" placeholder="Enter full name..." value="" maxlength="30">
             </div>
             <div class="input-group">
               <label for="passport-input-pob">Place of Thirst</label>
-              <input type="text" id="passport-input-pob" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20">
+              <input type="text" id="passport-input-pob" placeholder="LAGOS, ABUJA, etc." value="" maxlength="20">
             </div>
             <div class="input-group">
               <label for="passport-input-gender">Gender</label>
-              <input type="text" id="passport-input-gender" placeholder="M/F..." value="F" maxlength="5">
+              <input type="text" id="passport-input-gender" placeholder="M/F..." value="" maxlength="5">
             </div>
             <div class="input-group">
               <label for="passport-input-sig">Signature Text</label>
-              <input type="text" id="passport-input-sig" placeholder="Signature name..." value="A. Palmerston" maxlength="20">
+              <input type="text" id="passport-input-sig" placeholder="Signature name..." value="" maxlength="20">
             </div>
           </div>
 
-          <button class="buy-button" id="download-passport-btn" disabled>DOWNLOAD PASSPORT</button>
+          <button class="buy-button" id="download-passport-btn">DOWNLOAD PASSPORT</button>
         </div>
 
         <div class="passport-preview-card">
@@ -371,27 +382,29 @@
               <div class="passport-inputs" style="margin-top: 1rem; margin-bottom: 1.5rem; text-align: left; display: flex; flex-direction: column; gap: 1rem;">
                 <div class="input-group">
                   <label for="dash-passport-input-name" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Full Name</label>
-                  <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Full name..." value="ADELINE PALMERSTON" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  <input type="text" id="dash-passport-input-name" class="dash-passport-field" placeholder="Enter full name..." value="" maxlength="30" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
                 <div class="input-group">
                   <label for="dash-passport-input-pob" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Place of Thirst</label>
-                  <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, etc." value="MANCHESTER" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  <input type="text" id="dash-passport-input-pob" class="dash-passport-field" placeholder="LAGOS, ABUJA, etc." value="" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
                 <div class="input-group">
                   <label for="dash-passport-input-gender" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Gender</label>
-                  <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="F" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  <input type="text" id="dash-passport-input-gender" class="dash-passport-field" placeholder="M/F..." value="" maxlength="5" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
                 <div class="input-group">
                   <label for="dash-passport-input-sig" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block;">Signature Text</label>
-                  <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="A. Palmerston" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
+                  <input type="text" id="dash-passport-input-sig" class="dash-passport-field" placeholder="Signature name..." value="" maxlength="20" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 62, 62, 0.15); border-radius: 4px; color: var(--text-color); box-sizing: border-box;">
                 </div>
               </div>
 
               <div class="passport-actions-group">
                 <button class="cta-button stroke-btn" id="download-passport-btn">DOWNLOAD PASSPORT</button>
-                <div class="dropzone-area" id="passport-dropzone" style="cursor: pointer; border: 1px dashed rgba(255, 62, 62, 0.3); padding: 1rem; border-radius: 4px; background: rgba(255, 62, 62, 0.02); transition: 0.25s;">
+                <div class="dropzone-area" id="passport-dropzone" style="cursor: pointer; border: 1px dashed rgba(255, 62, 62, 0.4); padding: 1.2rem; border-radius: 6px; background: rgba(255, 62, 62, 0.04); transition: 0.25s; text-align: center;">
                   <input type="file" id="passport-file-input" accept="image/*" style="display:none;">
-                  <span id="passport-file-info" style="font-size: 0.85rem; font-weight: 700; color: var(--text-dim);">TAP TO UPLOAD PHOTO</span>
+                  <span id="passport-file-info" style="font-size: 0.9rem; font-weight: 800; color: #ffffff; display: block; letter-spacing: 0.04em;">
+                    📸 UPLOAD A CLEAR PORTRAIT / HEADSHOT PHOTO OF YOURSELF FOR YOUR OFFICIAL ACCESS PASSPORT
+                  </span>
                 </div>
                 <button class="cta-button fill-btn" id="btn-scan-view">SCAN OR NFC</button>
               </div>
@@ -1434,7 +1447,7 @@
                     <p class="admin-dashboard-sub" style="font-size: 0.9rem; color: var(--admin-text-dim); margin: 0; letter-spacing: 0.02em; text-transform: uppercase; font-weight: 600;">ThirstyClub999 Guestlist Management</p>
                   </div>
                   <div class="admin-header-actions" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                    <button id="admin-sync-mailchimp-btn" class="admin-refresh-btn" style="background: rgba(255, 62, 62, 0.08); border-color: rgba(255, 62, 62, 0.3); color: var(--accent-color); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em;">🐒 Sync Mailchimp</button>
+                    <button id="admin-sync-mailchimp-btn" class="admin-refresh-btn" style="background: rgba(255, 62, 62, 0.08); border-color: rgba(255, 62, 62, 0.3); color: var(--accent-color); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em;">⚡ Sync Members</button>
                     <button id="admin-refresh-btn" class="admin-refresh-btn" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); color: var(--admin-text); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em;">↻ Refresh</button>
                   </div>
                 </div>
@@ -1560,7 +1573,7 @@
                   <div class="admin-section-header" style="border-bottom: 1px solid rgba(255, 62, 62, 0.12); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; padding-bottom: 1rem;">
                     <div>
                       <h5 class="admin-section-title" style="font-family: 'Satoshi', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--admin-text); letter-spacing: 0.02em; text-transform: uppercase; margin: 0 0 0.4rem 0;">📣 BROADCAST EMAIL BLAST</h5>
-                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send a one-off custom email to all registered guestlist users via Mailchimp Transactional. Supports placeholders.</p>
+                      <p class="admin-section-desc" style="font-size: 0.85rem; color: var(--admin-text-dim); line-height: 1.5; margin: 0; max-width: 560px;">Send a custom email broadcast directly to all registered members. Supports placeholders like {username}.</p>
                     </div>
                     <span class="admin-badge-pill manual-badge" style="background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; flex-shrink: 0; display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">MANUAL</span>
                   </div>
@@ -1672,9 +1685,8 @@
     <div class="footer-content">
       <p>&copy; 2026 THIRSTYCLUB999. ALL RIGHTS RESERVED.</p>
       <div class="socials">
-        <a href="#">INSTAGRAM</a>
-        <a href="#">X</a>
-        <a href="#">DISCORD</a>
+        <a href="https://www.instagram.com/thirstynalia" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+        <a href="https://www.instagram.com/thirstynalia" target="_blank" rel="noopener noreferrer">X</a>
       </div>
     </div>
   </footer>
@@ -1897,6 +1909,44 @@
     <div class="lightbox-counter"><span id="lightbox-current-idx">1</span> / <span id="lightbox-total-count">10</span></div>
   </div>
 
-  <script src="main.js?v=20260624.0615"></script>
+  <!-- Custom Minimalist Notification Modal -->
+  <div id="custom-notification-overlay" class="custom-notify-overlay">
+    <div class="custom-notify-card" role="dialog" aria-modal="true">
+      <button class="custom-notify-close" id="custom-notify-close-btn" aria-label="Close notification">&times;</button>
+      <div class="custom-notify-icon" id="custom-notify-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--thirsty-red)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3 class="custom-notify-title" id="custom-notify-title">RSVP CONFIRMED</h3>
+      <p class="custom-notify-message" id="custom-notify-message">Welcome to ThirstyClub999! Your RSVP for AUG 15, 2026 is confirmed.</p>
+      <button class="custom-notify-btn" id="custom-notify-dismiss-btn">DISMISS</button>
+    </div>
+  </div>
+
+  <!-- Passport Preview & Direct Download Modal for Mobile & Desktop -->
+  <div id="passport-download-modal" class="custom-notify-overlay">
+    <div class="custom-notify-card passport-modal-card" role="dialog" aria-modal="true" style="max-width: 440px;">
+      <button class="custom-notify-close" id="passport-modal-close-btn" aria-label="Close modal">&times;</button>
+      <div class="custom-notify-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--thirsty-red)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3 class="custom-notify-title" id="passport-modal-title">RSVP CONFIRMED</h3>
+      <p class="custom-notify-message" id="passport-modal-status" style="margin-bottom: 1rem;">Welcome to ThirstyClub999! Your RSVP for AUG 15, 2026 is confirmed.</p>
+      
+      <!-- Generated Passport PNG Display -->
+      <div class="passport-modal-img-wrap">
+        <img id="passport-modal-img" src="" alt="Digital Passport" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255, 62, 62, 0.3); margin-bottom: 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.8);">
+        <p style="font-size: 0.78rem; color: #888888; margin-bottom: 1.25rem;">📱 <em>Mobile Users: Press & hold image above to save directly to Photos.</em></p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <a id="passport-modal-download-link" href="#" download="thirstyclub999-passport.png" class="custom-notify-btn" style="text-decoration: none; display: block; text-align: center;">DOWNLOAD PASSPORT PNG</a>
+        <p style="font-size: 0.82rem; color: #aaaaaa; margin-top: 0.5rem; line-height: 1.4;">📩 <strong>Please check your email inbox (and spam folder) for your official RSVP confirmation & entry ticket.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js?v=20260727.0532"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 1000, once: true });</script>
 </body>
 </html>
