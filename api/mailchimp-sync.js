@@ -19,6 +19,7 @@ const ADMIN_EMAILS = [
   'straffitti@hotmail.com',
   'bookthirsty234@gmail.com',
   'godliverse@gmail.com',
+  'gclef40@gmail.com',
   'ogunwuyi.olumide@yahoo.com'
 ];
 

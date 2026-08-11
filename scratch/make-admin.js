@@ -16,10 +16,10 @@ async function makeAdmin() {
     console.log('Connected to database.');
 
     // Check if user exists in auth.users
-    const userRes = await client.query("SELECT id FROM auth.users WHERE email = 'godliverse@gmail.com';");
+    const userRes = await client.query("SELECT id FROM auth.users WHERE email = 'gclef40@gmail.com';");
     
     if (userRes.rows.length === 0) {
-      console.log("User 'godliverse@gmail.com' does not exist in the database yet.");
+      console.log("User 'gclef40@gmail.com' does not exist in the database yet.");
       console.log("They will automatically become an admin when they register because of our updates in main.js.");
     } else {
       const userId = userRes.rows[0].id;

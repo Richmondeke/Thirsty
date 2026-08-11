@@ -137,6 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
         session.user.email === 'straffitti@hotmail.com' ||
         session.user.email === 'bookthirsty234@gmail.com' ||
         session.user.email === 'godliverse@gmail.com' ||
+        session.user.email === 'gclef40@gmail.com' ||
+        session.user.email.toLowerCase() === 'gclef40@gmail.com' ||
         session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
         session.user.email.toLowerCase() === 'kayodebalogun14@gmail.com' ||
         profile?.role === 'admin' ||
