@@ -1,5 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   
+  // Force update all ticket links/buttons to GET TICKETS on DOM load
+  try {
+    const ticketCtaElements = document.querySelectorAll('a[href*="jtr.rsvp"], .cta-button:not(#btn-toggle-passport)');
+    ticketCtaElements.forEach(el => {
+      if (el.tagName === 'A' || el.classList.contains('cta-button')) {
+        if (!el.id || el.id !== 'btn-toggle-passport') {
+          el.textContent = 'GET TICKETS';
+        }
+      }
+    });
+  } catch (e) {
+    console.warn('CTA text enforcer error:', e);
+  }
+
   // Auto-redirect if already logged in when visiting login.html
   if (window.location.pathname.endsWith('login.html') && localStorage.getItem('thirsty_logged_in') === 'true') {
     window.location.href = 'index.html';
