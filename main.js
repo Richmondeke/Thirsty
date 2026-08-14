@@ -3105,6 +3105,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadBtns = document.querySelectorAll('#download-passport-btn');
   downloadBtns.forEach(btn => {
     btn.addEventListener('click', async () => {
+      // Temporarily pause signups/RSVPs until August 16, 2026
+      const now = new Date();
+      const signupReopenDate = new Date('2026-08-16T00:00:00Z');
+      if (now < signupReopenDate) {
+        showCustomNotify(
+          "RSVPS PAUSED",
+          "Passport creation & RSVPs are currently closed until August 16. Redirecting to Get Tickets...",
+          "warning"
+        );
+        setTimeout(() => {
+          window.open('https://jtr.rsvp/thirstyclubunrlsd333', '_blank');
+        }, 1500);
+        return;
+      }
+
       // Re-draw fresh passport onto both canvases to guarantee 100% crisp rendered data
       drawPassportOnCanvas('passport-canvas');
       drawPassportOnCanvas('dash-passport-canvas');

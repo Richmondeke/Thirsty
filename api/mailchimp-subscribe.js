@@ -14,7 +14,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, username, thirstyclub_id, gender, place_of_thirst } = req.body;
+  // RSVPs & Passport Creation temporarily disabled until August 16, 2026
+  return res.status(403).json({ 
+    error: 'RSVPs and Passport creation are currently paused until August 16, 2026. Please purchase tickets at https://jtr.rsvp/thirstyclubunrlsd333' 
+  });
 
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
