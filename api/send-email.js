@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, username, thirstyclub_id, place_of_thirst, passport_image, custom_subject, custom_message, status } = req.body;
+  const { email, username, thirstyclub_id, place_of_thirst, passport_image, custom_subject, custom_message, status, key: bodyKey, api_key: bodyApiKey, mandrill_key: bodyMandrillKey } = req.body;
 
   if (!email || !username || !thirstyclub_id) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -23,7 +23,10 @@ export default async function handler(req, res) {
                  process.env.key || 
                  process.env.KEY || 
                  process.env.API_KEY ||
-                 process.env.TRANSACTIONAL_KEY;
+                 process.env.TRANSACTIONAL_KEY ||
+                 bodyKey ||
+                 bodyApiKey ||
+                 bodyMandrillKey;
 
   if (!apiKey) {
     console.error('Mailchimp Transactional API key is not configured. Available env keys:', Object.keys(process.env));
