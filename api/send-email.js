@@ -15,10 +15,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const apiKey = process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || process.env.MANDRILL_API_KEY || process.env.MAILCHIMP_API_KEY || process.env.key;
+  const apiKey = process.env.MAILCHIMP_TRANSACTIONAL_API_KEY || 
+                 process.env.MANDRILL_API_KEY || 
+                 process.env.MAILCHIMP_API_KEY || 
+                 process.env.MANDRILL_KEY || 
+                 process.env.MAILCHIMP_KEY || 
+                 process.env.key || 
+                 process.env.KEY || 
+                 process.env.API_KEY ||
+                 process.env.TRANSACTIONAL_KEY;
+
   if (!apiKey) {
-    console.error('Mailchimp Transactional API key is not configured');
-    return res.status(500).json({ error: 'Email configuration error' });
+    console.error('Mailchimp Transactional API key is not configured. Available env keys:', Object.keys(process.env));
+    return res.status(500).json({ error: 'Email configuration error', available_keys: Object.keys(process.env).filter(k => !k.includes('SECRET') && !k.includes('TOKEN')) });
   }
 
   try {
