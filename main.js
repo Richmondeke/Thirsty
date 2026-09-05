@@ -142,19 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Check if user is an admin
       const isAdmin = session.user.email && (
-        session.user.email.startsWith('admin@') || 
-        session.user.email.endsWith('@thirstyclub999.com') ||
-        session.user.email === 'richmond@guava.earth' ||
-        session.user.email === 'richmonde@guava.earth' ||
-        session.user.email === 'guavanigeria@gmail.com' ||
-        session.user.email === 'thirstynalia@gmail.com' ||
-        session.user.email === 'straffitti@hotmail.com' ||
-        session.user.email === 'bookthirsty234@gmail.com' ||
-        session.user.email === 'godliverse@gmail.com' ||
-        session.user.email === 'gclef40@gmail.com' ||
-        session.user.email.toLowerCase() === 'gclef40@gmail.com' ||
-        session.user.email === 'ogunwuyi.olumide@yahoo.com' ||
-        session.user.email.toLowerCase() === 'kayodebalogun14@gmail.com' ||
+        session.user.email.toLowerCase() === 'richmond@guava.earth' ||
+        session.user.email.toLowerCase() === 'richmonde@guava.earth' ||
+        session.user.email.toLowerCase() === 'richmondeke@gmail.com' ||
+        session.user.email.toLowerCase() === 'ekerichond@gmail.com' ||
         profile?.role === 'admin' ||
         profile?.socials?.role === 'admin'
       );

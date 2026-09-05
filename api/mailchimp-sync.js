@@ -14,13 +14,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const ADMIN_EMAILS = [
   'richmond@guava.earth',
   'richmonde@guava.earth',
-  'guavanigeria@gmail.com',
-  'thirstynalia@gmail.com',
-  'straffitti@hotmail.com',
-  'bookthirsty234@gmail.com',
-  'godliverse@gmail.com',
-  'gclef40@gmail.com',
-  'ogunwuyi.olumide@yahoo.com'
+  'richmondeke@gmail.com',
+  'ekerichond@gmail.com'
 ];
 
 export default async function handler(req, res) {

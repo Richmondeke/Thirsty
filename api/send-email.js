@@ -66,15 +66,10 @@ May the thirst be with you!`);
         .from('profiles')
         .select('socials')
         .in('email', [
-          'guavanigeria@gmail.com',
           'richmond@guava.earth',
           'richmonde@guava.earth',
-          'thirstynalia@gmail.com',
-          'straffitti@hotmail.com',
-          'bookthirsty234@gmail.com',
-          'godliverse@gmail.com',
-          'gclef40@gmail.com',
-          'ogunwuyi.olumide@yahoo.com'
+          'richmondeke@gmail.com',
+          'ekerichond@gmail.com'
         ])
         .not('socials', 'is', null);
 
